@@ -1,0 +1,29 @@
+<header>
+
+  <a class="header-brand" routerLink="">
+    <img class="mangajap-logo" src="images/logo.png" alt="logo">
+  </a>
+
+  <div class="navbar-menu">
+    <a class="navbar-item" routerLink="/manga">Manga</a>
+    <a class="navbar-item" routerLink="/anime">Anime</a>
+  </div>
+
+  <input type="text" class="mangajap-search" placeholder="Rechercher un manga, anime, profil..."
+    (input)="onSearch($event.target.value)">
+
+  <div *ngIf="user !== null">
+    <a routerLink="/profile/{{user.slug}}">Profil</a>
+    <div>
+      <span (click)="logout()">Déconnexion</span>
+    </div>
+  </div>
+
+  <div *ngIf="user === null" class="authentication-menu">
+    <a routerLink="/login">Connexion</a>
+    <a routerLink="/register">Inscription</a>
+  </div>
+
+</header>
+
+<div class="header-bis"></div>

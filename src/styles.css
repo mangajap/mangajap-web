@@ -1,0 +1,35 @@
+:root {
+  --accent-color: red;
+  --background-primary-color: #FFFFFF;
+  --background-secondary-color: #F7F7F7;
+  --text-primary-color: #000000;
+  --text-secondary-color: #252525;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 1.428571429;
+  color: var(--text-primary-color);
+  background-color: var(--background-secondary-color);
+  margin: 0;
+  overflow-y: scroll;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+ul {
+  list-style-type: none;
+}

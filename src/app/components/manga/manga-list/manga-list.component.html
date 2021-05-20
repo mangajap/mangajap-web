@@ -1,0 +1,25 @@
+<main>
+
+  <div>
+    <input type="text" placeholder="Rechercher un manga" (input)="onSearch($event.target.value)">
+  </div>
+
+  <div>
+    <a routerLink="/manga/add">Ajouter un manga</a>
+  </div>
+
+  <div class="manga-grid">
+    <div *ngFor="let manga of mangas" class="manga-item">
+
+      <a class="manga-link" routerLink="/manga/{{manga.id}}"></a>
+
+      <img class="manga-cover" [src]="manga.coverImage" />
+
+      <div class="manga-title">
+        <span>{{ manga.canonicalTitle }}</span>
+      </div>
+
+    </div>
+  </div>
+
+</main>

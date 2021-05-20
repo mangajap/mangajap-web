@@ -1,0 +1,34 @@
+<main>
+
+  <a routerLink="/manga/{{manga.id}}/edit">Modifier le manga</a>
+            
+  <h1>{{ manga.canonicalTitle }}</h1>
+  
+  <nav>
+      <img [src]="manga.coverImage" />
+      <img [src]="manga.bannerImage" />
+  </nav>
+  
+  <section>
+      
+      <article>
+          <h2>Statistiques</h2>
+          
+          <p>{{ manga.averageRating }}</p>
+          <p>{{ manga.ratingRank }}</p>
+          <p>{{ manga.popularity }}</p>
+          <p>{{ manga.userCount }}</p>
+          <p>{{ manga.favoritesCount }}</p>
+          
+      </article>
+      
+      <article>
+          <h2>Synopsis</h2>
+          
+          <p>{{ manga.synopsis }}</p>
+          
+      </article>
+      
+  </section>
+  
+</main>
