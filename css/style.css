@@ -1,0 +1,124 @@
+@import url("http://mangajap.000webhostapp.com/css/manga.css");
+
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #333;
+    background-color: #f7f7f7;
+    margin: 0;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+ul {
+    list-style-type: none;
+}
+
+
+
+.container {
+    width: 86.7%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Écrans larges */
+@media (min-width:1200px) {
+    .manga-grid .manga-item {
+        width: 16.666666%;
+    }
+}
+
+/* Ordinateurs */
+@media (min-width:992px) and (max-width: 1199px) {
+    .manga-grid .manga-item {
+        width: 20%;
+    }
+}
+
+/* Tablettes à petits écrans */
+@media (min-width:768px) and (max-width: 991px) {
+    .manga-grid .manga-item {
+        width: 25%;
+    }
+}
+
+/* De smartphones à tablettes */
+@media (min-width:481px) and (max-width:767px) {
+    .manga-grid .manga-item {
+        width: 50%;
+    }
+}
+
+/* Smartphones */
+@media (min-width:320px) and (max-width: 480px) {
+    .manga-grid .manga-item {
+        width: 100%;
+    }
+}
+
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    width: 40%;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.modal-content form {
+    margin: 0;
+}
+
+.modal-content input {
+    width: 100%;
+}
+
+.modal-content button {
+    width: 100%;
+    height: 70px;
+    background: #dc0e0e;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 0;
+    border-style: none;
+    cursor: pointer;
+    border: 0;
+}
+
+
+
