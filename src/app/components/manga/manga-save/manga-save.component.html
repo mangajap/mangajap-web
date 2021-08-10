@@ -188,10 +188,12 @@
             <div *ngFor="let staff of manga.staff">
               <div *ngIf="staff.id != undefined">
                 <input type="text" placeholder="Rechercher" (input)="onSearchPeople($event.target.value)">
-                <select [(ngModel)]="staff.people.id">
-                  <option *ngIf="staff.people.id" [value]="staff.people.id">{{ staff.people.firstName }} {{
-                    staff.people.lastName }} / {{ staff.people.pseudo }}</option>
-                  <option *ngFor="let p of peoples" [value]="p.id">{{ p.firstName }} {{ p.lastName }} / {{ p.pseudo }}
+                <select [(ngModel)]="staff.people">
+                  <option *ngIf="staff.people.id && !peoples.includes(staff.people)" [ngValue]="staff.people">
+                    {{ staff.people.firstName }} {{ staff.people.lastName }} / {{ staff.people.pseudo }}
+                  </option>
+                  <option *ngFor="let p of peoples" [ngValue]="p">
+                    {{ p.firstName }} {{ p.lastName }} / {{ p.pseudo }}
                   </option>
                 </select>
                 <select [(ngModel)]="staff.role">
@@ -225,11 +227,13 @@
           <div id="franchise-container">
             <div *ngFor="let franchise of manga.franchise">
               <input type="text" placeholder="Rechercher" (input)="onSearchFranchise($event.target.value)">
-              <select [(ngModel)]="franchise.destination" [ngValue]="franchise.destination">
-                <option *ngIf="franchise.destination" [ngValue]="franchise.destination">{{
-                  franchise.destination.canonicalTitle }} ({{ franchise.destination.jsonApi.type }})</option>
-                <option *ngFor="let media of mediaQuery" [ngValue]="media">{{ media.canonicalTitle }} ({{
-                  media.jsonApi.type }})</option>
+              <select [(ngModel)]="franchise.destination">
+                <option *ngIf="franchise.destination && !mediaQuery.includes(franchise.destination)" [ngValue]="franchise.destination">
+                  {{ franchise.destination.canonicalTitle }} ({{ franchise.destination.jsonApi.schema.type }})
+                </option>
+                <option *ngFor="let media of mediaQuery" [ngValue]="media">
+                  {{ media.canonicalTitle }} ({{ media.jsonApi.schema.type }})
+                </option>
               </select>
               <span> is a </span>
               <select [(ngModel)]="franchise.role">

@@ -71,12 +71,13 @@ export class MangajapApiService extends JsonApiService {
 
 
   login(username: string, password: string): Observable<OAuth2Body> {
-    return this.http.post<OAuth2Body>(`${environment.apiUrl}/oauth/token`, {
+    return this.http.post<any>(`${environment.apiUrl}/oauth/token`, {
       grant_type: 'password',
       username: username,
       password: password
     }).pipe(
       map(response => {
+        response = JSON.parse(response)
         if (response.access_token) {
           this.apiToken = response.access_token;
         } else {

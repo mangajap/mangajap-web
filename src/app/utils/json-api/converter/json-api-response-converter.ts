@@ -12,9 +12,9 @@ import { Staff } from "src/app/models/staff.model";
 import { Theme } from "src/app/models/theme.model";
 import { User } from "src/app/models/user.model";
 import { Volume } from "src/app/models/volume.model";
-import { JsonApiBody, JsonApiIdentifier, JsonApiResource } from "../json-api-body";
+import JsonApiBody, { JsonApiIdentifier, JsonApiResource } from "../json-api-body";
 import { ModelType } from "../json-api.service";
-import { JsonApiModel } from "../json-api-model";
+import JsonApiModel from "../json-api-model";
 
 export interface JsonApiResponse<T> {
   raw?: string,

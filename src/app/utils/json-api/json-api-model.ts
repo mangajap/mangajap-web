@@ -20,7 +20,7 @@ export interface JsonApiModelMeta {
   };
 }
 
-export abstract class JsonApiModel {
+export default abstract class JsonApiModel {
   id?: string;
 
   initial: any;
@@ -64,7 +64,7 @@ export abstract class JsonApiModel {
     }
   }
 
-  private create(): Observable<JsonApiResponse<this>> {
+  public create(): Observable<JsonApiResponse<this>> {
     const jsonApi: JsonApiModelMeta = this.constructor.prototype.jsonApi;
 
     // TODO: le code marche bien cependant il faut que lorsque par exemple on créer un manga, son id est attribué à ses relations (volumes,...) (volume.manga = response.data)
@@ -96,7 +96,7 @@ export abstract class JsonApiModel {
   }
 
 
-  private update(): Observable<JsonApiResponse<this>> {
+  public update(): Observable<JsonApiResponse<this>> {
     const jsonApi: JsonApiModelMeta = this.constructor.prototype.jsonApi;
 
     return jsonApi.service.update(this);

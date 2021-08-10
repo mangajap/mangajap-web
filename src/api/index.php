@@ -185,7 +185,7 @@ $router->mount(Volume::routerGroup($app));
 
 require_once 'routes/cronjobs.php';
 
-$dbConfig = json_decode(file_get_contents('db.config.json'), true);
+require_once('db.config.php');
 $app->setDatabase(
   'db_mangajap',
   new MySql([
@@ -202,7 +202,7 @@ $app->setDefault($app);
 
 $result = $app->run();
 
-ob_start('ob_gzhandler');
+// ob_start('ob_gzhandler');
 
 if ($result !== null) {
   if ($result instanceof Model || $result instanceof Result)

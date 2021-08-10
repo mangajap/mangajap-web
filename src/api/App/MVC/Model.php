@@ -1241,15 +1241,11 @@ abstract class Model {
                                     break;
                             }
                             $model->initializeRelations();
-
-                            $relatedModelName = $model->getRelationByAlias($key)->getReferenceModelName();
-
-                            $model->setRelated($key, $relatedModelName::fromJsonApi($relationships->optJSONObject($key)->optJSONObject('data')));
-                        } else {
-                            $relatedModelName = $model->getRelationByAlias($key)->getReferenceModelName();
-
-                            $model->setRelated($key, $relatedModelName::fromJsonApi($relationships->optJSONObject($key)->optJSONObject('data')));
                         }
+                        
+                        $relatedModelName = $model->getRelationByAlias($key)->getReferenceModelName();
+
+                        $model->setRelated($key, $relatedModelName::fromJsonApi($relationships->optJSONObject($key)->optJSONObject('data')));
                     }
                 }
             }

@@ -1,5 +1,5 @@
-import { JsonApiBody, JsonApiResource } from "../json-api-body";
-import { JsonApiModel } from "../json-api-model";
+import JsonApiBody, { JsonApiResource } from "../json-api-body";
+import JsonApiModel from "../json-api-model";
 
 export class JsonApiRequestConverter {
 

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
-import { forkJoin } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { forkJoin, of } from 'rxjs';
+import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { Anime } from 'src/app/models/anime.model';
 import { Episode } from 'src/app/models/episode.model';
 import { Franchise } from 'src/app/models/franchise.model';
@@ -28,9 +28,6 @@ export class AnimeSaveComponent implements OnInit {
   peoples: People[] = [];
 
   mediaQuery: any[] = [];
-
-  private timerSearchPeople = null;
-  private timerSearchFranchise = null;
 
   animeOrigin = Anime.Origin;
   animeStatus = Anime.Status;
@@ -79,7 +76,6 @@ export class AnimeSaveComponent implements OnInit {
       const videoYoutubeId = new URL(this.anime.youtubeVideoId).searchParams.get("v");
       this.anime.youtubeVideoId = videoYoutubeId;
     }
-    console.log(this.anime.youtubeVideoId);
   }
 
   updateEpisodes(seasonNumber: number, episodeCount: number) {
@@ -144,19 +140,11 @@ export class AnimeSaveComponent implements OnInit {
       return;
     }
 
-    if (this.timerSearchPeople) {
-      clearTimeout(this.timerSearchPeople);
-    }
-
-    this.timerSearchPeople = setTimeout(() => {
-
-      People.findAll({
-        filter: {
-          query: query
-        }
-      }).subscribe(response => this.peoples = response.data);
-
-    }, 1000);
+    People.findAll({
+      filter: {
+        query: query
+      }
+    }).subscribe(response => this.peoples = response.data);
   }
   addStaff() {
     const staff = new Staff();
@@ -187,32 +175,24 @@ export class AnimeSaveComponent implements OnInit {
       return;
     }
 
-    if (this.timerSearchFranchise) {
-      clearTimeout(this.timerSearchFranchise);
-    }
+    const mangas$ = Manga.findAll({
+      filter: {
+        query: query
+      }
+    });
+    const animes$ = Anime.findAll({
+      filter: {
+        query: query
+      }
+    });
 
-    this.timerSearchFranchise = setTimeout(() => {
-
-      const mangas$ = Manga.findAll({
-        filter: {
-          query: query
-        }
-      });
-      const animes$ = Anime.findAll({
-        filter: {
-          query: query
-        }
-      });
-  
-      forkJoin([mangas$, animes$]).subscribe(([mangaResponse, animeResponse]) => {
-        this.mediaQuery = [].concat(mangaResponse.data).concat(animeResponse.data)
-          .filter(media => media.id !== this.anime.id && typeof media === typeof this.anime);
-      });
-
-    }, 1000);
+    forkJoin([mangas$, animes$]).subscribe(([mangaResponse, animeResponse]) => {
+      this.mediaQuery = [].concat(mangaResponse.data).concat(animeResponse.data)
+        .filter(media => media.id !== this.anime.id && typeof media === typeof this.anime);
+    });
   }
 
-  
+
   submit() {
     if (!this.anime.id) {
       this.createInfo();
@@ -222,38 +202,50 @@ export class AnimeSaveComponent implements OnInit {
   }
 
   private createInfo() {
-    const anime$ = this.anime.save().pipe(
-      mergeMap(animeResponse => {
-        const episodes$ = this.anime.episodes.map(episode => {
-          episode.anime = animeResponse.data;
-          return episode.save();
-        });
-
-        const staff$ = this.anime.staff.map(staff => {
-          staff.anime = animeResponse.data;
-          if (!staff.people.id) {
-            return staff.people.save().pipe(
-              mergeMap(peopleResponse => {
-                staff.people = peopleResponse.data;
+    forkJoin(
+      []
+        .concat(of(1))
+        .concat(this.anime.genres?.filter(genre => !genre.exists()).map(genre => genre.save().pipe(
+          map(response => {
+            genre.id = response.data.id
+            return response
+          })
+        )))
+        .concat(this.anime.themes?.filter(theme => !theme.exists()).map(theme => theme.save().pipe(
+          map(response => {
+            theme.id = response.data.id
+            return response
+          })
+        )))
+    ).pipe(
+      switchMap(() => this.anime.save().pipe(
+        tap(response => this.anime.id = response.data.id),
+        mergeMap(() => forkJoin(
+          []
+            .concat(this.anime.episodes.map(episode => {
+              episode.anime = this.anime;
+              return episode.save();
+            }))
+            .concat(this.anime.staff.map(staff => {
+              staff.anime = this.anime;
+              if (!staff.people.id) {
+                return staff.people.save().pipe(
+                  mergeMap(peopleResponse => {
+                    staff.people = peopleResponse.data;
+                    return staff.save();
+                  })
+                );
+              } else {
                 return staff.save();
-              })
-            );
-          } else {
-            return staff.save();
-          }
-        });
-
-        const franchises$ = this.anime.franchise.map(franchise => {
-          franchise.source = animeResponse.data;
-          return franchise.save();
-        });
-
-        this.anime.id = animeResponse.data.id;
-        return forkJoin([].concat(episodes$).concat(staff$).concat(franchises$));
-      })
-    );
-
-    anime$.subscribe({
+              }
+            }))
+            .concat(this.anime.franchise.map(franchise => {
+              franchise.source = this.anime;
+              return franchise.save();
+            }))
+        ))
+      ))
+    ).subscribe({
       next: value => console.log(value),
       error: error => console.error(error),
       complete: () => this.router.navigate(['/anime', this.anime.id])
@@ -261,57 +253,72 @@ export class AnimeSaveComponent implements OnInit {
   }
 
   private updateInfo() {
-    const anime$ = this.anime.save();
-
-    const episodes$ = this.anime.episodes
-      .filter(episode => !episode.id || episode.hasChanged())
-      .map(episode => {
-        if (!episode.id) {
-          episode.anime = this.anime;
-          return episode.save();
-        } else if (episode.hasChanged()) {
-          return episode.save();
-        }
-      });
-
-    const staff$ = this.anime.staff
-      .filter(staff => !staff.people.id || !staff.id || staff.hasChanged())
-      .map(staff => {
-        if (!staff.people.id) {
-          return staff.people.save().pipe(
-            mergeMap(peopleResponse => {
-              staff.people = peopleResponse.data;
-              if (!staff.id) {
-                staff.anime = this.anime;
-                return staff.save();
-              } else if (staff.hasChanged()) {
-                return staff.save();
+    forkJoin(
+      []
+        .concat(of(1))
+        .concat(this.anime.genres?.filter(genre => !genre.exists()).map(genre => genre.save().pipe(
+          map(response => {
+            genre.id = response.data.id
+            return response
+          })
+        )))
+        .concat(this.anime.themes?.filter(theme => !theme.exists()).map(theme => theme.save().pipe(
+          map(response => {
+            theme.id = response.data.id
+            return response
+          })
+        )))
+    ).pipe(
+      mergeMap(() => forkJoin(
+        []
+          .concat(this.anime.save())
+          .concat(this.anime.episodes
+            .filter(episode => !episode.id || episode.hasChanged())
+            .map(episode => {
+              if (!episode.id) {
+                episode.anime = this.anime;
+                return episode.save();
+              } else if (episode.hasChanged()) {
+                return episode.save();
               }
-            })
-          );
-        } else {
-          if (!staff.id) {
-            staff.anime = this.anime;
-            return staff.save();
-          } else if (staff.hasChanged()) {
-            return staff.save();
-          }
-        }
-      });
-
-    const franchises$ = this.anime.franchise
-      .filter(franchise => !franchise.id || franchise.hasChanged())
-      .map(franchise => {
-        console.log(franchise.hasChanged());
-        if (!franchise.id) {
-          franchise.source = this.anime;
-          return franchise.save();
-        } else if (franchise.hasChanged()) {
-          return franchise.save();
-        }
-      });
-
-    forkJoin([].concat([anime$]).concat(episodes$).concat(staff$).concat(franchises$)).subscribe(
+            }))
+          .concat(this.anime.staff
+            .filter(staff => !staff.people.id || !staff.id || staff.hasChanged())
+            .map(staff => {
+              if (!staff.people.id) {
+                return staff.people.save().pipe(
+                  mergeMap(peopleResponse => {
+                    staff.people = peopleResponse.data;
+                    if (!staff.id) {
+                      staff.anime = this.anime;
+                      return staff.save();
+                    } else if (staff.hasChanged()) {
+                      return staff.save();
+                    }
+                  })
+                );
+              } else {
+                if (!staff.id) {
+                  staff.anime = this.anime;
+                  return staff.save();
+                } else if (staff.hasChanged()) {
+                  return staff.save();
+                }
+              }
+            }))
+          .concat(this.anime.franchise
+            .filter(franchise => !franchise.id || franchise.hasChanged())
+            .map(franchise => {
+              console.log(franchise.hasChanged());
+              if (!franchise.id) {
+                franchise.source = this.anime;
+                return franchise.save();
+              } else if (franchise.hasChanged()) {
+                return franchise.save();
+              }
+            }))
+      ))
+    ).subscribe(
       value => console.log(value),
       error => console.error(error),
       () => this.router.navigate(['/anime', this.anime.id])

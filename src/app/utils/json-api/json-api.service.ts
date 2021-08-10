@@ -5,7 +5,7 @@ import { environment } from "src/environments/environment";
 import { JsonApiErrorConverter } from "./converter/json-api-error.converter";
 import { JsonApiRequestConverter } from "./converter/json-api-request-converter";
 import { JsonApiResponse, JsonApiResponseConverter } from "./converter/json-api-response-converter";
-import { JsonApiModel, JsonApiModelMeta } from "./json-api-model";
+import JsonApiModel, { JsonApiModelMeta } from "./json-api-model";
 import { JsonApiParams } from "./json-api-params";
 
 interface JsonApiConfig {
@@ -117,18 +117,17 @@ export class JsonApiService {
     body: any,
     modelType: ModelType<T>
   ): JsonApiResponse<T> {
-    // body = body.split(/\r?\n/).pop();
-
-    // if (!environment.production) {
-    //   const requestSQL = body.split(/\r?\n/).slice(0, -1).join('\n')
-    //   if (requestSQL !== "") {
-    //     let sql = localStorage.getItem('request_sql') || '';
-    //     sql += requestSQL + '\n';
-    //     localStorage.setItem('request_sql', sql);
-    //   }
-    // }
+    if (!environment.production) {
+      const requestSQL = body.split(/\r?\n/).slice(0, -1).join('\n')
+      if (requestSQL !== "") {
+        let sql = localStorage.getItem('request_sql') || '';
+        sql += requestSQL + '\n';
+        localStorage.setItem('request_sql', sql);
+      }
+    }
+    body = body.split(/\r?\n/).pop();
     
-    return JsonApiResponseConverter.convert(modelType, body);
+    return JsonApiResponseConverter.convert(modelType, JSON.parse(body));
   }
 
   private handleErrorResponse(err: any): Observable<any> {

@@ -9,17 +9,20 @@ use App\JsonApi\JsonApiException;
 use PDO;
 use PDOException;
 
-class MySql extends Database {
+class MySql extends Database
+{
 
     private $pdo;
 
-    public function __construct($descriptor) {
+    public function __construct($descriptor)
+    {
         $this->connect($descriptor);
 
         return $this;
     }
 
-    private function connect($descriptor) {
+    private function connect($descriptor)
+    {
         $host = $descriptor['host'];
         $dbname = $descriptor['dbname'];
         $username = $descriptor['username'];
@@ -41,24 +44,26 @@ class MySql extends Database {
         return true;
     }
 
-    private function getPDO(): PDO {
+    private function getPDO(): PDO
+    {
         return $this->pdo;
     }
 
 
 
-    public function execute($sqlStatement, $bindParams = [], $bindTypes = []) {
+    public function execute($sqlStatement, $bindParams = [], $bindTypes = [])
+    {
         $statement = $this->getPDO()->prepare($sqlStatement);
 
         foreach ($bindParams as $field => $value) {
             $statement->bindValue(
-                ':'.$field,
+                ':' . $field,
                 $value,
                 Column::toPDO($bindTypes[$field] ?? "")
             );
         }
 
-//        print_r($this->interpolateQuery($this->getPDO(), $sqlStatement.";", $bindParams));
+        //        print_r($this->interpolateQuery($this->getPDO(), $sqlStatement.";", $bindParams));
 
         try {
             return $statement->execute();
@@ -79,18 +84,19 @@ class MySql extends Database {
         }
     }
 
-    public function query($sqlStatement, $bindParams = [], $bindTypes = []) {
+    public function query($sqlStatement, $bindParams = [], $bindTypes = [])
+    {
         $statement = $this->getPDO()->prepare($sqlStatement);
 
         foreach ($bindParams as $field => $value) {
             $statement->bindValue(
-                ':'.$field,
+                ':' . $field,
                 $value,
                 Column::toPDO($bindTypes[$field] ?? "")
             );
         }
 
-//        print_r($this->interpolateQuery($this->getPDO(), $sqlStatement.";", $bindParams));
+        //        print_r($this->interpolateQuery($this->getPDO(), $sqlStatement.";", $bindParams));
 
         try {
             $statement->execute();
@@ -112,40 +118,39 @@ class MySql extends Database {
         }
     }
 
-    public function insert($table, array $data, $bindTypes = []) {
+    public function insert($table, array $data, $bindTypes = [])
+    {
         $fieldsClause = [];
         $valuesClause = [];
 
         foreach ($data as $field => $value) {
             if (is_int($field) && empty($fieldsClause)) {
-                $valuesClause[] = ':'.$field;
-            }
-            else {
+                $valuesClause[] = ':' . $field;
+            } else {
                 $fieldsClause[] = $field;
-                $valuesClause[] = ':'.$field;
+                $valuesClause[] = ':' . $field;
             }
         }
 
         if (empty($fieldsClause)) {
-            $sqlStatement = "INSERT INTO {$table} VALUES(".implode(', ', $valuesClause).");";
-        }
-        else {
-            $sqlStatement = "INSERT INTO {$table} (".implode(', ', $fieldsClause).") VALUES(".implode(', ', $valuesClause).");";
+            $sqlStatement = "INSERT INTO {$table} VALUES(" . implode(', ', $valuesClause) . ");";
+        } else {
+            $sqlStatement = "INSERT INTO {$table} (" . implode(', ', $fieldsClause) . ") VALUES(" . implode(', ', $valuesClause) . ");";
         }
 
         $statement = $this->getPDO()->prepare($sqlStatement);
 
         foreach ($data as $field => $value) {
             $statement->bindValue(
-                ':'.$field,
+                ':' . $field,
                 $value,
                 Column::toPDO($bindTypes[$field] ?? "")
             );
         }
 
 
-        // print_r($this->interpolateQuery($this->getPDO(), $sqlStatement, $data));
-//        return true;
+        print_r($this->interpolateQuery($this->getPDO(), $sqlStatement, $data));
+        // return true;
 
         try {
             return $statement->execute();
@@ -166,7 +171,8 @@ class MySql extends Database {
         }
     }
 
-    public function update($table, $data, $conditions = [], $bindTypes = []) {
+    public function update($table, $data, $conditions = [], $bindTypes = [])
+    {
         $bindParams = [];
 
         $setClause = [];
@@ -175,37 +181,35 @@ class MySql extends Database {
         foreach ($data as $field => $value) {
             if ($value === null) {
                 $setClause[] = $field . " = NULL";
-            }
-            else {
-                $setClause[] = $field . " = " . ':'.$field;
+            } else {
+                $setClause[] = $field . " = " . ':' . $field;
                 $bindParams[$field] = $value;
             }
         }
         foreach ($conditions as $field => $value) {
-            $whereClause[] = $field . " = " . ':'.$field;
+            $whereClause[] = $field . " = " . ':' . $field;
 
             $bindParams[$field] = $value;
         }
 
         if (empty($whereClause)) {
-            $sqlStatement = "UPDATE {$table} SET ".implode(', ', $setClause).";";
-        }
-        else {
-            $sqlStatement = "UPDATE {$table} SET ".implode(', ', $setClause)." WHERE ".implode(' AND ', $whereClause).";";
+            $sqlStatement = "UPDATE {$table} SET " . implode(', ', $setClause) . ";";
+        } else {
+            $sqlStatement = "UPDATE {$table} SET " . implode(', ', $setClause) . " WHERE " . implode(' AND ', $whereClause) . ";";
         }
 
         $statement = $this->getPDO()->prepare($sqlStatement);
 
         foreach ($bindParams as $field => $value) {
             $statement->bindValue(
-                ':'.$field,
+                ':' . $field,
                 $value,
                 Column::toPDO($bindTypes[$field] ?? "")
             );
         }
 
-        // print_r($this->interpolateQuery($this->getPDO(), $sqlStatement, $bindParams));
-//        return true;
+        print_r($this->interpolateQuery($this->getPDO(), $sqlStatement, $bindParams));
+        // return true;
 
         try {
             return $statement->execute();
@@ -226,14 +230,13 @@ class MySql extends Database {
         }
     }
 
-    public function delete($table, $conditions = null, $bindParams = [], $bindTypes = []) {
+    public function delete($table, $conditions = null, $bindParams = [], $bindTypes = [])
+    {
         if (is_array($conditions)) {
-            $sqlStatement = "DELETE FROM {$table} WHERE ".implode(' AND ', $conditions).";";
-        }
-        elseif (is_string($conditions)) {
+            $sqlStatement = "DELETE FROM {$table} WHERE " . implode(' AND ', $conditions) . ";";
+        } elseif (is_string($conditions)) {
             $sqlStatement = "DELETE FROM {$table} WHERE {$conditions};";
-        }
-        else {
+        } else {
             $sqlStatement = "DELETE FROM {$table};";
         }
 
@@ -242,14 +245,14 @@ class MySql extends Database {
 
         foreach ($bindParams as $field => $value) {
             $statement->bindValue(
-                ':'.$field,
+                ':' . $field,
                 $value,
                 Column::toPDO($bindTypes[$field] ?? "")
             );
         }
 
-//        print_r($this->interpolateQuery($this->getPDO(), $sqlStatement, $bindParams));
-//        return true;
+        //        print_r($this->interpolateQuery($this->getPDO(), $sqlStatement, $bindParams));
+        //        return true;
 
         try {
             return $statement->execute();
@@ -271,24 +274,27 @@ class MySql extends Database {
     }
 
 
-    public function lastInsertId($sequenceName = null): string {
+    public function lastInsertId($sequenceName = null): string
+    {
         return $this->getPDO()->lastInsertId($sequenceName);
     }
 
 
-    public function close() {
+    public function close()
+    {
         $this->pdo = null;
 
         return true;
     }
 
 
-    public function interpolateQuery($db, $query, $params) {
+    public function interpolateQuery($db, $query, $params)
+    {
         $keys = [];
 
         foreach ($params as $key => &$value) {
             if (is_string($key)) {
-                $keys[] = '/:'.$key.'/';
+                $keys[] = '/:' . $key . '/';
             } else {
                 $keys[] = '/[?]/';
             }

@@ -1,5 +1,5 @@
 import { JsonApiAttribute, JsonApiModelConfig, JsonApiRelationship, JsonApiType } from "../utils/json-api/json-api-annotations";
-import { JsonApiModel } from "../utils/json-api/json-api-model";
+import JsonApiModel from "../utils/json-api/json-api-model";
 import { Anime } from "./anime.model";
 import { User } from "./user.model";
 

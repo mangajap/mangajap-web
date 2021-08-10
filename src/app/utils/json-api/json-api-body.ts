@@ -40,7 +40,7 @@ export interface JsonApiResource {
   meta?: any;
 }
 
-export interface JsonApiBody {
+export default interface JsonApiBody {
   jsonapi?: {
     version: string;
   };

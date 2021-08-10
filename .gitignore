@@ -16,20 +16,13 @@ speed-measure-plugin*.json
 
 # IDEs and editors
 /.idea
+/.vscode
 .project
 .classpath
 .c9/
 *.launch
 .settings/
 *.sublime-workspace
-
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
 
 # misc
 /.sass-cache
@@ -46,4 +39,9 @@ testem.log
 Thumbs.db
 
 # Config files
-/src/api/db.config.json
+/src/api/db.config.php
+
+# Firebase
+/.firebase
+.firebaserc
+firebase.json

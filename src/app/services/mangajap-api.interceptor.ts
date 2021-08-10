@@ -1,6 +1,7 @@
 import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class MangaJapApiInterceptor implements HttpInterceptor {
@@ -26,6 +27,8 @@ export class MangaJapApiInterceptor implements HttpInterceptor {
       }),
       method: 'POST'
     });
+
+    httpRequest = httpRequest.clone({ responseType: 'text' });
 
     return next.handle(httpRequest);
   }
