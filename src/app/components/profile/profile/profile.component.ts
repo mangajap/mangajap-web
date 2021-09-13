@@ -1,10 +1,8 @@
-import { query } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/models/user.model';
 import { MangajapApiService } from 'src/app/services/mangajap-api.service';
-import { JsonApiParams } from 'src/app/utils/json-api/json-api-params';
 
 @Component({
   selector: 'app-profile',

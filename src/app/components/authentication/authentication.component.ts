@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { User } from 'src/app/models/user.model';
-import { MangajapApiService } from 'src/app/services/mangajap-api.service';
-import { OAuth2ErrorBody } from 'src/app/utils/oauth2/oauth2-error-body';
 
 @Component({
   selector: 'app-authentication',
@@ -12,12 +11,14 @@ import { OAuth2ErrorBody } from 'src/app/utils/oauth2/oauth2-error-body';
 export class AuthenticationComponent implements OnInit {
 
   user: User = new User();
+  email: string = '';
+  password: string = '';
   isLogin: boolean = false;
   isRegister: boolean = false;
 
   constructor(
     private router: Router,
-    private mangajapApiService: MangajapApiService
+    private firebaseAuth: AngularFireAuth,
   ) { }
 
   ngOnInit(): void {
@@ -26,28 +27,25 @@ export class AuthenticationComponent implements OnInit {
   }
 
   onLogin() {
-    this.mangajapApiService.login(this.user.pseudo, this.user.password).subscribe(
-      response => {
-        if (response.access_token) {
-          this.router.navigate(['/']);
-        }
-      },
-      (error: OAuth2ErrorBody) => { 
-        console.error(error);
-      }
-    );
+    this.firebaseAuth.signInWithEmailAndPassword(this.email, this.password)
+      .then((result) => {
+        this.router.navigate(['/']);
+      })
+      .catch((error) => {
+        window.alert(error.message);
+      });
   }
 
   onRegister() {
-    // TODO: check pseudo et password
-    this.user.save().subscribe(response => {
-      // TODO: check pas d'erreur
-      this.mangajapApiService.login(this.user.pseudo, this.user.password).subscribe(response => {
-        if (response.access_token) {
-          this.router.navigate(['/']);
-        }
-      })
-    });
+    // // TODO: check pseudo et password
+    // this.user.save().subscribe(response => {
+    //   // TODO: check pas d'erreur
+    //   this.mangajapApiService.login(this.user.pseudo, this.user.password).subscribe(response => {
+    //     if (response.access_token) {
+    //       this.router.navigate(['/']);
+    //     }
+    //   })
+    // });
   }
 
 }

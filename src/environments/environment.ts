@@ -4,7 +4,16 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost/mangajap/api',
+  apiUrl: 'http://localhost:3000',
+  firebase: {
+    apiKey: "AIzaSyBERviz4ObXOcBPCHiY8weoU_zdA8UNcIk",
+    authDomain: "mangajap.firebaseapp.com",
+    projectId: "mangajap",
+    storageBucket: "mangajap.appspot.com",
+    messagingSenderId: "765459541968",
+    appId: "1:765459541968:web:fd5acd1ab2ba4d4c1193d5",
+    measurementId: "G-P784KGM19T"
+  },
 };
 
 /*

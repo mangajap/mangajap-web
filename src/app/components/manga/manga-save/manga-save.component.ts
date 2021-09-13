@@ -47,12 +47,12 @@ export class MangaSaveComponent implements OnInit {
 
     Genre.findAll({
       limit: 1000,
-      sort: "title_fr"
+      sort: "title"
     }).subscribe(response => this.genres = response.data);
 
     Theme.findAll({
       limit: 1000,
-      sort: "title_fr"
+      sort: "title"
     }).subscribe(response => this.themes = response.data);
 
     const id = +this.route.snapshot.paramMap.get('id');
@@ -61,7 +61,7 @@ export class MangaSaveComponent implements OnInit {
         include: ["volumes", "genres", "themes", "staff.people", "franchise.destination"],
       }).subscribe(response => {
         this.manga = response.data;
-        this.titleService.setTitle(`${this.manga.canonicalTitle} - Modification | MangaJap`);
+        this.titleService.setTitle(`${this.manga.title} - Modification | MangaJap`);
       });
     }
   }

@@ -21,7 +21,7 @@ class User extends Model implements JsonApiSerializable {
     public $id;
     public $createdAt;
     public $updatedAt;
-    public $accessToken = 'null';
+    public $uid;
     public $pseudo;
     public $slug;
     public $isAdmin;
@@ -51,7 +51,7 @@ class User extends Model implements JsonApiSerializable {
 
         $this->setColumnMap([
             'id' => 'user_id',
-            'accessToken' => 'user_accesstoken',
+            'uid' => 'user_accesstoken',
             'pseudo' => 'user_pseudo',
             'slug' => 'user_slug',
             'email' => 'user_email',
@@ -79,7 +79,7 @@ class User extends Model implements JsonApiSerializable {
         $this->setPrimaryKey('id');
 
         $this->setAttributes([
-            'accessToken',
+            'uid',
             'pseudo',
             'slug',
             'email',
@@ -106,7 +106,7 @@ class User extends Model implements JsonApiSerializable {
 
         $this->setDataTypes([
             'id' => Column::TYPE_INT,
-            'accessToken' => Column::TYPE_CHAR,
+            'uid' => Column::TYPE_CHAR,
             'pseudo' => Column:: TYPE_VARCHAR,
             'slug' => Column::TYPE_TINYTEXT,
             'email' => Column::TYPE_TINYTEXT,
@@ -335,8 +335,6 @@ class User extends Model implements JsonApiSerializable {
     }
 
     public function beforeCreate(): bool {
-        $this->setAccessToken(Random::hex(64));
-
         if (!isset($this->slug))
             $this->slug = Slug::generate($this->pseudo);
 
@@ -359,40 +357,31 @@ class User extends Model implements JsonApiSerializable {
     }
 
     public function beforeSave(): bool {
-        if ($this->isPseudoTaken())
-            return false;
-
-        if ($this->isEmailTaken())
-            return false;
-
-        if (isset($this->password) && $this->password !== 'null')
-            $this->setPassword(Password::hash($this->password));
-
         return true;
     }
 
 
-    public static function fromAccessToken($accessToken = null) {
-        if (!isset($accessToken))
-            $accessToken = \App\OAuth::getBearerToken();
+    public static function fromAccessToken($uid = null) {
+        if (!isset($uid))
+            $uid = \App\OAuth::getBearerToken();
 
         $user = self::$selfUser;
 
         if ($user === 'null') {
             $user = User::get([
-                'conditions' => 'user_accesstoken = :accessToken',
+                'conditions' => 'user_accesstoken = :uid',
                 'bind' => [
-                    'accessToken' => $accessToken,
+                    'uid' => $uid,
                 ],
                 'limit' => 1,
             ]);
         }
         elseif ($user instanceof User) {
-            if ($user->getAccessToken() !== $accessToken)
+            if ($user->getUid() !== $uid)
                 $user = User::get([
-                    'conditions' => 'user_accesstoken = :accessToken',
+                    'conditions' => 'user_accesstoken = :uid',
                     'bind' => [
-                        'accessToken' => $accessToken,
+                        'uid' => $uid,
                     ],
                     'limit' => 1,
                 ]);
@@ -400,54 +389,6 @@ class User extends Model implements JsonApiSerializable {
 
         self::$selfUser = $user;
         return self::$selfUser;
-    }
-
-    public function isPseudoTaken(): bool {
-        $user = self::get([
-            'conditions' => 'user_pseudo = :pseudo AND user_id != :id',
-            'bind' => [
-                'pseudo' => $this->getPseudo(),
-                'id' => $this->getId(),
-            ],
-            'limit' => 1,
-        ]);
-
-        if ($user instanceof User)
-            return true;
-        else
-            return false;
-    }
-
-    public function isEmailTaken(): bool {
-        $user = self::get([
-            'conditions' => 'user_email = :email AND user_id != :id',
-            'bind' => [
-                'email' => $this->email,
-                'id' => $this->getId(),
-            ],
-            'limit' => 1,
-        ]);
-
-        if ($user instanceof User)
-            return true;
-        else
-            return false;
-    }
-
-    public function isAccessTokenTaken(): bool {
-        $user = self::get([
-            'conditions' => 'user_accesstoken = :accessToken AND user_id != :id',
-            'bind' => [
-                'accessToken' => $this->getAccessToken(),
-                'id' => $this->getId(),
-            ],
-            'limit' => 1,
-        ]);
-
-        if ($user instanceof User)
-            return true;
-        else
-            return false;
     }
 
 
@@ -465,6 +406,9 @@ class User extends Model implements JsonApiSerializable {
             '/users',
             function() use ($app) {
                 $user = User::fromJsonApi($app->getRequest()->getJSONObject()->optJSONObject('data'));
+                if ($user->uid === null) {
+                  return null;
+                }
                 if ($user->create())
                     return User::get($user->getId());
                 else
@@ -567,15 +511,12 @@ class User extends Model implements JsonApiSerializable {
         $this->updatedAt = $updatedAt;
     }
 
-    public function getAccessToken() {
-        return $this->accessToken;
+    public function getUid() {
+        return $this->uid;
     }
 
-    public function setAccessToken($accessToken) {
-        do {
-            $this->accessToken = $accessToken;
-        }
-        while ($this->isAccessTokenTaken());
+    public function setUid($uid) {
+      $this->uid = $uid;
     }
 
     public function getPseudo() {
@@ -584,22 +525,6 @@ class User extends Model implements JsonApiSerializable {
 
     public function setPseudo($pseudo) {
         $this->pseudo = $pseudo;
-
-        if ($this->isPseudoTaken()) {
-            throw new Errors(
-                new JsonApiException(
-                    null,
-                    null,
-                    HTTP::CODE_UNPROCESSABLE_ENTITY,
-                    null,
-                    "Invalid attribute",
-                    "The pseudo is already taken",
-                    "/data/attributes/pseudo",
-                    null,
-                    null
-                )
-            );
-        }
     }
 
     public function getSlug() {
@@ -778,22 +703,6 @@ class User extends Model implements JsonApiSerializable {
 
     public function setEmail($email) {
         $this->email = $email;
-
-        if ($this->isEmailTaken()) {
-            throw new Errors(
-                new JsonApiException(
-                    null,
-                    null,
-                    HTTP::CODE_UNPROCESSABLE_ENTITY,
-                    null,
-                    "Invalid attribute",
-                    "The email is already taken",
-                    "/data/attributes/email",
-                    null,
-                    null
-                )
-            );
-        }
     }
 
     public function getPassword() {
@@ -820,6 +729,7 @@ class User extends Model implements JsonApiSerializable {
         $attributes = [
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
+            'uid' => $this->uid,
             'pseudo' => $this->pseudo,
             'slug' => $this->slug,
             'isAdmin' => $this->isAdmin,
@@ -837,7 +747,7 @@ class User extends Model implements JsonApiSerializable {
             'lastName' => $this->lastName,
             'birthday' => $this->birthday,
             'gender' => $this->gender,
-			'country' => $this->country,
+			      'country' => $this->country,
             'avatar' => $this->getAvatar(),
         ];
 
@@ -886,9 +796,9 @@ class User extends Model implements JsonApiSerializable {
     public function JsonApi_filter() {
         return [
             'self' => [
-                'conditions' => 'user_accesstoken = :accessToken',
+                'conditions' => 'user_accesstoken = :uid',
                 'bind' => [
-                    'accessToken' => \App\OAuth::getBearerToken(),
+                    'uid' => \App\OAuth::getBearerToken(),
                 ],
                 'limit' => 1,
             ],

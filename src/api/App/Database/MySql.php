@@ -149,7 +149,7 @@ class MySql extends Database
         }
 
 
-        print_r($this->interpolateQuery($this->getPDO(), $sqlStatement, $data));
+        // print_r($this->interpolateQuery($this->getPDO(), $sqlStatement, $data));
         // return true;
 
         try {
@@ -208,7 +208,7 @@ class MySql extends Database
             );
         }
 
-        print_r($this->interpolateQuery($this->getPDO(), $sqlStatement, $bindParams));
+        // print_r($this->interpolateQuery($this->getPDO(), $sqlStatement, $bindParams));
         // return true;
 
         try {

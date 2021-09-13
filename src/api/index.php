@@ -63,7 +63,7 @@ $router->post(
     ]);
 
     if ($user instanceof User) {
-      $result['access_token'] = $user->getAccessToken();
+      $result['access_token'] = $user->getUid();
       $result['sub'] = $user->getId();
 
       return $result;

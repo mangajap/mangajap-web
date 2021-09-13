@@ -15,7 +15,7 @@ class Manga extends Model implements JsonApiSerializable
   public $id;
   public $createdAt;
   public $updatedAt;
-  public $canonicalTitle;
+  public $title;
   public $title_fr;
   public $title_en;
   public $title_en_jp;
@@ -47,7 +47,7 @@ class Manga extends Model implements JsonApiSerializable
 
     $this->setColumnMap([
       'id' => 'manga_id',
-      'canonicalTitle' => 'manga_title',
+      'title' => 'manga_title',
       'title_fr' => 'manga_title_fr',
       'title_en' => 'manga_title_en',
       'title_en_jp' => 'manga_title_en_jp',
@@ -74,7 +74,7 @@ class Manga extends Model implements JsonApiSerializable
     $this->setPrimaryKey('id');
 
     $this->setAttributes([
-      'canonicalTitle',
+      'title',
       'title_fr',
       'title_en',
       'title_en_jp',
@@ -100,7 +100,7 @@ class Manga extends Model implements JsonApiSerializable
 
     $this->setDataTypes([
       'id' => Column::TYPE_INT,
-      'canonicalTitle' => Column::TYPE_TINYTEXT,
+      'title' => Column::TYPE_TINYTEXT,
       'title_fr' => Column::TYPE_TINYTEXT,
       'title_en' => Column::TYPE_TINYTEXT,
       'title_en_jp' => Column::TYPE_TINYTEXT,
@@ -226,7 +226,7 @@ class Manga extends Model implements JsonApiSerializable
   public function beforeCreate(): bool
   {
     if (!isset($this->slug))
-      $this->slug = Slug::generate($this->canonicalTitle);
+      $this->slug = Slug::generate($this->title);
 
     return true;
   }
@@ -327,9 +327,9 @@ class Manga extends Model implements JsonApiSerializable
     $this->updatedAt = $updatedAt;
   }
 
-  public function setCanonicalTitle($canonicalTitle)
+  public function setTitle($title)
   {
-    $this->canonicalTitle = $canonicalTitle;
+    $this->title = $title;
   }
 
   public function setTitleEn($title_en)
@@ -450,7 +450,7 @@ class Manga extends Model implements JsonApiSerializable
 
   public function setCoverImage($coverImage)
   {
-    $this->slug = Manga::get($this->id)->slug ?? Slug::generate($this->canonicalTitle);
+    $this->slug = Manga::get($this->id)->slug ?? Slug::generate($this->title);
     $coverImagePath = $_SERVER['DOCUMENT_ROOT'] . '/images/manga/cover/' . $this->slug . '.jpg';
 
     if ($coverImage === null) {
@@ -486,7 +486,7 @@ class Manga extends Model implements JsonApiSerializable
 
   public function setBannerImage($bannerImage)
   {
-    $this->slug = Manga::get($this->id)->slug ?? Slug::generate($this->canonicalTitle);
+    $this->slug = Manga::get($this->id)->slug ?? Slug::generate($this->title);
     $coverImagePath = $_SERVER['DOCUMENT_ROOT'] . '/images/manga/banner/' . $this->slug . '.jpg';
 
     if ($bannerImage === null) {
@@ -642,7 +642,8 @@ class Manga extends Model implements JsonApiSerializable
     return [
       'createdAt' => $this->createdAt,
       'updatedAt' => $this->updatedAt,
-      'canonicalTitle' => $this->canonicalTitle,
+      'canonicalTitle' => $this->title, // TODO: DEPRECATED use title
+      'title' => $this->title,
       'titles' => [
         'fr' => $this->title_fr,
         'en' => $this->title_en,

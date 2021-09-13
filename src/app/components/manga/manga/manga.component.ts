@@ -29,7 +29,7 @@ export class MangaComponent implements OnInit {
       }).subscribe(
         response => {
           this.manga = response.data;
-          this.titleService.setTitle(`${this.manga.canonicalTitle} | MangaJap`);
+          this.titleService.setTitle(`${this.manga.title} | MangaJap`);
         },
         error => this.router.navigate(['**'], { skipLocationChange: true })
       );

@@ -8,8 +8,12 @@ class OAuth {
 
         $authorizationHeader = Header::getAuthorization();
 
-        if (preg_match('@Bearer\s([a-zA-Z0-9-._~+/]{64})@', $authorizationHeader, $token)) {
-            return $token[1];
+        if (preg_match('@Bearer\s([a-zA-Z0-9-._~+/]{28,64})@', $authorizationHeader, $token)) {
+          if (strlen($token[1]) === 64) {
+            throw new Exception('Invalid version app');
+          }
+          
+          return $token[1];
         }
 
         return null;

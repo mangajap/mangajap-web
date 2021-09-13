@@ -13,7 +13,7 @@ class Genre extends Model implements JsonApiSerializable {
     public $id;
     public $createdAt;
     public $updatedAt;
-    public $title_fr;
+    public $title;
     public $description;
 
 
@@ -24,7 +24,7 @@ class Genre extends Model implements JsonApiSerializable {
 
         $this->setColumnMap([
             'id' => 'genre_id',
-            'title_fr' => 'genre_title_fr',
+            'title' => 'genre_title_fr',
             'description' => 'genre_description',
             'createdAt' => 'genre_createdat',
             'updatedAt' => 'genre_updatedat',
@@ -33,7 +33,7 @@ class Genre extends Model implements JsonApiSerializable {
         $this->setPrimaryKey('id');
 
         $this->setAttributes([
-            'title_fr',
+            'title',
             'description',
             'createdAt',
             'updatedAt',
@@ -41,7 +41,7 @@ class Genre extends Model implements JsonApiSerializable {
 
         $this->setDataTypes([
             'id' => Column::TYPE_INT,
-            'title_fr' => Column::TYPE_TINYTEXT,
+            'title' => Column::TYPE_TINYTEXT,
             'description' => Column::TYPE_TEXT,
             'createdAt' => Column::TYPE_DATETIME,
             'updatedAt' => Column::TYPE_DATETIME,
@@ -178,16 +178,12 @@ class Genre extends Model implements JsonApiSerializable {
         $this->updatedAt = $updatedAt;
     }
 
-    public function getTitleFr() {
-        return $this->title_fr;
+    public function getTitle() {
+        return $this->title;
     }
 
-    public function setTitleFr($title_fr) {
-        $this->title_fr = $title_fr;
-    }
-
-    public function setTitles($titles) {
-        $this->title_fr = $titles->fr;
+    public function setTitle($title) {
+        $this->title = $title;
     }
 
     public function getDescription() {
@@ -211,9 +207,9 @@ class Genre extends Model implements JsonApiSerializable {
         return [
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
-            'title' => $this->title_fr,
-            'titles' => [
-                'fr' => $this->title_fr,
+            'title' => $this->title,
+            'titles' => [ // TODO: DEPRECATED use title
+                'fr' => $this->title,
             ],
             'description' => $this->description,
         ];

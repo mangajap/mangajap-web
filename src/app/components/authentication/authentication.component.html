@@ -1,15 +1,15 @@
 <div *ngIf="isLogin && !isRegister">
   <form (ngSubmit)="onLogin()">
-    <input type="text" [(ngModel)]="user.pseudo" placeholder="Pseudo" name="pseudo">
-    <input type="password" [(ngModel)]="user.password" placeholder="Password" name="password">
+    <input type="text" [(ngModel)]="email" placeholder="Pseudo" name="pseudo">
+    <input type="password" [(ngModel)]="password" placeholder="Password" name="password">
     <input type="submit" value="Connexion">
   </form>
 </div>
 <div *ngIf="isRegister && !isLogin">
   <form (ngSubmit)="onRegister()">
     <input type="text" [(ngModel)]="user.pseudo" placeholder="Pseudo" name="pseudo">
-    <input type="text" [(ngModel)]="user.email" placeholder="Email" name="email">
-    <input type="password" [(ngModel)]="user.password" placeholder="Password" name="password">
+    <input type="text" [(ngModel)]="email" placeholder="Email" name="email">
+    <input type="password" [(ngModel)]="password" placeholder="Password" name="password">
     <input type="submit" value="Inscription">
   </form>
 </div>

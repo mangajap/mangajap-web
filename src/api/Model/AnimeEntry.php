@@ -286,6 +286,9 @@ class AnimeEntry extends Model implements JsonApiSerializable {
     }
 
     public function setStartedAt($startedAt) {
+      if (strpos($startedAt, "T") !== false) {
+          $startedAt = date('Y-m-d H:i:s', strtotime($startedAt));
+      }
         $this->startedAt = $startedAt;
     }
 
@@ -294,6 +297,9 @@ class AnimeEntry extends Model implements JsonApiSerializable {
     }
 
     public function setFinishedAt($finishedAt) {
+      if (strpos($finishedAt, "T") !== false) {
+          $finishedAt = date('Y-m-d H:i:s', strtotime($finishedAt));
+      }
         $this->finishedAt = $finishedAt;
     }
 

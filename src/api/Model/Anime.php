@@ -14,7 +14,7 @@ class Anime extends Model implements JsonApiSerializable {
     public $id;
     public $createdAt;
     public $updatedAt;
-    public $canonicalTitle;
+    public $title;
     public $title_fr;
     public $title_en;
     public $title_en_jp;
@@ -47,7 +47,7 @@ class Anime extends Model implements JsonApiSerializable {
 
         $this->setColumnMap([
             'id' => 'anime_id',
-            'canonicalTitle' => 'anime_title',
+            'title' => 'anime_title',
             'title_fr' => 'anime_title_fr',
             'title_en' => 'anime_title_en',
             'title_en_jp' => 'anime_title_en_jp',
@@ -76,7 +76,7 @@ class Anime extends Model implements JsonApiSerializable {
         $this->setPrimaryKey('id');
 
         $this->setAttributes([
-            'canonicalTitle',
+            'title',
             'title_fr',
             'title_en',
             'title_en_jp',
@@ -104,7 +104,7 @@ class Anime extends Model implements JsonApiSerializable {
 
         $this->setDataTypes([
             'id' => Column::TYPE_INT,
-            'canonicalTitle' => Column::TYPE_TINYTEXT,
+            'title' => Column::TYPE_TINYTEXT,
             'title_fr' => Column::TYPE_TINYTEXT,
             'title_en' => Column::TYPE_TINYTEXT,
             'title_en_jp' => Column::TYPE_TINYTEXT,
@@ -231,7 +231,7 @@ class Anime extends Model implements JsonApiSerializable {
 
     public function beforeCreate(): bool {
         if (!isset($this->slug))
-            $this->slug = Slug::generate($this->canonicalTitle);
+            $this->slug = Slug::generate($this->title);
 
         return true;
     }
@@ -249,8 +249,7 @@ class Anime extends Model implements JsonApiSerializable {
     }
 
     public function afterGet() {
-        $this->getWriteConnection()->execute(
-            "
+        $this->getWriteConnection()->execute("
             UPDATE
                 anime
             SET
@@ -465,12 +464,12 @@ class Anime extends Model implements JsonApiSerializable {
         $this->updatedAt = $updatedAt;
     }
 
-    public function getCanonicalTitle() {
-        return $this->canonicalTitle;
+    public function getTitle() {
+        return $this->title;
     }
 
-    public function setCanonicalTitle($canonicalTitle) {
-        $this->canonicalTitle = $canonicalTitle;
+    public function setTitle($title) {
+        $this->title = $title;
     }
 
     public function getTitleEn() {
@@ -530,7 +529,7 @@ class Anime extends Model implements JsonApiSerializable {
     }
 
     public function setCoverImage($coverImage) {
-        $this->slug = Anime::get($this->id)->slug ?? Slug::generate($this->canonicalTitle);
+        $this->slug = Anime::get($this->id)->slug ?? Slug::generate($this->title);
         $coverImagePath = $_SERVER['DOCUMENT_ROOT'] . '/images/anime/cover/'.$this->slug.'.jpg';
 
         if ($coverImage === null) {
@@ -696,7 +695,8 @@ class Anime extends Model implements JsonApiSerializable {
         return [
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
-            'canonicalTitle' => $this->canonicalTitle,
+            'canonicalTitle' => $this->title, // TODO: DEPRECATED use title
+            'title' => $this->title,
             'titles' => [
                 'fr' => $this->title_fr,
                 'en' => $this->title_en,

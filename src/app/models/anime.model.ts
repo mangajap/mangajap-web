@@ -39,7 +39,7 @@ enum AnimeType {
 export class Anime extends JsonApiModel {
   @JsonApiAttribute() createdAt: string;
   @JsonApiAttribute() updatedAt: string;
-  @JsonApiAttribute() canonicalTitle: string;
+  @JsonApiAttribute() title: string;
   @JsonApiAttribute() titles: Titles = {
     fr: undefined,
     en: undefined,

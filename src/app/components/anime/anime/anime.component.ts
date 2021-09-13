@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Anime } from 'src/app/models/anime.model';
 import { MangajapApiService } from 'src/app/services/mangajap-api.service';
-import { JsonApiParams } from 'src/app/utils/json-api/json-api-params';
 
 @Component({
   selector: 'app-anime',
@@ -28,7 +27,7 @@ export class AnimeComponent implements OnInit {
         // include: ["episodes", "genres", "themes", "staff.people", "franchise.destination"],
       }).subscribe(response => {
         this.anime = response.data;
-        this.titleService.setTitle(`${this.anime.canonicalTitle} | MangaJap`);
+        this.titleService.setTitle(`${this.anime.title} | MangaJap`);
       });
     }
   }

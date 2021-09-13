@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
-import { MangajapApiService } from '../services/mangajap-api.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -9,16 +10,18 @@ import { MangajapApiService } from '../services/mangajap-api.service';
 export class IsLoggedGuard implements CanActivate {
 
   constructor(
-    private mangajapApiService: MangajapApiService
+    private firebaseAuth: AngularFireAuth,
   ) { }
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.mangajapApiService.apiToken !== '' &&
-      this.mangajapApiService.apiToken !== 'null' &&
-      this.mangajapApiService.apiToken !== null;
+    return this.firebaseAuth.authState.pipe(
+      map(user => {
+        return !!user;
+      })
+    );
   }
 
 }

@@ -9,7 +9,7 @@ import { Title } from '@angular/platform-browser';
 export class HomeComponent implements OnInit {
 
   constructor(
-    private titleService: Title
+    private titleService: Title,
   ) { }
 
   ngOnInit(): void {

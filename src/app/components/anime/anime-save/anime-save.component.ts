@@ -47,12 +47,12 @@ export class AnimeSaveComponent implements OnInit {
 
     Genre.findAll({
       limit: 1000,
-      sort: "title_fr"
+      sort: "title"
     }).subscribe(response => this.genres = response.data);
 
     Theme.findAll({
       limit: 1000,
-      sort: "title_fr"
+      sort: "title"
     }).subscribe(response => this.themes = response.data);
 
     const id = +this.route.snapshot.paramMap.get('id');
@@ -61,7 +61,7 @@ export class AnimeSaveComponent implements OnInit {
         include: ["episodes", "genres", "themes", "staff.people", "franchise.destination"],
       }).subscribe(response => {
         this.anime = response.data;
-        this.titleService.setTitle(`${this.anime.canonicalTitle} - Modification | MangaJap`);
+        this.titleService.setTitle(`${this.anime.title} - Modification | MangaJap`);
       });
     }
   }
@@ -99,9 +99,11 @@ export class AnimeSaveComponent implements OnInit {
       }
     }
 
-    this.anime.episodes.sort((a, b) => a["seasonNumber"] - b["seasonNumber"] || a["relativeNumber"] - b["relativeNumber"]);
+    this.anime.episodes.sort((a, b) => a.seasonNumber - b.seasonNumber || a.relativeNumber - b.relativeNumber);
 
     this.anime.episodes.forEach((episode, index) => episode.number = index + 1);
+
+    this.anime.episodeCount = this.anime.episodes.length;
   }
 
   addGenre() {

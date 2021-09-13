@@ -1,42 +1,35 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
+import { Injectable } from "@angular/core";
 import { Observable, throwError } from "rxjs";
 import { map, catchError } from "rxjs/operators";
-import { environment } from "src/environments/environment";
-import { JsonApiErrorConverter } from "./converter/json-api-error.converter";
-import { JsonApiRequestConverter } from "./converter/json-api-request-converter";
-import { JsonApiResponse, JsonApiResponseConverter } from "./converter/json-api-response-converter";
-import JsonApiModel, { JsonApiModelMeta } from "./json-api-model";
-import { JsonApiParams } from "./json-api-params";
+import JsonApi, { JsonApiResponse, ModelType } from "./json-api";
+import JsonApiConfig from "./json-api-config";
+import JsonApiModel from "./json-api-model";
 
-interface JsonApiConfig {
-  baseUrl: string,
-  models: {
-    [type: string]: ModelType<any>
-  },
-  headers?: HttpHeaders | {
-    [header: string]: string | string[]
-  },
+export interface JsonApiParams {
+  include?: string | string[];
+  fields?: {
+    [type: string]: string | string[];
+  };
+  sort?: string | string[];
+  limit?: number;
+  offset?: number;
+  filter?: {
+    [type: string]: string | string[];
+  };
 }
 
-export type ModelType<T extends JsonApiModel> = new () => T;
+@Injectable({
+  providedIn: 'root'
+})
+export default class JsonApiService {
 
-export class JsonApiService {
-
-  private _config: JsonApiConfig;
-  public get config(): JsonApiConfig {
-    return this._config;
-  }
-  public set config(value: JsonApiConfig) {
-    this._config = value;
-    for (const type of Object.keys(value.models)) {
-      const jsonApi = value.models[type].prototype.jsonApi || {};
+  constructor(protected http: HttpClient) {
+    for (const [type, model] of Object.entries(JsonApi.models)) {
+      const jsonApi: JsonApiConfig = model.prototype.jsonApi || {};
       jsonApi.service = this;
     }
-
-    JsonApiResponseConverter.models = value.models;
   }
-
-  constructor(protected http: HttpClient) { }
 
 
   public findAll<T extends JsonApiModel>(
@@ -44,7 +37,7 @@ export class JsonApiService {
     params?: JsonApiParams,
     headers?: HttpHeaders | { [header: string]: string | string[] }
   ): Observable<JsonApiResponse<T[]>> {
-    const url = JsonApiService.buildUrl(modelType, this.config.baseUrl);
+    const url = JsonApiService.buildUrl(modelType);
     const options = this.buildOptions(headers, params);
 
     return this.http.get(url, options).pipe(
@@ -59,7 +52,7 @@ export class JsonApiService {
     params?: JsonApiParams,
     headers?: HttpHeaders | { [header: string]: string | string[] }
   ): Observable<JsonApiResponse<T>> {
-    const url = JsonApiService.buildUrl(modelType, this.config.baseUrl, id);
+    const url = JsonApiService.buildUrl(modelType, id);
     const options = this.buildOptions(headers, params);
 
     return this.http.get(url, options).pipe(
@@ -73,8 +66,8 @@ export class JsonApiService {
     headers?: HttpHeaders | { [header: string]: string | string[] }
   ): Observable<JsonApiResponse<T>> {
     const modelType = model.constructor as ModelType<T>;
-    const url = JsonApiService.buildUrl(modelType, this.config.baseUrl);
-    const body = JsonApiRequestConverter.convertRequest(model);
+    const url = JsonApiService.buildUrl(modelType);
+    const body = JsonApi.encode(model);
     const options = this.buildOptions(headers);
 
     return this.http.post(url, body, options).pipe(
@@ -88,8 +81,8 @@ export class JsonApiService {
     headers?: HttpHeaders | { [header: string]: string | string[] }
   ): Observable<JsonApiResponse<T>> {
     const modelType = model.constructor as ModelType<T>;
-    const url = JsonApiService.buildUrl(modelType, this.config.baseUrl, model.id);
-    const body = JsonApiRequestConverter.convertRequest(model);
+    const url = JsonApiService.buildUrl(modelType, model.id);
+    const body = JsonApi.encode(model);
     const options = this.buildOptions(headers);
 
     return this.http.patch(url, body, options).pipe(
@@ -103,7 +96,7 @@ export class JsonApiService {
     id: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
   ): Observable<Response> {
-    const url = JsonApiService.buildUrl(modelType, this.config.baseUrl, id);
+    const url = JsonApiService.buildUrl(modelType, id);
     const options = this.buildOptions(headers);
 
     return this.http.delete(url, options).pipe(
@@ -117,23 +110,12 @@ export class JsonApiService {
     body: any,
     modelType: ModelType<T>
   ): JsonApiResponse<T> {
-    if (!environment.production) {
-      const requestSQL = body.split(/\r?\n/).slice(0, -1).join('\n')
-      if (requestSQL !== "") {
-        let sql = localStorage.getItem('request_sql') || '';
-        sql += requestSQL + '\n';
-        localStorage.setItem('request_sql', sql);
-      }
-    }
-    body = body.split(/\r?\n/).pop();
-    
-    return JsonApiResponseConverter.convert(modelType, JSON.parse(body));
+    return JsonApi.decode(modelType, body);
   }
 
   private handleErrorResponse(err: any): Observable<any> {
     if (err instanceof HttpErrorResponse) {
-      const errors = JsonApiErrorConverter.convert(err.error)
-      return throwError(errors);
+      return throwError(err.error);
     }
 
     return throwError(err);
@@ -143,16 +125,15 @@ export class JsonApiService {
 
 
 
-  private static buildUrl<T extends JsonApiModel>(modelType: ModelType<T>, baseUrl: string, id?: string): string {
-    const jsonApi: JsonApiModelMeta = modelType.prototype.jsonApi;
+  private static buildUrl<T extends JsonApiModel>(modelType: ModelType<T>, id?: string): string {
+    const jsonApi: JsonApiConfig = modelType.prototype.jsonApi;
     const endpoint = jsonApi.config?.endpoint || jsonApi.schema.type;
 
-    return [baseUrl, endpoint, id].filter(x => x).join('/');
+    return [endpoint, id].filter(x => x).join('/');
   }
 
   private buildOptions(headers?: HttpHeaders | { [header: string]: string | string[] }, params?: JsonApiParams) {
     return {
-      headers: this.buildHeaders(headers),
       params: this.buildParams(params),
     }
   }
@@ -190,27 +171,5 @@ export class JsonApiService {
     }
 
     return httpParams;
-  }
-
-  private buildHeaders(headers: HttpHeaders | { [header: string]: string | string[] }): HttpHeaders {
-    let httpHeaders: HttpHeaders = new HttpHeaders();
-
-    if (this.config.headers instanceof HttpHeaders) {
-      httpHeaders = this.config.headers;
-    } else if (this.config.headers) {
-      httpHeaders = new HttpHeaders(this.config.headers);
-    }
-
-    if (headers instanceof HttpHeaders) {
-      for (const key of headers.keys()) {
-        httpHeaders = httpHeaders.set(key, headers[key]);
-      }
-    } else if (headers) {
-      for (const key in headers) {
-        httpHeaders = httpHeaders.set(key, headers[key])
-      }
-    }
-
-    return httpHeaders;
   }
 }

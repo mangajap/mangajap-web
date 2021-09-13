@@ -1,4 +1,4 @@
-import { JsonApiAttribute, JsonApiModelConfig, JsonApiRelationship, JsonApiType } from "../utils/json-api/json-api-annotations";
+import { JsonApiAttribute, JsonApiRelationship, JsonApiType } from "../utils/json-api/json-api-annotations";
 import JsonApiModel from "../utils/json-api/json-api-model";
 import { Manga } from "./manga.model";
 
@@ -9,10 +9,9 @@ interface Titles {
   ja_jp: string;
 }
 
-@JsonApiModelConfig({
+@JsonApiType("volumes", {
   endpoint: 'volumes'
 })
-@JsonApiType("volumes")
 export class Volume extends JsonApiModel {
   @JsonApiAttribute() createdAt: string;
   @JsonApiAttribute() updatedAt: string;

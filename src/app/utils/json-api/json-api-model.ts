@@ -1,24 +1,8 @@
 import { Observable } from "rxjs";
-import { JsonApiResponse } from "./converter/json-api-response-converter";
+import { JsonApiResponse } from "./json-api";
 import { JsonApiIdentifier } from "./json-api-body";
-import { JsonApiParams } from "./json-api-params";
-import { JsonApiService } from "./json-api.service";
-
-export interface JsonApiModelMeta {
-  schema: {
-    type: string;
-    attributes: {
-      [attribute: string]: string;
-    };
-    relationships: {
-      [relationship: string]: string;
-    };
-  };
-  service: JsonApiService;
-  config: {
-    endpoint?: string;
-  };
-}
+import JsonApiConfig from "./json-api-config";
+import { JsonApiParams } from "./json-api.service";
 
 export default abstract class JsonApiModel {
   id?: string;
@@ -27,7 +11,7 @@ export default abstract class JsonApiModel {
 
 
   identifier(): JsonApiIdentifier {
-    const jsonApi: JsonApiModelMeta = this.constructor.prototype.jsonApi;
+    const jsonApi: JsonApiConfig = this.constructor.prototype.jsonApi;
 
     return {
       type: jsonApi.schema.type,
@@ -45,13 +29,13 @@ export default abstract class JsonApiModel {
 
   
   public static findAll<T extends JsonApiModel>(this: new () => T, params?: JsonApiParams): Observable<JsonApiResponse<T[]>> {
-    const jsonApi: JsonApiModelMeta = this.prototype.jsonApi;
+    const jsonApi: JsonApiConfig = this.prototype.jsonApi;
 
     return jsonApi.service.findAll(this, params);
   }
 
   public static find<T extends JsonApiModel>(this: new () => T, id: string, params?: JsonApiParams): Observable<JsonApiResponse<T>> {
-    const jsonApi: JsonApiModelMeta = this.prototype.jsonApi;
+    const jsonApi: JsonApiConfig = this.prototype.jsonApi;
 
     return jsonApi.service.find(this, id, params);
   }
@@ -65,7 +49,7 @@ export default abstract class JsonApiModel {
   }
 
   public create(): Observable<JsonApiResponse<this>> {
-    const jsonApi: JsonApiModelMeta = this.constructor.prototype.jsonApi;
+    const jsonApi: JsonApiConfig = this.constructor.prototype.jsonApi;
 
     // TODO: le code marche bien cependant il faut que lorsque par exemple on créer un manga, son id est attribué à ses relations (volumes,...) (volume.manga = response.data)
     // jsonApi.service.create(this).pipe(
@@ -97,7 +81,7 @@ export default abstract class JsonApiModel {
 
 
   public update(): Observable<JsonApiResponse<this>> {
-    const jsonApi: JsonApiModelMeta = this.constructor.prototype.jsonApi;
+    const jsonApi: JsonApiConfig = this.constructor.prototype.jsonApi;
 
     return jsonApi.service.update(this);
   }

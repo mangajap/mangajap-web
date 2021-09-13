@@ -1,45 +1,35 @@
-import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpParams, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { from, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class MangaJapApiInterceptor implements HttpInterceptor {
 
+  constructor(
+    private firebaseAuth: AngularFireAuth,
+  ) { }
+
   intercept(httpRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (httpRequest.url.endsWith('/oauth/token')) {
-      httpRequest = httpRequest.clone({
-        body: this.queryParamsToString(httpRequest.body),
-      });
-    } else {
-      httpRequest = httpRequest.clone({
-        body: new HttpParams()
-          .set('data', JSON.stringify(httpRequest.body))
-          .set('REQUEST_METHOD', httpRequest.method)
-          .set('Authorization', httpRequest.headers.get('Authorization'))
-          .toString()
-      });
-    }
-
-    httpRequest = httpRequest.clone({
-      headers: new HttpHeaders({
-        'Content-Type': 'application/x-www-form-urlencoded',
-      }),
-      method: 'POST'
-    });
-
-    httpRequest = httpRequest.clone({ responseType: 'text' });
-
-    return next.handle(httpRequest);
+    return from(this.handle(httpRequest, next));
   }
 
+  private async handle(httpRequest: HttpRequest<any>, next: HttpHandler) {
+    const firebaseUser = await this.firebaseAuth.currentUser;
 
+    httpRequest = httpRequest.clone({
+      url: httpRequest.url.startsWith(environment.apiUrl) ? httpRequest.url : `${environment.apiUrl}/${httpRequest.url}`,
+      headers: new HttpHeaders({
+        Authorization: firebaseUser ? `Bearer ${firebaseUser.uid}` : '',
+      }),
+      body: {
+        data: httpRequest.body,
+        REQUEST_METHOD: httpRequest.method,
+      },
+      method: 'POST',
+    });
 
-  private queryParamsToString(params: any): string {
-    const keyValuePairs = [];
-    for (const key in params) {
-      keyValuePairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(params[key]));
-    }
-    return keyValuePairs.join('&');
+    return next.handle(httpRequest).toPromise();
   }
 }

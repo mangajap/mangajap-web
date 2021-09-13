@@ -1,29 +1,31 @@
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
-
+import { BrowserModule } from '@angular/platform-browser';
+import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { MangaJapApiInterceptor } from './services/mangajap-api.interceptor';
-import { HeaderComponent } from './components/common/header/header.component';
-import { FooterComponent } from './components/common/footer/footer.component';
-import { HomeComponent } from './components/home/home.component';
-import { MangaComponent } from './components/manga/manga/manga.component';
-import { MangaSaveComponent } from './components/manga/manga-save/manga-save.component';
-import { AnimeComponent } from './components/anime/anime/anime.component';
+import { PrivacyPolicyComponent } from './components/about/privacy-policy/privacy-policy.component';
+import { AnimeListComponent } from './components/anime/anime-list/anime-list.component';
 import { AnimeSaveComponent } from './components/anime/anime-save/anime-save.component';
+import { AnimeComponent } from './components/anime/anime/anime.component';
+import { AuthenticationComponent } from './components/authentication/authentication.component';
+import { FooterComponent } from './components/common/footer/footer.component';
+import { HeaderComponent } from './components/common/header/header.component';
+import { HomeComponent } from './components/home/home.component';
+import { MangaListComponent } from './components/manga/manga-list/manga-list.component';
+import { MangaSaveComponent } from './components/manga/manga-save/manga-save.component';
+import { MangaComponent } from './components/manga/manga/manga.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { ProfileComponent } from './components/profile/profile/profile.component';
+import { MangaJapApiInterceptor } from './services/mangajap-api.interceptor';
+import { EnumPipe } from './utils/pipes/enum.pipe';
+import { FilterPipe } from './utils/pipes/filter.pipe';
 import { GroupByPipe } from './utils/pipes/group-by.pipe';
 import { RepeatPipe } from './utils/pipes/repeat.pipe';
-import { FilterPipe } from './utils/pipes/filter.pipe';
-import { EnumPipe } from './utils/pipes/enum.pipe';
-import { MangaListComponent } from './components/manga/manga-list/manga-list.component';
-import { AnimeListComponent } from './components/anime/anime-list/anime-list.component';
-import { ProfileComponent } from './components/profile/profile/profile.component';
-import { PrivacyPolicyComponent } from './components/about/privacy-policy/privacy-policy.component';
-import { NotFoundComponent } from './components/not-found/not-found.component';
-import { AuthenticationComponent } from './components/authentication/authentication.component';
+
 
 @NgModule({
   declarations: [
@@ -50,7 +52,9 @@ import { AuthenticationComponent } from './components/authentication/authenticat
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: MangaJapApiInterceptor, multi: true },

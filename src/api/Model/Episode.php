@@ -252,7 +252,7 @@ class Episode extends Model implements JsonApiSerializable {
         return [
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
-            'canonicalTitle' => $this->title_fr,
+            'canonicalTitle' => $this->title_fr, // TODO: DEPRECATED use titles
             'titles' => [
                 'fr' => $this->title_fr,
                 'en' => $this->title_en,

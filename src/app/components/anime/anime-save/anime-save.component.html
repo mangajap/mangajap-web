@@ -7,7 +7,7 @@
           <label>Titre</label>
         </th>
         <td>
-          <input type="text" [(ngModel)]="anime.canonicalTitle">
+          <input type="text" [(ngModel)]="anime.title">
         </td>
       </tr>
 
@@ -181,12 +181,12 @@
             <div *ngFor="let genre of anime.genres">
               <div *ngIf="genre.id != undefined">
                 <select [(ngModel)]="genre.id">
-                  <option *ngFor="let g of genres" [value]="g.id">{{ g.titles.fr }}</option>
+                  <option *ngFor="let g of genres" [value]="g.id">{{ g.title }}</option>
                 </select>
                 <a href="javascript: void(0)" (click)="removeGenre(genre)">X</a>
               </div>
               <div *ngIf="genre.id == undefined">
-                <input type="text" [(ngModel)]="genre.titles.fr" placeholder="Nom français">
+                <input type="text" [(ngModel)]="genre.title" placeholder="Nom">
                 <input type="text" [(ngModel)]="genre.description" placeholder="Description">
                 <a href="javascript: void(0)" (click)="removeGenre(genre)">X</a>
               </div>
@@ -208,12 +208,12 @@
             <div *ngFor="let theme of anime.themes">
               <div *ngIf="theme.id != undefined">
                 <select [(ngModel)]="theme.id">
-                  <option *ngFor="let t of themes" [value]="t.id">{{ t.titles.fr }}</option>
+                  <option *ngFor="let t of themes" [value]="t.id">{{ t.title }}</option>
                 </select>
                 <a href="javascript: void(0)" (click)="removeTheme(theme)">X</a>
               </div>
               <div *ngIf="theme.id == undefined">
-                <input type="text" [(ngModel)]="theme.titles.fr" placeholder="Nom français">
+                <input type="text" [(ngModel)]="theme.title" placeholder="Nom">
                 <input type="text" [(ngModel)]="theme.description" placeholder="Description">
                 <a href="javascript: void(0)" (click)="removeTheme(theme)">X</a>
               </div>
@@ -279,10 +279,10 @@
               <input type="text" placeholder="Rechercher" (input)="onSearchFranchise($event.target.value)">
               <select [(ngModel)]="franchise.destination">
                 <option *ngIf="franchise.destination && !mediaQuery.includes(franchise.destination)" [ngValue]="franchise.destination">
-                  {{ franchise.destination.canonicalTitle }} ({{ franchise.destination.jsonApi.schema.type }})
+                  {{ franchise.destination.title }} ({{ franchise.destination.jsonApi.schema.type }})
                 </option>
                 <option *ngFor="let media of mediaQuery" [ngValue]="media">
-                  {{ media.canonicalTitle }} ({{ media.jsonApi.schema.type }})
+                  {{ media.title }} ({{ media.jsonApi.schema.type }})
                 </option>
               </select>
               <span> is a </span>

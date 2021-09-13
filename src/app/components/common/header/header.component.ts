@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { User } from 'src/app/models/user.model';
 import { MangajapApiService } from 'src/app/services/mangajap-api.service';
-import { JsonApiParams } from 'src/app/utils/json-api/json-api-params';
 
 @Component({
   selector: 'app-header',
@@ -12,19 +12,14 @@ export class HeaderComponent implements OnInit {
 
   user: User = null;
 
-  private timerSearch = null;
-
   constructor(
-    private mangajapApiService: MangajapApiService
+    private mangajapApiService: MangajapApiService,
+    private firebaseAuth: AngularFireAuth,
   ) { }
 
   ngOnInit(): void {
-    if (this.mangajapApiService.apiToken) this.user = new User();
-
-    this.mangajapApiService.apiToken$.subscribe(token => {
-      if (!token) {
-        this.user = null;
-      } else {
+    this.firebaseAuth.authState.subscribe(firebaseUser => {
+      if (firebaseUser) {
         User.findAll({
           filter: {
             self: "true"
@@ -37,11 +32,14 @@ export class HeaderComponent implements OnInit {
           }
           this.mangajapApiService.selfUser = this.user;
         });
+      } else {
+        this.user = null;
       }
-    })
+    });
   }
 
 
+  private timerSearch = null;
   onSearch(query: string) {
     if (this.timerSearch) {
       clearTimeout(this.timerSearch);
@@ -53,6 +51,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.mangajapApiService.logout();
+    this.firebaseAuth.signOut().then(() => {
+    });
   }
 }

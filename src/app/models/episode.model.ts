@@ -13,7 +13,6 @@ interface Titles {
 export class Episode extends JsonApiModel {
   @JsonApiAttribute() createdAt: string;
   @JsonApiAttribute() updatedAt: string;
-  @JsonApiAttribute() canonicalTitle: string;
   @JsonApiAttribute() titles: Titles = {
     fr: undefined,
     en: undefined,
