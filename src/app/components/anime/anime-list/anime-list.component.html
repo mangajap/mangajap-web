@@ -1,25 +1,21 @@
-<main>
+<div>
+  <input type="text" placeholder="Rechercher un anime" (input)="onSearch($event.target.value)">
+</div>
 
-  <div>
-    <input type="text" placeholder="Rechercher un anime" (input)="onSearch($event.target.value)">
-  </div>
+<div>
+  <a routerLink="/anime/add">Ajouter un anime</a>
+</div>
 
-  <div>
-    <a routerLink="/anime/add">Ajouter un anime</a>
-  </div>
+<div class="anime-grid">
+  <div *ngFor="let anime of animes" class="anime-item">
 
-  <div class="anime-grid">
-    <div *ngFor="let anime of animes" class="anime-item">
+    <a class="anime-link" routerLink="/anime/{{anime.id}}"></a>
 
-      <a class="anime-link" routerLink="/anime/{{anime.id}}"></a>
+    <img class="anime-cover" [src]="anime.coverImage" />
 
-      <img class="anime-cover" [src]="anime.coverImage" />
-
-      <div class="anime-title">
-        <span>{{ anime.title }}</span>
-      </div>
-
+    <div class="anime-title">
+      <span>{{ anime.title }}</span>
     </div>
-  </div>
 
-</main>
+  </div>
+</div>

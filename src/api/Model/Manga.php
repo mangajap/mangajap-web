@@ -469,8 +469,10 @@ class Manga extends Model implements JsonApiSerializable
   {
     if (isset($this->bannerImage))
       return $this->bannerImage;
-    else if (true)
+    else if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/images/manga/banner/' . $this->slug . '.jpg'))
       return 'http://mangajap.000webhostapp.com/images/manga/banner/' . $this->slug . '.jpg';
+    else if (true)
+      return null;
     else {
       $bannerImage = [];
 

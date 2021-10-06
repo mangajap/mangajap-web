@@ -9,10 +9,17 @@ import { Franchise } from 'src/app/models/franchise.model';
 import { Genre } from 'src/app/models/genre.model';
 import { Manga } from 'src/app/models/manga.model';
 import { People } from 'src/app/models/people.model';
+import Season from 'src/app/models/season.model';
 import { Staff } from 'src/app/models/staff.model';
 import { Theme } from 'src/app/models/theme.model';
 import { MangajapApiService } from 'src/app/services/mangajap-api.service';
-import { Base64 } from 'src/app/utils/base64/base64';
+import Base64 from 'src/app/utils/base64/base64';
+import Countries, { Country } from 'src/app/utils/countries/countries';
+
+// TODO:
+function range(start, end) {
+  return Array(end - start + 1).fill(0).map((_, idx) => start + idx)
+}
 
 @Component({
   selector: 'app-anime-save',
@@ -29,7 +36,7 @@ export class AnimeSaveComponent implements OnInit {
 
   mediaQuery: any[] = [];
 
-  animeOrigin = Anime.Origin;
+  countries: Country[] = Countries.getCountries();
   animeStatus = Anime.Status;
   animeType = Anime.AnimeType;
   staffRole = Staff.Role;
@@ -58,7 +65,7 @@ export class AnimeSaveComponent implements OnInit {
     const id = +this.route.snapshot.paramMap.get('id');
     if (id) {
       Anime.find(id.toString(), {
-        include: ["episodes", "genres", "themes", "staff.people", "franchise.destination"],
+        include: ["seasons.episodes", "genres", "themes", "staff.people", "franchise.destination"],
       }).subscribe(response => {
         this.anime = response.data;
         this.titleService.setTitle(`${this.anime.title} - Modification | MangaJap`);
@@ -67,43 +74,62 @@ export class AnimeSaveComponent implements OnInit {
   }
 
 
-  updateCover(file: File) {
-    Base64.encode(file, (base64) => this.anime.coverImage = base64);
+  onCoverImageChange(file: File | null) {
+    if (file) {
+      Base64.encode(file, (base64) => this.anime.coverImage = base64);
+    } else {
+      this.anime.coverImage = null;
+    }
   }
 
-  updateYoutubeVideo() {
+  onYoutubeVideoIdChange() {
     if (this.anime.youtubeVideoId.startsWith("http://") || this.anime.youtubeVideoId.startsWith("https://")) {
       const videoYoutubeId = new URL(this.anime.youtubeVideoId).searchParams.get("v");
       this.anime.youtubeVideoId = videoYoutubeId;
     }
   }
 
-  updateEpisodes(seasonNumber: number, episodeCount: number) {
-    const seasonEpisodes = this.anime.episodes.filter(episode => episode.seasonNumber === seasonNumber);
-
-    if (episodeCount < seasonEpisodes.length) {
-      seasonEpisodes
-        .filter(episode => episode.relativeNumber > episodeCount)
-        .forEach(episode => this.anime.episodes.splice(this.anime.episodes.indexOf(episode), 1));
+  onSeasonCountChange() {
+    if (this.anime.seasonCount < this.anime.seasons.length) {
+      this.anime.seasons.splice(
+        this.anime.seasonCount,
+        this.anime.seasons.length - this.anime.seasonCount
+      );
     } else {
-      for (let relativeNumber = 1; relativeNumber <= episodeCount; relativeNumber++) {
-        if (seasonEpisodes
-          .filter(episode => episode.relativeNumber === relativeNumber)
-          .length == 0) {
-          const episode = new Episode();
-          episode.seasonNumber = seasonNumber;
-          episode.relativeNumber = relativeNumber;
+      this.anime.seasons.push(...range(this.anime.seasons.length + 1, this.anime.seasonCount)
+        .map(number => {
+          const season = new Season();
+          season.number = number;
+          return season;
+        }));
+    }
+  }
 
-          this.anime.episodes.push(episode);
-        }
-      }
+  onSeasonEpisodeCountChange(season: Season) {
+    if (season.episodeCount < season.episodes.length) {
+      season.episodes.splice(
+        season.episodeCount,
+        season.episodes.length - season.episodeCount
+      );
+    } else {
+      season.episodes.push(...range(season.episodes.length + 1, season.episodeCount)
+        .map(relativeNumber => {
+          const episode = new Episode();
+          episode.seasonNumber = season.number;
+          episode.relativeNumber = relativeNumber;
+          return episode;
+        }));
     }
 
-    this.anime.episodes.sort((a, b) => a.seasonNumber - b.seasonNumber || a.relativeNumber - b.relativeNumber);
+    this.anime.seasons
+      .reduce((acc, season) => acc.concat(season.episodes), [] as Episode[])
+      .forEach((episode, i) => {
+        episode.number = i + 1;
+      });
 
-    this.anime.episodes.forEach((episode, index) => episode.number = index + 1);
-
-    this.anime.episodeCount = this.anime.episodes.length;
+    this.anime.episodeCount = this.anime.seasons
+      .reduce((acc, season) => acc.concat(season.episodes), [] as Episode[])
+      .length;
   }
 
   addGenre() {
@@ -164,14 +190,17 @@ export class AnimeSaveComponent implements OnInit {
   removeStaff(staff: Staff) {
     this.anime.staff.splice(this.anime.staff.indexOf(staff), 1);
   }
+  onStaffAdded(peopleIndex: string) {
+    const staff = new Staff();
+    staff.id = '';
+    staff.people = this.peoples[peopleIndex];
 
-  addFranchise() {
-    this.anime.franchise.push(new Franchise());
+    this.anime.staff.push(staff);
+    console.log(this.anime.staff)
   }
-  removeFranchise(franchise: Franchise) {
-    this.anime.franchise.splice(this.anime.franchise.indexOf(franchise), 1);
-  }
-  onSearchFranchise(query: string) {
+
+
+  onFranchiseSearch(query: string) {
     if (query === '') {
       this.mediaQuery = [];
       return;
@@ -193,137 +222,145 @@ export class AnimeSaveComponent implements OnInit {
         .filter(media => media.id !== this.anime.id && typeof media === typeof this.anime);
     });
   }
+  onFranchiseAdded(mediaIndex: string) {
+    const franchise = new Franchise();
+    franchise.destination = this.mediaQuery[mediaIndex];
+
+    this.anime.franchise.push(franchise);
+  }
+  removeFranchise(franchise: Franchise) {
+    this.anime.franchise.splice(this.anime.franchise.indexOf(franchise), 1);
+  }
+
 
 
   submit() {
-    if (!this.anime.id) {
-      this.createInfo();
+    if (!this.anime.exists()) {
+      this.createInfo()
+        .then(() => this.router.navigate(['/anime', this.anime.id]))
+        .catch(err => console.error(err));
     } else {
-      this.updateInfo();
+      this.updateInfo()
+        .then(() => this.router.navigate(['/anime', this.anime.id]))
+        .catch(err => console.error(err));
     }
   }
 
-  private createInfo() {
-    forkJoin(
-      []
-        .concat(of(1))
-        .concat(this.anime.genres?.filter(genre => !genre.exists()).map(genre => genre.save().pipe(
-          map(response => {
-            genre.id = response.data.id
-            return response
-          })
-        )))
-        .concat(this.anime.themes?.filter(theme => !theme.exists()).map(theme => theme.save().pipe(
-          map(response => {
-            theme.id = response.data.id
-            return response
-          })
-        )))
-    ).pipe(
-      switchMap(() => this.anime.save().pipe(
-        tap(response => this.anime.id = response.data.id),
-        mergeMap(() => forkJoin(
-          []
-            .concat(this.anime.episodes.map(episode => {
-              episode.anime = this.anime;
-              return episode.save();
-            }))
-            .concat(this.anime.staff.map(staff => {
-              staff.anime = this.anime;
-              if (!staff.people.id) {
-                return staff.people.save().pipe(
-                  mergeMap(peopleResponse => {
-                    staff.people = peopleResponse.data;
-                    return staff.save();
-                  })
-                );
-              } else {
-                return staff.save();
-              }
-            }))
-            .concat(this.anime.franchise.map(franchise => {
-              franchise.source = this.anime;
-              return franchise.save();
-            }))
-        ))
-      ))
-    ).subscribe({
-      next: value => console.log(value),
-      error: error => console.error(error),
-      complete: () => this.router.navigate(['/anime', this.anime.id])
-    });
+  private async createInfo() {
+    await Promise.all<any>([
+      ...this.anime.genres
+        .filter(genre => !genre.exists())
+        .map(genre => genre.save().toPromise()
+          .then(response => genre.id = response.data.id)
+        ),
+      ...this.anime.themes
+        .filter(theme => !theme.exists())
+        .map(theme => theme.save().toPromise()
+          .then(response => theme.id = response.data.id)
+        ),
+      ...this.anime.staff
+        .filter(staff => !staff.people.exists())
+        .map(staff => staff.people.save().toPromise()
+          .then(response => staff.people.id = response.data.id)
+        ),
+    ]);
+
+    await this.anime.save().toPromise()
+      .then(response => this.anime.id = response.data.id);
+
+    await Promise.all<any>([
+      ...this.anime.seasons
+        .map(season => {
+          season.anime = this.anime;
+          return season.save().toPromise()
+            .then(response => season.id = response.data.id)
+            .then(async () => {
+              return await Promise.all(season.episodes
+                .map(episode => {
+                  episode.season = season;
+                  episode.anime = this.anime;
+                  return episode;
+                })
+                .map(episode => episode.save().toPromise())
+              )
+            })
+        }),
+      ...this.anime.staff
+        .map(staff => {
+          staff.anime = this.anime;
+          return staff.save().toPromise();
+        }),
+      ...this.anime.franchise
+        .map(franchise => {
+          franchise.source = this.anime;
+          return franchise.save().toPromise();
+        }),
+    ]);
   }
 
-  private updateInfo() {
-    forkJoin(
-      []
-        .concat(of(1))
-        .concat(this.anime.genres?.filter(genre => !genre.exists()).map(genre => genre.save().pipe(
-          map(response => {
-            genre.id = response.data.id
-            return response
-          })
-        )))
-        .concat(this.anime.themes?.filter(theme => !theme.exists()).map(theme => theme.save().pipe(
-          map(response => {
-            theme.id = response.data.id
-            return response
-          })
-        )))
-    ).pipe(
-      mergeMap(() => forkJoin(
-        []
-          .concat(this.anime.save())
-          .concat(this.anime.episodes
-            .filter(episode => !episode.id || episode.hasChanged())
-            .map(episode => {
-              if (!episode.id) {
-                episode.anime = this.anime;
-                return episode.save();
-              } else if (episode.hasChanged()) {
-                return episode.save();
-              }
-            }))
-          .concat(this.anime.staff
-            .filter(staff => !staff.people.id || !staff.id || staff.hasChanged())
-            .map(staff => {
-              if (!staff.people.id) {
-                return staff.people.save().pipe(
-                  mergeMap(peopleResponse => {
-                    staff.people = peopleResponse.data;
-                    if (!staff.id) {
-                      staff.anime = this.anime;
-                      return staff.save();
-                    } else if (staff.hasChanged()) {
-                      return staff.save();
-                    }
-                  })
-                );
-              } else {
-                if (!staff.id) {
-                  staff.anime = this.anime;
-                  return staff.save();
-                } else if (staff.hasChanged()) {
-                  return staff.save();
-                }
-              }
-            }))
-          .concat(this.anime.franchise
-            .filter(franchise => !franchise.id || franchise.hasChanged())
-            .map(franchise => {
-              console.log(franchise.hasChanged());
-              if (!franchise.id) {
-                franchise.source = this.anime;
-                return franchise.save();
-              } else if (franchise.hasChanged()) {
-                return franchise.save();
-              }
-            }))
-      ))
-    ).subscribe(
-      value => console.log(value),
-      error => console.error(error),
-      () => this.router.navigate(['/anime', this.anime.id])
-    );
+  private async updateInfo() {
+    await Promise.all<any>([
+      ...this.anime.genres
+        ?.filter(genre => !genre.exists())
+        ?.map(genre => genre.save().toPromise()
+          .then(response => genre.id = response.data.id)
+        ),
+      ...this.anime.themes
+        ?.filter(theme => !theme.exists())
+        ?.map(theme => theme.save().toPromise()
+          .then(response => theme.id = response.data.id)
+        ),
+      ...this.anime.staff
+        ?.filter(staff => !staff.people.exists())
+        ?.map(staff => staff.people.save().toPromise()
+          .then(response => staff.people.id = response.data.id)
+        ),
+    ]);
+
+    await Promise.all<any>([
+      this.anime.save().toPromise(),
+      ...this.anime.seasons
+        .map(season => {
+          if (!season.exists()) {
+            season.anime = this.anime;
+          }
+          return season;
+        })
+        .map(season => {
+          return season.save().toPromise()
+            .then(response => season.id = response.data.id)
+            .then(async () => {
+              return await Promise.all(season.episodes
+                .filter(episode => !episode.exists() || episode.hasChanged())
+                .map(episode => {
+                  if (!episode.exists()) {
+                    episode.season = season;
+                    episode.anime = this.anime;
+                  }
+                  return episode;
+                })
+                .map(episode => episode.save().toPromise())
+              )
+            })
+        }),
+      ...this.anime.staff
+        .filter(staff => !staff.exists() || staff.hasChanged())
+        .map(staff => {
+          if (!staff.exists()) {
+            staff.anime = this.anime;
+          }
+          return staff;
+        })
+        .map(staff => staff.save().toPromise()),
+      ...this.anime.franchise
+        .filter(franchise => !franchise.exists() || franchise.hasChanged())
+        .map(franchise => {
+          if (!franchise.exists()) {
+            franchise.source = this.anime;
+          }
+          return franchise;
+        })
+        .map(franchise => franchise.save().toPromise())
+    ]);
   }
 }

@@ -12,7 +12,7 @@ import { Staff } from 'src/app/models/staff.model';
 import { Theme } from 'src/app/models/theme.model';
 import { Volume } from 'src/app/models/volume.model';
 import { MangajapApiService } from 'src/app/services/mangajap-api.service';
-import { Base64 } from 'src/app/utils/base64/base64';
+import Base64 from 'src/app/utils/base64/base64';
 
 @Component({
   selector: 'app-manga-save',

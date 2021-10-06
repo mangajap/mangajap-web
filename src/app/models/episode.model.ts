@@ -1,6 +1,7 @@
 import { JsonApiAttribute, JsonApiRelationship, JsonApiType } from "../utils/json-api/json-api-annotations";
 import JsonApiModel from "../utils/json-api/json-api-model";
 import { Anime } from "./anime.model";
+import Season from './season.model';
 
 interface Titles {
   fr: string;
@@ -26,4 +27,6 @@ export class Episode extends JsonApiModel {
   @JsonApiAttribute() episodeType: string
 
   @JsonApiRelationship() anime: Anime;
+  @JsonApiRelationship() season: Season;
+
 }

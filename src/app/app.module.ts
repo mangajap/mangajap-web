@@ -22,9 +22,12 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { ProfileComponent } from './components/profile/profile/profile.component';
 import { MangaJapApiInterceptor } from './services/mangajap-api.interceptor';
 import { EnumPipe } from './utils/pipes/enum.pipe';
+import { FilterNotPipe } from './utils/pipes/filter-not.pipe';
 import { FilterPipe } from './utils/pipes/filter.pipe';
 import { GroupByPipe } from './utils/pipes/group-by.pipe';
+import { InstanceOfPipe } from './utils/pipes/instance-of.pipe';
 import { RepeatPipe } from './utils/pipes/repeat.pipe';
+import { SafeUrlPipe } from './utils/pipes/safe-url.pipe';
 
 
 @NgModule({
@@ -40,7 +43,10 @@ import { RepeatPipe } from './utils/pipes/repeat.pipe';
     GroupByPipe,
     RepeatPipe,
     FilterPipe,
+    FilterNotPipe,
     EnumPipe,
+    SafeUrlPipe,
+    InstanceOfPipe,
     MangaListComponent,
     AnimeListComponent,
     ProfileComponent,
@@ -61,7 +67,10 @@ import { RepeatPipe } from './utils/pipes/repeat.pipe';
     GroupByPipe,
     RepeatPipe,
     FilterPipe,
-    EnumPipe
+    FilterNotPipe,
+    EnumPipe,
+    SafeUrlPipe,
+    InstanceOfPipe,
   ],
   bootstrap: [AppComponent]
 })

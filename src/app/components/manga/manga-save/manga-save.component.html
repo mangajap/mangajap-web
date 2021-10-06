@@ -1,259 +1,258 @@
-<main>
-  <table>
-    <tbody>
+<table>
+  <tbody>
 
-      <tr>
-        <th>Titre</th>
-        <td>
-          <input type="text" [(ngModel)]="manga.title">
-        </td>
-      </tr>
+    <tr>
+      <th>Titre</th>
+      <td>
+        <input type="text" [(ngModel)]="manga.title">
+      </td>
+    </tr>
 
-      <tr>
-        <th>Titre français</th>
-        <td>
-          <input type="text" [(ngModel)]="manga.titles.fr">
-        </td>
-      </tr>
+    <tr>
+      <th>Titre français</th>
+      <td>
+        <input type="text" [(ngModel)]="manga.titles.fr">
+      </td>
+    </tr>
 
-      <tr>
-        <th>Titre anglais</th>
-        <td>
-          <input type="text" [(ngModel)]="manga.titles.en">
-        </td>
-      </tr>
+    <tr>
+      <th>Titre anglais</th>
+      <td>
+        <input type="text" [(ngModel)]="manga.titles.en">
+      </td>
+    </tr>
 
-      <tr>
-        <th>Titre romanisé</th>
-        <td>
-          <input type="text" [(ngModel)]="manga.titles.en_jp">
-        </td>
-      </tr>
+    <tr>
+      <th>Titre romanisé</th>
+      <td>
+        <input type="text" [(ngModel)]="manga.titles.en_jp">
+      </td>
+    </tr>
 
-      <tr>
-        <th>Titre japonais</th>
-        <td>
-          <input type="text" [(ngModel)]="manga.titles.ja_jp">
-        </td>
-      </tr>
+    <tr>
+      <th>Titre japonais</th>
+      <td>
+        <input type="text" [(ngModel)]="manga.titles.ja_jp">
+      </td>
+    </tr>
 
-      <tr>
-        <th>Date de sortie</th>
-        <td>
-          <input type="date" [(ngModel)]="manga.startDate">
-        </td>
-      </tr>
+    <tr>
+      <th>Date de sortie</th>
+      <td>
+        <input type="date" [(ngModel)]="manga.startDate">
+      </td>
+    </tr>
 
-      <tr>
-        <th>Date de fin</th>
-        <td>
-          <input type="date" [(ngModel)]="manga.endDate">
-        </td>
-      </tr>
+    <tr>
+      <th>Date de fin</th>
+      <td>
+        <input type="date" [(ngModel)]="manga.endDate">
+      </td>
+    </tr>
 
-      <tr>
-        <th>Pays</th>
-        <td>
-          <select [(ngModel)]="manga.origin">
-            <option *ngFor="let origin of mangaOrigin | enum" [value]="origin.key">{{ origin.value }}</option>
-          </select>
-        </td>
-      </tr>
+    <tr>
+      <th>Pays</th>
+      <td>
+        <select [(ngModel)]="manga.origin">
+          <option *ngFor="let origin of mangaOrigin | enum" [value]="origin.key">{{ origin.value }}</option>
+        </select>
+      </td>
+    </tr>
 
-      <tr>
-        <th>Status de publication</th>
-        <td>
-          <select [(ngModel)]="manga.status">
-            <option *ngFor="let status of mangaStatus | enum" [value]="status.key">{{status.value}}</option>
-          </select>
-        </td>
-      </tr>
+    <tr>
+      <th>Status de publication</th>
+      <td>
+        <select [(ngModel)]="manga.status">
+          <option *ngFor="let status of mangaStatus | enum" [value]="status.key">{{status.value}}</option>
+        </select>
+      </td>
+    </tr>
 
-      <tr>
-        <th>Type</th>
-        <td>
-          <select [(ngModel)]="manga.mangaType">
-            <option *ngFor="let type of mangaType | enum" [value]="type.key">{{type.value}}</option>
-          </select>
-        </td>
-      </tr>
+    <tr>
+      <th>Type</th>
+      <td>
+        <select [(ngModel)]="manga.mangaType">
+          <option *ngFor="let type of mangaType | enum" [value]="type.key">{{type.value}}</option>
+        </select>
+      </td>
+    </tr>
 
-      <tr>
-        <th>Nombre de volumes</th>
-        <td>
-          <input type="number" [(ngModel)]="manga.volumeCount" (ngModelChange)="updateVolumes()">
-          <div id="volume-container" style="max-height: 600px; overflow-y: auto">
-            <div *ngFor="let volume of manga.volumes">
-              <span>{{ volume.number }}</span>
-              <input type="text" [(ngModel)]="volume.titles.fr" placeholder="Titre fr">
-              <input type="text" [(ngModel)]="volume.titles.en" placeholder="Titre en">
-              <input type="text" [(ngModel)]="volume.titles.en_jp" placeholder="Titre en_jp">
-              <input type="text" [(ngModel)]="volume.titles.ja_jp" placeholder="Titre ja_jp">
-              <input type="number" [(ngModel)]="volume.startChapter" placeholder="Start chapter">
-              <input type="number" [(ngModel)]="volume.endChapter" placeholder="End chapter">
-              <input type="date" [(ngModel)]="volume.published" placeholder="Date de publication">
+    <tr>
+      <th>Nombre de volumes</th>
+      <td>
+        <input type="number" [(ngModel)]="manga.volumeCount" (ngModelChange)="updateVolumes()">
+        <div id="volume-container" style="max-height: 600px; overflow-y: auto">
+          <div *ngFor="let volume of manga.volumes">
+            <span>{{ volume.number }}</span>
+            <input type="text" [(ngModel)]="volume.titles.fr" placeholder="Titre fr">
+            <input type="text" [(ngModel)]="volume.titles.en" placeholder="Titre en">
+            <input type="text" [(ngModel)]="volume.titles.en_jp" placeholder="Titre en_jp">
+            <input type="text" [(ngModel)]="volume.titles.ja_jp" placeholder="Titre ja_jp">
+            <input type="number" [(ngModel)]="volume.startChapter" placeholder="Start chapter">
+            <input type="number" [(ngModel)]="volume.endChapter" placeholder="End chapter">
+            <input type="date" [(ngModel)]="volume.published" placeholder="Date de publication">
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Nombre de chapitres</th>
+      <td>
+        <input type="number" [(ngModel)]="manga.chapterCount">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Synopsis</th>
+      <td>
+        <textarea rows="8" cols="33" [(ngModel)]="manga.synopsis"></textarea>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Image</th>
+      <td>
+        <img [src]="manga.coverImage" alt="coverImage">
+        <input type="file" accept="image/*" (change)="updateCover($event.target.files[0])">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Bannière</th>
+      <td>
+        <img [src]="manga.bannerImage" alt="bannerImage">
+        <input type="file" accept="image/*" (change)="updateBanner($event.target.files[0])">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Genres</th>
+      <td>
+        <div id="genre-container">
+          <div *ngFor="let genre of manga.genres">
+            <div *ngIf="genre.id != undefined">
+              <select [(ngModel)]="genre.id">
+                <option *ngFor="let g of genres" [value]="g.id">{{ g.title }}</option>
+              </select>
+              <a href="javascript: void(0)" (click)="removeGenre(genre)">X</a>
+            </div>
+            <div *ngIf="genre.id == undefined">
+              <input type="text" [(ngModel)]="genre.title" placeholder="Nom">
+              <input type="text" [(ngModel)]="genre.description" placeholder="Description">
+              <a href="javascript: void(0)" (click)="removeGenre(genre)">X</a>
             </div>
           </div>
-        </td>
-      </tr>
+        </div>
+        <p>
+          <a href="javascript: void(0)" (click)="addGenre()">+ Ajouter un genre</a>
+          <br />
+          Si le genre n'est pas sur le site, <a href="javascript: void(0)" (click)="createGenre()">merci de le
+            créer</a>.
+        </p>
+      </td>
+    </tr>
 
-      <tr>
-        <th>Nombre de chapitres</th>
-        <td>
-          <input type="number" [(ngModel)]="manga.chapterCount">
-        </td>
-      </tr>
-
-      <tr>
-        <th>Synopsis</th>
-        <td>
-          <textarea rows="8" cols="33" [(ngModel)]="manga.synopsis"></textarea>
-        </td>
-      </tr>
-
-      <tr>
-        <th>Image</th>
-        <td>
-          <img [src]="manga.coverImage" alt="coverImage">
-          <input type="file" accept="image/*" (change)="updateCover($event.target.files[0])">
-        </td>
-      </tr>
-
-      <tr>
-        <th>Bannière</th>
-        <td>
-          <img [src]="manga.bannerImage" alt="bannerImage">
-          <input type="file" accept="image/*" (change)="updateBanner($event.target.files[0])">
-        </td>
-      </tr>
-
-      <tr>
-        <th>Genres</th>
-        <td>
-          <div id="genre-container">
-            <div *ngFor="let genre of manga.genres">
-              <div *ngIf="genre.id != undefined">
-                <select [(ngModel)]="genre.id">
-                  <option *ngFor="let g of genres" [value]="g.id">{{ g.title }}</option>
-                </select>
-                <a href="javascript: void(0)" (click)="removeGenre(genre)">X</a>
-              </div>
-              <div *ngIf="genre.id == undefined">
-                <input type="text" [(ngModel)]="genre.title" placeholder="Nom">
-                <input type="text" [(ngModel)]="genre.description" placeholder="Description">
-                <a href="javascript: void(0)" (click)="removeGenre(genre)">X</a>
-              </div>
+    <tr>
+      <th>Thèmes</th>
+      <td>
+        <div id="theme-container">
+          <div *ngFor="let theme of manga.themes">
+            <div *ngIf="theme.id != undefined">
+              <select [(ngModel)]="theme.id">
+                <option *ngFor="let t of themes" [value]="t.id">{{ t.title }}</option>
+              </select>
+              <a href="javascript: void(0)" (click)="removeTheme(theme)">X</a>
+            </div>
+            <div *ngIf="theme.id == undefined">
+              <input type="text" [(ngModel)]="theme.title" placeholder="Nom">
+              <input type="text" [(ngModel)]="theme.description" placeholder="Description">
+              <a href="javascript: void(0)" (click)="removeTheme(theme)">X</a>
             </div>
           </div>
-          <p>
-            <a href="javascript: void(0)" (click)="addGenre()">+ Ajouter un genre</a>
-            <br />
-            Si le genre n'est pas sur le site, <a href="javascript: void(0)" (click)="createGenre()">merci de le
-              créer</a>.
-          </p>
-        </td>
-      </tr>
+        </div>
+        <p>
+          <a href="javascript: void(0)" (click)="addTheme()">+ Ajouter un thème</a>
+          <br />
+          Si le thème n'est pas sur le site, <a href="javascript: void(0)" (click)="createTheme()">merci de le
+            créer</a>.
+        </p>
+      </td>
+    </tr>
 
-      <tr>
-        <th>Thèmes</th>
-        <td>
-          <div id="theme-container">
-            <div *ngFor="let theme of manga.themes">
-              <div *ngIf="theme.id != undefined">
-                <select [(ngModel)]="theme.id">
-                  <option *ngFor="let t of themes" [value]="t.id">{{ t.title }}</option>
-                </select>
-                <a href="javascript: void(0)" (click)="removeTheme(theme)">X</a>
-              </div>
-              <div *ngIf="theme.id == undefined">
-                <input type="text" [(ngModel)]="theme.title" placeholder="Nom">
-                <input type="text" [(ngModel)]="theme.description" placeholder="Description">
-                <a href="javascript: void(0)" (click)="removeTheme(theme)">X</a>
-              </div>
-            </div>
-          </div>
-          <p>
-            <a href="javascript: void(0)" (click)="addTheme()">+ Ajouter un thème</a>
-            <br />
-            Si le thème n'est pas sur le site, <a href="javascript: void(0)" (click)="createTheme()">merci de le
-              créer</a>.
-          </p>
-        </td>
-      </tr>
-
-      <tr>
-        <th>Staff</th>
-        <td>
-          <div id="staff-container">
-            <div *ngFor="let staff of manga.staff">
-              <div *ngIf="staff.id != undefined">
-                <input type="text" placeholder="Rechercher" (input)="onSearchPeople($event.target.value)">
-                <select [(ngModel)]="staff.people">
-                  <option *ngIf="staff.people.id && !peoples.includes(staff.people)" [ngValue]="staff.people">
-                    {{ staff.people.firstName }} {{ staff.people.lastName }} / {{ staff.people.pseudo }}
-                  </option>
-                  <option *ngFor="let p of peoples" [ngValue]="p">
-                    {{ p.firstName }} {{ p.lastName }} / {{ p.pseudo }}
-                  </option>
-                </select>
-                <select [(ngModel)]="staff.role">
-                  <option *ngFor="let role of staffRole | enum" [value]="role.key">{{ role.value }}</option>
-                </select>
-                <a href="javascript: void(0)" (click)="removeStaff(staff)">X</a>
-              </div>
-              <div *ngIf="staff.id == undefined">
-                <input type="text" [(ngModel)]="staff.people.firstName" placeholder="Prénom">
-                <input type="text" [(ngModel)]="staff.people.lastName" placeholder="Nom">
-                <input type="text" [(ngModel)]="staff.people.pseudo" placeholder="Pseudo">
-                <select [(ngModel)]="staff.role">
-                  <option *ngFor="let role of staffRole | enum" [value]="role.key">{{ role.value }}</option>
-                </select>
-                <a href="javascript: void(0)" (click)="removeStaff(staff)">X</a>
-              </div>
-            </div>
-          </div>
-          <p>
-            <a href="javascript: void(0)" (click)="addStaff()">+ Ajouter un staff</a>
-            <br />
-            Si la personne n'est pas sur le site, <a href="javascript: void(0)" (click)="createStaff()">merci de le
-              créer</a>.
-          </p>
-        </td>
-      </tr>
-
-      <tr>
-        <th>Franchise</th>
-        <td>
-          <div id="franchise-container">
-            <div *ngFor="let franchise of manga.franchise">
-              <input type="text" placeholder="Rechercher" (input)="onSearchFranchise($event.target.value)">
-              <select [(ngModel)]="franchise.destination">
-                <option *ngIf="franchise.destination && !mediaQuery.includes(franchise.destination)" [ngValue]="franchise.destination">
-                  {{ franchise.destination.title }} ({{ franchise.destination.jsonApi.schema.type }})
+    <tr>
+      <th>Staff</th>
+      <td>
+        <div id="staff-container">
+          <div *ngFor="let staff of manga.staff">
+            <div *ngIf="staff.id != undefined">
+              <input type="text" placeholder="Rechercher" (input)="onSearchPeople($event.target.value)">
+              <select [(ngModel)]="staff.people">
+                <option *ngIf="staff.people.id && !peoples.includes(staff.people)" [ngValue]="staff.people">
+                  {{ staff.people.firstName }} {{ staff.people.lastName }} / {{ staff.people.pseudo }}
                 </option>
-                <option *ngFor="let media of mediaQuery" [ngValue]="media">
-                  {{ media.title }} ({{ media.jsonApi.schema.type }})
+                <option *ngFor="let p of peoples" [ngValue]="p">
+                  {{ p.firstName }} {{ p.lastName }} / {{ p.pseudo }}
                 </option>
               </select>
-              <span> is a </span>
-              <select [(ngModel)]="franchise.role">
-                <option *ngFor="let role of franchiseRole | enum" [value]="role.key">{{ role.value }}</option>
+              <select [(ngModel)]="staff.role">
+                <option *ngFor="let role of staffRole | enum" [value]="role.key">{{ role.value }}</option>
               </select>
-              <a href="javascript: void(0)" (click)="removeFranchise(franchise)">X</a>
+              <a href="javascript: void(0)" (click)="removeStaff(staff)">X</a>
+            </div>
+            <div *ngIf="staff.id == undefined">
+              <input type="text" [(ngModel)]="staff.people.firstName" placeholder="Prénom">
+              <input type="text" [(ngModel)]="staff.people.lastName" placeholder="Nom">
+              <input type="text" [(ngModel)]="staff.people.pseudo" placeholder="Pseudo">
+              <select [(ngModel)]="staff.role">
+                <option *ngFor="let role of staffRole | enum" [value]="role.key">{{ role.value }}</option>
+              </select>
+              <a href="javascript: void(0)" (click)="removeStaff(staff)">X</a>
             </div>
           </div>
-          <p>
-            <a href="javascript: void(0)" (click)="addFranchise()">+ Ajouter une franchise</a>
-          </p>
-        </td>
-      </tr>
+        </div>
+        <p>
+          <a href="javascript: void(0)" (click)="addStaff()">+ Ajouter un staff</a>
+          <br />
+          Si la personne n'est pas sur le site, <a href="javascript: void(0)" (click)="createStaff()">merci de le
+            créer</a>.
+        </p>
+      </td>
+    </tr>
 
-      <tr>
-        <td colspan="2">
-          <input type="submit" (click)="submit()" value="Envoyer">
-        </td>
-      </tr>
+    <tr>
+      <th>Franchise</th>
+      <td>
+        <div id="franchise-container">
+          <div *ngFor="let franchise of manga.franchise">
+            <input type="text" placeholder="Rechercher" (input)="onSearchFranchise($event.target.value)">
+            <select [(ngModel)]="franchise.destination">
+              <option *ngIf="franchise.destination && !mediaQuery.includes(franchise.destination)"
+                [ngValue]="franchise.destination">
+                {{ franchise.destination.title }} ({{ franchise.destination.jsonApi.schema.type }})
+              </option>
+              <option *ngFor="let media of mediaQuery" [ngValue]="media">
+                {{ media.title }} ({{ media.jsonApi.schema.type }})
+              </option>
+            </select>
+            <span> is a </span>
+            <select [(ngModel)]="franchise.role">
+              <option *ngFor="let role of franchiseRole | enum" [value]="role.key">{{ role.value }}</option>
+            </select>
+            <a href="javascript: void(0)" (click)="removeFranchise(franchise)">X</a>
+          </div>
+        </div>
+        <p>
+          <a href="javascript: void(0)" (click)="addFranchise()">+ Ajouter une franchise</a>
+        </p>
+      </td>
+    </tr>
 
-    </tbody>
-  </table>
-</main>
+    <tr>
+      <td colspan="2">
+        <input type="submit" (click)="submit()" value="Envoyer">
+      </td>
+    </tr>
+
+  </tbody>
+</table>

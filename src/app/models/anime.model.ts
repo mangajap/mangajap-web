@@ -4,24 +4,9 @@ import { Episode } from "./episode.model"
 import { Franchise } from "./franchise.model"
 import { Genre } from "./genre.model"
 import { Review } from "./review.model"
+import Season from './season.model'
 import { Staff } from "./staff.model"
 import { Theme } from "./theme.model"
-
-interface Titles {
-  fr: string;
-  en: string;
-  en_jp: string;
-  ja_jp: string;
-}
-
-enum Origin {
-  jp = "Japon",
-  kr = "Corée du sud",
-  fr = "Français",
-  us = "Etats-Unis",
-  cn = "Chine",
-  hk = "Hong Kong",
-}
 
 enum Status {
   airing = "En cours",
@@ -37,44 +22,112 @@ enum AnimeType {
 
 @JsonApiType("anime")
 export class Anime extends JsonApiModel {
-  @JsonApiAttribute() createdAt: string;
-  @JsonApiAttribute() updatedAt: string;
-  @JsonApiAttribute() title: string;
-  @JsonApiAttribute() titles: Titles = {
-    fr: undefined,
-    en: undefined,
-    en_jp: undefined,
-    ja_jp: undefined
-  };
-  @JsonApiAttribute() slug: string;
-  @JsonApiAttribute() synopsis: string;
-  @JsonApiAttribute() startDate: string;
-  @JsonApiAttribute() endDate: string | null;
-  @JsonApiAttribute() origin: string;
-  @JsonApiAttribute() status: string;
-  @JsonApiAttribute() animeType: string;
-  @JsonApiAttribute() seasonCount: number;
-  @JsonApiAttribute() episodeCount: number;
-  @JsonApiAttribute() episodeLength: number;
-  @JsonApiAttribute() totalLength: number;
-  @JsonApiAttribute() averageRating: number;
-  @JsonApiAttribute() ratingRank: number;
-  @JsonApiAttribute() popularity: number;
-  @JsonApiAttribute() userCount: number;
-  @JsonApiAttribute() favoritesCount: number;
-  @JsonApiAttribute() reviewCount: number;
-  @JsonApiAttribute() coverImage: string;
-  @JsonApiAttribute() youtubeVideoId: string
 
-  @JsonApiRelationship() episodes: Episode[] = [];
-  @JsonApiRelationship() genres: Genre[] = [];
-  @JsonApiRelationship() themes: Theme[] = [];
-  @JsonApiRelationship() staff: Staff[] = [];
-  @JsonApiRelationship() reviews: Review[] = [];
-  @JsonApiRelationship() franchise: Franchise[] = [];
+  @JsonApiAttribute()
+  createdAt?: string;
 
-  
-  static readonly Origin = Origin;
+  @JsonApiAttribute()
+  updatedAt?: string;
+
+  @JsonApiAttribute()
+  title?: string;
+
+  @JsonApiAttribute()
+  titles?: {
+    fr: string;
+    en: string;
+    en_jp: string;
+    ja_jp: string;
+  } = {
+      fr: undefined,
+      en: undefined,
+      en_jp: undefined,
+      ja_jp: undefined
+    };
+
+  @JsonApiAttribute()
+  slug?: string;
+
+  @JsonApiAttribute()
+  synopsis?: string;
+
+  @JsonApiAttribute()
+  startDate?: string;
+
+  @JsonApiAttribute()
+  endDate?: string | null;
+
+  @JsonApiAttribute()
+  get origin(): string | undefined {
+    return this._origin?.toUpperCase();
+  }
+  set origin(value: string | undefined) {
+    this._origin = value?.toUpperCase();
+  }
+  _origin?: string;
+
+  @JsonApiAttribute()
+  status: string;
+
+  @JsonApiAttribute()
+  animeType: string;
+
+  @JsonApiAttribute()
+  seasonCount: number;
+
+  @JsonApiAttribute()
+  episodeCount: number;
+
+  @JsonApiAttribute()
+  episodeLength: number;
+
+  @JsonApiAttribute()
+  totalLength: number;
+
+  @JsonApiAttribute()
+  averageRating: number;
+
+  @JsonApiAttribute()
+  ratingRank: number;
+
+  @JsonApiAttribute()
+  popularity: number;
+
+  @JsonApiAttribute()
+  userCount: number;
+
+  @JsonApiAttribute()
+  favoritesCount: number;
+
+  @JsonApiAttribute()
+  reviewCount: number;
+
+  @JsonApiAttribute()
+  coverImage: string;
+
+  @JsonApiAttribute()
+  youtubeVideoId: string
+
+
+  @JsonApiRelationship()
+  seasons: Season[] = [];
+
+  @JsonApiRelationship()
+  genres: Genre[] = [];
+
+  @JsonApiRelationship()
+  themes: Theme[] = [];
+
+  @JsonApiRelationship()
+  staff: Staff[] = [];
+
+  @JsonApiRelationship()
+  reviews: Review[] = [];
+
+  @JsonApiRelationship()
+  franchise: Franchise[] = [];
+
+
   static readonly Status = Status;
   static readonly AnimeType = AnimeType;
 }
