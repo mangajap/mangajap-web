@@ -34,7 +34,7 @@ const routes: Routes = [
 
   { path: 'profile/:slug', component: ProfileComponent },
 
-  { path: '**', component: NotFoundComponent }
+  { path: '**', component: NotFoundComponent },
 ];
 
 @NgModule({

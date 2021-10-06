@@ -433,8 +433,10 @@ class Manga extends Model implements JsonApiSerializable
   {
     if (isset($this->coverImage))
       return $this->coverImage;
-    else if (true)
+    else if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/images/manga/cover/' . $this->slug . '.jpg'))
       return 'http://mangajap.000webhostapp.com/images/manga/cover/' . $this->slug . '.jpg';
+    else if (true)
+      return 'https://firebasestorage.googleapis.com/v0/b/mangajap.appspot.com/o/manga%2F' . $this->id . '%2Fimages%2Fcover.jpg?alt=media';
     else {
       $coverImage = [];
 
@@ -472,7 +474,7 @@ class Manga extends Model implements JsonApiSerializable
     else if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/images/manga/banner/' . $this->slug . '.jpg'))
       return 'http://mangajap.000webhostapp.com/images/manga/banner/' . $this->slug . '.jpg';
     else if (true)
-      return null;
+      return 'https://firebasestorage.googleapis.com/v0/b/mangajap.appspot.com/o/manga%2F' . $this->id . '%2Fimages%2Fbanner.jpg?alt=media';
     else {
       $bannerImage = [];
 

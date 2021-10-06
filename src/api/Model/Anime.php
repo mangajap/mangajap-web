@@ -9,7 +9,8 @@ use App\MVC\Model;
 use App\MVC\Router\RouterGroup;
 use App\Utils\Slug;
 
-class Anime extends Model implements JsonApiSerializable {
+class Anime extends Model implements JsonApiSerializable
+{
 
     public $id;
     public $createdAt;
@@ -40,7 +41,8 @@ class Anime extends Model implements JsonApiSerializable {
     public $youtubeVideoId;
 
 
-    public function initialize() {
+    public function initialize()
+    {
         $this->setConnectionService('db_mangajap');
 
         $this->setSource('anime');
@@ -150,6 +152,20 @@ class Anime extends Model implements JsonApiSerializable {
             ]
         );
 
+        $this->hasMany(
+            'id',
+            Season::class,
+            'animeId',
+            [
+                'alias' => 'seasons',
+                'params' => [
+                    'order' => [
+                        'number ASC',
+                    ],
+                ],
+            ]
+        );
+
         $this->hasManyToMany(
             'id',
             GenreRelationships::class,
@@ -229,14 +245,16 @@ class Anime extends Model implements JsonApiSerializable {
         );
     }
 
-    public function beforeCreate(): bool {
+    public function beforeCreate(): bool
+    {
         if (!isset($this->slug))
             $this->slug = Slug::generate($this->title);
 
         return true;
     }
 
-    public function beforeSave(): bool {
+    public function beforeSave(): bool
+    {
         $user = User::fromAccessToken();
 
         if (!$user instanceof User)
@@ -248,8 +266,10 @@ class Anime extends Model implements JsonApiSerializable {
         return true;
     }
 
-    public function afterGet() {
-        $this->getWriteConnection()->execute("
+    public function afterGet()
+    {
+        $this->getWriteConnection()->execute(
+            "
             UPDATE
                 anime
             SET
@@ -317,19 +337,20 @@ class Anime extends Model implements JsonApiSerializable {
     }
 
 
-    public static function routerGroup(Application $app): RouterGroup {
+    public static function routerGroup(Application $app): RouterGroup
+    {
         $anime = new RouterGroup();
 
         $anime->get(
             '/anime',
-            function() {
+            function () {
                 return Anime::getList(JsonApi::getParameters());
             }
         );
 
         $anime->post(
             '/anime',
-            function() use ($app) {
+            function () use ($app) {
                 $anime = Anime::fromJsonApi($app->getRequest()->getJSONObject()->optJSONObject('data'));
                 if ($anime->create())
                     return Anime::get($anime->getId());
@@ -340,7 +361,7 @@ class Anime extends Model implements JsonApiSerializable {
 
         $anime->get(
             '/anime/{id:[0-9]+}',
-            function($id) {
+            function ($id) {
                 return Anime::get($id);
             }
         );
@@ -358,56 +379,63 @@ class Anime extends Model implements JsonApiSerializable {
 
         $anime->get(
             '/anime/{id:[0-9]+}/episodes',
-            function($id) {
+            function ($id) {
                 return Anime::get($id)->getRelated("episodes", JsonApi::getParameters());
             }
         );
 
         $anime->get(
+            '/anime/{id:[0-9]+}/seasons',
+            function ($id) {
+                return Anime::get($id)->getRelated("seasons", JsonApi::getParameters());
+            }
+        );
+
+        $anime->get(
             '/anime/{id:[0-9]+}/genres',
-            function($id) {
+            function ($id) {
                 return Anime::get($id)->getRelated("genres", JsonApi::getParameters());
             }
         );
 
         $anime->get(
             '/anime/{id:[0-9]+}/themes',
-            function($id) {
+            function ($id) {
                 return Anime::get($id)->getRelated("themes", JsonApi::getParameters());
             }
         );
 
         $anime->get(
             '/anime/{id:[0-9]+}/staff',
-            function($id) {
+            function ($id) {
                 return Anime::get($id)->getRelated("staff", JsonApi::getParameters());
             }
         );
 
         $anime->get(
             '/anime/{id:[0-9]+}/reviews',
-            function($id) {
+            function ($id) {
                 return Anime::get($id)->getRelated("reviews", JsonApi::getParameters());
             }
         );
 
         $anime->get(
             '/anime/{id:[0-9]+}/franchise',
-            function($id) {
+            function ($id) {
                 return Anime::get($id)->getRelated("franchise", JsonApi::getParameters());
             }
         );
 
         $anime->get(
             '/anime/{id:[0-9]+}/anime-entry',
-            function($id) {
+            function ($id) {
                 return Anime::get($id)->getRelated("anime-entry");
             }
         );
 
         $anime->get(
             '/trending/anime',
-            function() {
+            function () {
                 $user = User::fromAccessToken();
 
                 if ($user instanceof User)
@@ -440,81 +468,101 @@ class Anime extends Model implements JsonApiSerializable {
     }
 
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
     }
 
-    public function getCreatedAt() {
+    public function getCreatedAt()
+    {
         return $this->createdAt;
     }
 
-    public function setCreatedAt($createdAt) {
+    public function setCreatedAt($createdAt)
+    {
         $this->createdAt = $createdAt;
     }
 
-    public function getUpdatedAt() {
+    public function getUpdatedAt()
+    {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt($updatedAt) {
+    public function setUpdatedAt($updatedAt)
+    {
         $this->updatedAt = $updatedAt;
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->title;
     }
 
-    public function setTitle($title) {
+    public function setTitle($title)
+    {
         $this->title = $title;
     }
 
-    public function getTitleEn() {
+    public function getTitleEn()
+    {
         return $this->title_en;
     }
 
-    public function setTitleEn($title_en) {
+    public function setTitleEn($title_en)
+    {
         $this->title_en = $title_en;
     }
 
-    public function getTitleEnJp() {
+    public function getTitleEnJp()
+    {
         return $this->title_en_jp;
     }
 
-    public function setTitleEnJp($title_en_jp) {
+    public function setTitleEnJp($title_en_jp)
+    {
         $this->title_en_jp = $title_en_jp;
     }
 
-    public function getTitleJaJp() {
+    public function getTitleJaJp()
+    {
         return $this->title_ja_jp;
     }
 
-    public function setTitleJaJp($title_ja_jp) {
+    public function setTitleJaJp($title_ja_jp)
+    {
         $this->title_ja_jp = $title_ja_jp;
     }
 
-    public function setTitles($titles) {
+    public function setTitles($titles)
+    {
         foreach (get_object_vars($titles) as $key => $value) {
-            $this->{'title_'.$key} = $value;
+            $this->{'title_' . $key} = $value;
         }
     }
 
-    public function getSlug() {
+    public function getSlug()
+    {
         return $this->slug;
     }
 
-    public function setSlug($slug) {
+    public function setSlug($slug)
+    {
         $this->slug = $slug;
     }
 
-    public function getCoverImage() {
+    public function getCoverImage()
+    {
         if (isset($this->coverImage))
             return $this->coverImage;
+        else if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/images/anime/cover/' . $this->slug . '.jpg'))
+            return 'http://mangajap.000webhostapp.com/images/anime/cover/' . $this->slug . '.jpg';
         else if (true)
-            return 'http://mangajap.000webhostapp.com/images/anime/cover/'. $this->slug .'.jpg';
+            return 'https://firebasestorage.googleapis.com/v0/b/mangajap.appspot.com/o/anime%2F' . $this->id . '%2Fimages%2Fcover.jpg?alt=media';
         else {
             $coverImage = [];
 
@@ -528,170 +576,207 @@ class Anime extends Model implements JsonApiSerializable {
         }
     }
 
-    public function setCoverImage($coverImage) {
+    public function setCoverImage($coverImage)
+    {
         $this->slug = Anime::get($this->id)->slug ?? Slug::generate($this->title);
-        $coverImagePath = $_SERVER['DOCUMENT_ROOT'] . '/images/anime/cover/'.$this->slug.'.jpg';
+        $coverImagePath = $_SERVER['DOCUMENT_ROOT'] . '/images/anime/cover/' . $this->slug . '.jpg';
 
         if ($coverImage === null) {
             if (file_exists($coverImagePath))
                 unlink($coverImagePath);
-        }
-        else {
-            if (substr($coverImage, 0, 4 ) === "data") {
+        } else {
+            if (substr($coverImage, 0, 4) === "data") {
                 $coverImage = explode(',', $coverImage)[1];
             }
-            $image = imagecreatefromstring(base64_decode(str_replace(' ','+', $coverImage)));
+            $image = imagecreatefromstring(base64_decode(str_replace(' ', '+', $coverImage)));
             imagejpeg($image, $coverImagePath);
         }
     }
 
-    public function getStartDate() {
+    public function getStartDate()
+    {
         return $this->startDate;
     }
 
-    public function setStartDate($startDate) {
+    public function setStartDate($startDate)
+    {
         $this->startDate = $startDate;
     }
 
-    public function getEndDate() {
+    public function getEndDate()
+    {
         return $this->endDate;
     }
 
-    public function setEndDate($endDate) {
+    public function setEndDate($endDate)
+    {
         $this->endDate = $endDate;
     }
 
-    public function getOrigin() {
+    public function getOrigin()
+    {
         return $this->origin;
     }
 
-    public function setOrigin($origin) {
+    public function setOrigin($origin)
+    {
         $this->origin = $origin;
     }
 
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->status;
     }
 
-    public function setStatus($status) {
+    public function setStatus($status)
+    {
         $this->status = $status;
     }
 
-    public function getSeasonCount() {
+    public function getSeasonCount()
+    {
         return $this->seasonCount;
     }
 
-    public function setSeasonCount($seasonCount) {
+    public function setSeasonCount($seasonCount)
+    {
         $this->seasonCount = $seasonCount;
     }
 
-    public function getEpisodeCount() {
+    public function getEpisodeCount()
+    {
         return $this->episodeCount;
     }
 
-    public function setEpisodeCount($episodeCount) {
+    public function setEpisodeCount($episodeCount)
+    {
         $this->episodeCount = $episodeCount;
     }
 
-    public function getEpisodeLength() {
+    public function getEpisodeLength()
+    {
         return $this->episodeLength;
     }
 
-    public function setEpisodeLength($episodeLength) {
+    public function setEpisodeLength($episodeLength)
+    {
         $this->episodeLength = $episodeLength;
     }
 
-    public function setTotalLength($totalLength) {
+    public function setTotalLength($totalLength)
+    {
         $this->totalLength = $totalLength;
     }
 
-    public function getTotalLength() {
+    public function getTotalLength()
+    {
         return $this->getEpisodeCount() * $this->getEpisodeLength();
     }
 
-    public function getAnimeType() {
+    public function getAnimeType()
+    {
         return $this->animeType;
     }
 
-    public function setAnimeType($animeType) {
+    public function setAnimeType($animeType)
+    {
         $this->animeType = $animeType;
     }
 
-    public function getSynopsis() {
+    public function getSynopsis()
+    {
         return $this->synopsis;
     }
 
-    public function setSynopsis($synopsis) {
+    public function setSynopsis($synopsis)
+    {
         $this->synopsis = $synopsis;
     }
 
-    public function getAverageRating() {
+    public function getAverageRating()
+    {
         return $this->averageRating;
     }
 
-    public function setAverageRating($averageRating) {
+    public function setAverageRating($averageRating)
+    {
         $this->averageRating = $averageRating;
     }
 
-    public function getRatingRank() {
+    public function getRatingRank()
+    {
         return $this->ratingRank;
     }
 
-    public function setRatingRank($ratingRank) {
+    public function setRatingRank($ratingRank)
+    {
         $this->ratingRank = $ratingRank;
     }
 
-    public function getPopularity() {
+    public function getPopularity()
+    {
         return $this->popularity;
     }
 
-    public function setPopularity($popularity) {
+    public function setPopularity($popularity)
+    {
         $this->popularity = $popularity;
     }
 
-    public function getUserCount() {
+    public function getUserCount()
+    {
         return $this->userCount;
     }
 
-    public function setUserCount($userCount) {
+    public function setUserCount($userCount)
+    {
         $this->userCount = $userCount;
     }
 
-    public function getFavoritesCount() {
+    public function getFavoritesCount()
+    {
         return $this->favoritesCount;
     }
 
-    public function setFavoritesCount($favoritesCount) {
+    public function setFavoritesCount($favoritesCount)
+    {
         $this->favoritesCount = $favoritesCount;
     }
 
-    public function getReviewCount() {
+    public function getReviewCount()
+    {
         return $this->reviewCount;
     }
 
-    public function setReviewCount($reviewCount) {
+    public function setReviewCount($reviewCount)
+    {
         $this->reviewCount = $reviewCount;
     }
 
-    public function getYoutubeVideoId() {
+    public function getYoutubeVideoId()
+    {
         return $this->youtubeVideoId;
     }
 
-    public function setYoutubeVideoId($youtubeVideoId) {
+    public function setYoutubeVideoId($youtubeVideoId)
+    {
         $this->youtubeVideoId = $youtubeVideoId;
     }
 
 
 
-    public function JsonApi_type() {
+    public function JsonApi_type()
+    {
         return "anime";
     }
 
-    public function JsonApi_id() {
+    public function JsonApi_id()
+    {
         return $this->getId();
     }
 
-    public function JsonApi_attributes() {
+    public function JsonApi_attributes()
+    {
         return [
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
@@ -725,9 +810,14 @@ class Anime extends Model implements JsonApiSerializable {
         ];
     }
 
-    public function JsonApi_relationships() {
+    public function JsonApi_relationships()
+    {
         $relationships = [
             'episodes' => [
+                Relationship::LINKS_SELF => false,
+                Relationship::LINKS_RELATED => true,
+            ],
+            'seasons' => [
                 Relationship::LINKS_SELF => false,
                 Relationship::LINKS_RELATED => true,
             ],
@@ -762,7 +852,8 @@ class Anime extends Model implements JsonApiSerializable {
         return $relationships;
     }
 
-    public function JsonApi_filter() {
+    public function JsonApi_filter()
+    {
         return [
             'query' => [
                 'conditions' => [

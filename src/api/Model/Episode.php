@@ -12,6 +12,7 @@ class Episode extends Model implements JsonApiSerializable {
 
     public $id;
     public $animeId;
+    public $seasonId;
     public $createdAt;
     public $updatedAt;
     public $title_fr;
@@ -32,6 +33,7 @@ class Episode extends Model implements JsonApiSerializable {
         $this->setColumnMap([
             'id' => 'episode_id',
             'animeId' => 'episode_animeid',
+            'seasonId' => 'episode_seasonid',
             'title_fr' => 'episode_title_fr',
             'title_en' => 'episode_title_en',
             'title_en_jp' => 'episode_title_en_jp',
@@ -50,6 +52,7 @@ class Episode extends Model implements JsonApiSerializable {
         $this->setAttributes([
             'id',
             'animeId',
+            'seasonId',
             'title_fr',
             'title_en',
             'title_en_jp',
@@ -65,6 +68,7 @@ class Episode extends Model implements JsonApiSerializable {
         $this->setDataTypes([
             'id' => Column::TYPE_INT,
             'animeId' => Column::TYPE_INT,
+            'seasonId' => Column::TYPE_INT,
             'title_fr' => Column::TYPE_TINYTEXT,
             'title_en' => Column::TYPE_TINYTEXT,
             'title_en_jp' => Column::TYPE_TINYTEXT,
@@ -90,6 +94,15 @@ class Episode extends Model implements JsonApiSerializable {
             'id',
             [
                 'alias' => 'anime',
+            ]
+        );
+
+        $this->belongsTo(
+            'seasonId',
+            Season::class,
+            'id',
+            [
+                'alias' => 'season',
             ]
         );
     }
@@ -150,6 +163,13 @@ class Episode extends Model implements JsonApiSerializable {
             '/episodes/{id:[0-9]+}/anime',
             function($id) {
                 return Episode::get($id)->getRelated("anime");
+            }
+        );
+
+        $episodes->get(
+            '/episodes/{id:[0-9]+}/season',
+            function($id) {
+                return Episode::get($id)->getRelated("season");
             }
         );
 
@@ -270,6 +290,10 @@ class Episode extends Model implements JsonApiSerializable {
     public function JsonApi_relationships() {
         return [
             'anime' => [
+                Relationship::LINKS_SELF => false,
+                Relationship::LINKS_RELATED => true,
+            ],
+            'season' => [
                 Relationship::LINKS_SELF => false,
                 Relationship::LINKS_RELATED => true,
             ],
