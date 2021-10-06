@@ -6,11 +6,23 @@ import { User } from "./user.model";
 
 @JsonApiType("reviews")
 export class Review extends JsonApiModel {
-  @JsonApiAttribute() createdAt: string;
-  @JsonApiAttribute() updatedAt: string;
-  @JsonApiAttribute() content: string
 
-  @JsonApiRelationship() user: User;
-  @JsonApiRelationship() manga: Manga;
-  @JsonApiRelationship() anime: Anime;
+  @JsonApiAttribute()
+  createdAt: string;
+
+  @JsonApiAttribute()
+  updatedAt: string;
+
+  @JsonApiAttribute()
+  content: string
+
+
+  @JsonApiRelationship()
+  user: User;
+
+  @JsonApiRelationship()
+  manga: Manga;
+
+  @JsonApiRelationship()
+  anime: Anime;
 }

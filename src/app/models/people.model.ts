@@ -4,14 +4,32 @@ import { Staff } from "./staff.model";
 
 @JsonApiType("people")
 export class People extends JsonApiModel {
-  @JsonApiAttribute() createdAt: string;
-  @JsonApiAttribute() updatedAt: string;
-  @JsonApiAttribute() firstName: string;
-  @JsonApiAttribute() lastName: string;
-  @JsonApiAttribute() pseudo: string;
-  @JsonApiAttribute() image: string | null
 
-  @JsonApiRelationship() staff: Staff[];
-  @JsonApiRelationship() mangaStaff: Staff[];
-  @JsonApiRelationship() animeStaff: Staff[];
+  @JsonApiAttribute()
+  createdAt: string;
+
+  @JsonApiAttribute()
+  updatedAt: string;
+
+  @JsonApiAttribute()
+  firstName: string;
+
+  @JsonApiAttribute()
+  lastName: string;
+
+  @JsonApiAttribute()
+  pseudo: string;
+
+  @JsonApiAttribute()
+  image: string | null
+
+
+  @JsonApiRelationship()
+  staff: Staff[];
+
+  @JsonApiRelationship()
+  mangaStaff: Staff[];
+
+  @JsonApiRelationship()
+  animeStaff: Staff[];
 }

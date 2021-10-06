@@ -4,9 +4,17 @@ import { User } from "./user.model";
 
 @JsonApiType("follows")
 export class Follow extends JsonApiModel {
-  @JsonApiAttribute() createdAt: string;
-  @JsonApiAttribute() updatedAt: string;
 
-  @JsonApiRelationship() follower: User;
-  @JsonApiRelationship() followed: User;
+  @JsonApiAttribute()
+  createdAt: string;
+
+  @JsonApiAttribute()
+  updatedAt: string;
+
+
+  @JsonApiRelationship()
+  follower: User;
+
+  @JsonApiRelationship()
+  followed: User;
 }

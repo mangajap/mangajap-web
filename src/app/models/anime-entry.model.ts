@@ -7,17 +7,41 @@ import { User } from "./user.model";
   endpoint: 'anime-entries'
 })
 export class AnimeEntry extends JsonApiModel {
-  @JsonApiAttribute() createdAt: string;
-  @JsonApiAttribute() updatedAt: string;
-  @JsonApiAttribute() isAdd: boolean;
-  @JsonApiAttribute() isFavorites: boolean;
-  @JsonApiAttribute() status: string;
-  @JsonApiAttribute() episodesWatch: number;
-  @JsonApiAttribute() startedAt: string;
-  @JsonApiAttribute() finishedAt: string;
-  @JsonApiAttribute() rating: number;
-  @JsonApiAttribute() rewatchCount: number;
 
-  @JsonApiRelationship() user: User;
-  @JsonApiRelationship() anime: Anime;
+  @JsonApiAttribute()
+  createdAt: string;
+
+  @JsonApiAttribute()
+  updatedAt: string;
+
+  @JsonApiAttribute()
+  isAdd: boolean;
+
+  @JsonApiAttribute()
+  isFavorites: boolean;
+
+  @JsonApiAttribute()
+  status: string;
+
+  @JsonApiAttribute()
+  episodesWatch: number;
+
+  @JsonApiAttribute()
+  startedAt: string;
+
+  @JsonApiAttribute()
+  finishedAt: string;
+
+  @JsonApiAttribute()
+  rating: number;
+
+  @JsonApiAttribute()
+  rewatchCount: number;
+
+
+  @JsonApiRelationship()
+  user: User;
+
+  @JsonApiRelationship()
+  anime: Anime;
 }

@@ -20,12 +20,23 @@ enum Role {
 
 @JsonApiType("franchises")
 export class Franchise extends JsonApiModel {
-  @JsonApiAttribute() createdAt: string;
-  @JsonApiAttribute() updatedAt: string;
-  @JsonApiAttribute() role: string;
 
-  @JsonApiRelationship() source?: Manga | Anime;
-  @JsonApiRelationship() destination?: Manga | Anime;
+  @JsonApiAttribute()
+  createdAt: string;
+
+  @JsonApiAttribute()
+  updatedAt: string;
+
+  @JsonApiAttribute()
+  role: string;
+
+
+  @JsonApiRelationship()
+  source?: Manga | Anime;
+
+  @JsonApiRelationship()
+  destination?: Manga | Anime;
+
 
 
   static readonly Role = Role;

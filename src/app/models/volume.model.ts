@@ -2,30 +2,46 @@ import { JsonApiAttribute, JsonApiRelationship, JsonApiType } from "../utils/jso
 import JsonApiModel from "../utils/json-api/json-api-model";
 import { Manga } from "./manga.model";
 
-interface Titles {
-  fr: string;
-  en: string;
-  en_jp: string;
-  ja_jp: string;
-}
-
 @JsonApiType("volumes", {
   endpoint: 'volumes'
 })
 export class Volume extends JsonApiModel {
-  @JsonApiAttribute() createdAt: string;
-  @JsonApiAttribute() updatedAt: string;
-  @JsonApiAttribute() titles: Titles = {
-    fr: undefined,
-    en: undefined,
-    en_jp: undefined,
-    ja_jp: undefined
-  };
-  @JsonApiAttribute() number: number;
-  @JsonApiAttribute() startChapter: number;
-  @JsonApiAttribute() endChapter: number;
-  @JsonApiAttribute() published: string;
-  @JsonApiAttribute() coverImage: string | null;
 
-  @JsonApiRelationship() manga: Manga;
+  @JsonApiAttribute()
+  createdAt: string;
+
+  @JsonApiAttribute()
+  updatedAt: string;
+
+  @JsonApiAttribute()
+  titles: {
+    fr: string;
+    en: string;
+    en_jp: string;
+    ja_jp: string;
+  } = {
+      fr: undefined,
+      en: undefined,
+      en_jp: undefined,
+      ja_jp: undefined
+    };
+
+  @JsonApiAttribute()
+  number: number;
+
+  @JsonApiAttribute()
+  startChapter: number;
+
+  @JsonApiAttribute()
+  endChapter: number;
+
+  @JsonApiAttribute()
+  published: string;
+
+  @JsonApiAttribute()
+  coverImage: string | null;
+
+
+  @JsonApiRelationship()
+  manga: Manga;
 }

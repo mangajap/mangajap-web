@@ -16,14 +16,27 @@ enum Role {
 
 @JsonApiType("staff")
 export class Staff extends JsonApiModel {
-  @JsonApiAttribute() createdAt: string;
-  @JsonApiAttribute() updatedAt: string;
-  @JsonApiAttribute() role: string
 
-  @JsonApiRelationship() people: People;
-  @JsonApiRelationship() manga: Manga;
-  @JsonApiRelationship() anime: Anime;
+  @JsonApiAttribute()
+  createdAt: string;
 
-  
+  @JsonApiAttribute()
+  updatedAt: string;
+
+  @JsonApiAttribute()
+  role: string
+
+
+  @JsonApiRelationship()
+  people: People;
+
+  @JsonApiRelationship()
+  manga: Manga;
+
+  @JsonApiRelationship()
+  anime: Anime;
+
+
+
   static readonly Role = Role;
 }

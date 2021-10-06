@@ -5,11 +5,23 @@ import { Manga } from "./manga.model";
 
 @JsonApiType("themes")
 export class Theme extends JsonApiModel {
-  @JsonApiAttribute() createdAt: string;
-  @JsonApiAttribute() updatedAt: string;
-  @JsonApiAttribute() title: string;
-  @JsonApiAttribute() description: string;
 
-  @JsonApiRelationship() manga: Manga[];
-  @JsonApiRelationship() anime: Anime[];
+  @JsonApiAttribute()
+  createdAt: string;
+
+  @JsonApiAttribute()
+  updatedAt: string;
+
+  @JsonApiAttribute()
+  title: string;
+
+  @JsonApiAttribute()
+  description: string;
+
+
+  @JsonApiRelationship()
+  manga: Manga[];
+
+  @JsonApiRelationship()
+  anime: Anime[];
 }

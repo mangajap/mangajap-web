@@ -7,18 +7,44 @@ import { User } from "./user.model";
   endpoint: 'manga-entries'
 })
 export class MangaEntry extends JsonApiModel {
-  @JsonApiAttribute() createdAt: string;
-  @JsonApiAttribute() updatedAt: string;
-  @JsonApiAttribute() isAdd: boolean;
-  @JsonApiAttribute() isFavorites: boolean;
-  @JsonApiAttribute() status: string;
-  @JsonApiAttribute() volumesRead: number;
-  @JsonApiAttribute() chaptersRead: number;
-  @JsonApiAttribute() startedAt: string;
-  @JsonApiAttribute() finishedAt: string;
-  @JsonApiAttribute() rating: number;
-  @JsonApiAttribute() rereadCount: number;
 
-  @JsonApiRelationship() user: User;
-  @JsonApiRelationship() manga: Manga;
+  @JsonApiAttribute()
+  createdAt: string;
+
+  @JsonApiAttribute()
+  updatedAt: string;
+
+  @JsonApiAttribute()
+  isAdd: boolean;
+
+  @JsonApiAttribute()
+  isFavorites: boolean;
+
+  @JsonApiAttribute()
+  status: string;
+
+  @JsonApiAttribute()
+  volumesRead: number;
+
+  @JsonApiAttribute()
+  chaptersRead: number;
+
+  @JsonApiAttribute()
+  startedAt: string;
+
+  @JsonApiAttribute()
+  finishedAt: string;
+
+  @JsonApiAttribute()
+  rating: number;
+
+  @JsonApiAttribute()
+  rereadCount: number;
+
+
+  @JsonApiRelationship()
+  user: User;
+
+  @JsonApiRelationship()
+  manga: Manga;
 }
