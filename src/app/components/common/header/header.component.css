@@ -22,6 +22,7 @@ header {
 .mangajap-logo {
   height: 30px;
   width: auto;
+  vertical-align: middle;
 }
 
 .navbar-menu {

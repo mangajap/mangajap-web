@@ -46,10 +46,11 @@
             "aot": true,
             "assets": [
               "src/favicon.ico",
+              "src/assets",
+
               "src/images",
               "src/.htaccess",
               "src/app-ads.txt",
-
               "src/media",
               "src/api"
             ],
