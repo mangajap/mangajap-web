@@ -30,7 +30,7 @@ export class ProfileComponent implements OnInit {
             filter: {
               slug: slug
             }
-          }).subscribe(response => {
+          }).then(response => {
             if (response.data[0]) {
               this.user = response.data[0];
               this.titleService.setTitle(`${this.user.pseudo} - Profil | MangaJap`);

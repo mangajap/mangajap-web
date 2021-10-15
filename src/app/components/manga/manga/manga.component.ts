@@ -26,13 +26,11 @@ export class MangaComponent implements OnInit {
     if (id) {
       Manga.find(id.toString(), {
         // include: ["volumes", "genres", "themes", "staff.people", "franchise.destination"],
-      }).subscribe(
-        response => {
-          this.manga = response.data;
-          this.titleService.setTitle(`${this.manga.title} | MangaJap`);
-        },
-        error => this.router.navigate(['**'], { skipLocationChange: true })
-      );
+      }).then(response => {
+        this.manga = response.data;
+        this.titleService.setTitle(`${this.manga.title} | MangaJap`);
+      })
+        .catch(() => this.router.navigate(['**'], { skipLocationChange: true }));
     } else {
       this.router.navigate(['**'], { skipLocationChange: true });
     }

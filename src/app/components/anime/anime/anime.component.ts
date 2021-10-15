@@ -25,7 +25,7 @@ export class AnimeComponent implements OnInit {
     if (id) {
       Anime.find(id.toString(), {
         // include: ["episodes", "genres", "themes", "staff.people", "franchise.destination"],
-      }).subscribe(response => {
+      }).then(response => {
         this.anime = response.data;
         this.titleService.setTitle(`${this.anime.title} | MangaJap`);
       });

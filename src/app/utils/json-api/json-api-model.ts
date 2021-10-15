@@ -28,19 +28,19 @@ export default abstract class JsonApiModel {
   }
 
   
-  public static findAll<T extends JsonApiModel>(this: new () => T, params?: JsonApiParams): Observable<JsonApiResponse<T[]>> {
+  public static findAll<T extends JsonApiModel>(this: new () => T, params?: JsonApiParams): Promise<JsonApiResponse<T[]>> {
     const jsonApi: JsonApiConfig = this.prototype.jsonApi;
 
-    return jsonApi.service.findAll(this, params);
+    return jsonApi.service.findAll(this, params).toPromise();
   }
 
-  public static find<T extends JsonApiModel>(this: new () => T, id: string, params?: JsonApiParams): Observable<JsonApiResponse<T>> {
+  public static find<T extends JsonApiModel>(this: new () => T, id: string, params?: JsonApiParams): Promise<JsonApiResponse<T>> {
     const jsonApi: JsonApiConfig = this.prototype.jsonApi;
 
-    return jsonApi.service.find(this, id, params);
+    return jsonApi.service.find(this, id, params).toPromise();
   }
 
-  public save(): Observable<JsonApiResponse<this>> {
+  public save(): Promise<JsonApiResponse<this>> {
     if (this.id) {
       return this.update();
     } else {
@@ -48,7 +48,7 @@ export default abstract class JsonApiModel {
     }
   }
 
-  public create(): Observable<JsonApiResponse<this>> {
+  public create(): Promise<JsonApiResponse<this>> {
     const jsonApi: JsonApiConfig = this.constructor.prototype.jsonApi;
 
     // TODO: le code marche bien cependant il faut que lorsque par exemple on créer un manga, son id est attribué à ses relations (volumes,...) (volume.manga = response.data)
@@ -76,13 +76,13 @@ export default abstract class JsonApiModel {
     // ).subscribe(response => console.log(response));
     // return;
 
-    return jsonApi.service.create(this);
+    return jsonApi.service.create(this).toPromise();
   }
 
 
-  public update(): Observable<JsonApiResponse<this>> {
+  public update(): Promise<JsonApiResponse<this>> {
     const jsonApi: JsonApiConfig = this.constructor.prototype.jsonApi;
 
-    return jsonApi.service.update(this);
+    return jsonApi.service.update(this).toPromise();
   }
 }

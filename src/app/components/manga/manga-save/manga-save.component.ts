@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
-import { concat, forkJoin, of, scheduled } from 'rxjs';
-import { concatAll, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
 import { Anime } from 'src/app/models/anime.model';
 import { Franchise } from 'src/app/models/franchise.model';
 import { Genre } from 'src/app/models/genre.model';
@@ -11,7 +9,6 @@ import { People } from 'src/app/models/people.model';
 import { Staff } from 'src/app/models/staff.model';
 import { Theme } from 'src/app/models/theme.model';
 import { Volume } from 'src/app/models/volume.model';
-import { MangajapApiService } from 'src/app/services/mangajap-api.service';
 import Base64 from 'src/app/utils/base64/base64';
 
 @Component({
@@ -39,7 +36,6 @@ export class MangaSaveComponent implements OnInit {
     private titleService: Title,
     private router: Router,
     private route: ActivatedRoute,
-    private mangajapApiService: MangajapApiService
   ) { }
 
   ngOnInit(): void {
@@ -47,19 +43,19 @@ export class MangaSaveComponent implements OnInit {
 
     Genre.findAll({
       limit: 1000,
-      sort: "title"
-    }).subscribe(response => this.genres = response.data);
+      sort: "title",
+    }).then(response => this.genres = response.data);
 
     Theme.findAll({
       limit: 1000,
-      sort: "title"
-    }).subscribe(response => this.themes = response.data);
+      sort: "title",
+    }).then(response => this.themes = response.data);
 
     const id = +this.route.snapshot.paramMap.get('id');
     if (id) {
       Manga.find(id.toString(), {
         include: ["volumes", "genres", "themes", "staff.people", "franchise.destination"],
-      }).subscribe(response => {
+      }).then(response => {
         this.manga = response.data;
         this.titleService.setTitle(`${this.manga.title} - Modification | MangaJap`);
       });
@@ -133,7 +129,7 @@ export class MangaSaveComponent implements OnInit {
       filter: {
         query: query
       }
-    }).subscribe(response => this.peoples = response.data);
+    }).then(response => this.peoples = response.data);
   }
   addStaff() {
     const staff = new Staff();
@@ -164,206 +160,127 @@ export class MangaSaveComponent implements OnInit {
       return;
     }
 
-    const mangas$ = Manga.findAll({
-      filter: {
-        query: query
-      }
-    });
-    const animes$ = Anime.findAll({
-      filter: {
-        query: query
-      }
-    });
-
-    forkJoin([mangas$, animes$]).subscribe(([mangaResponse, animeResponse]) => {
+    Promise.all([
+      Manga.findAll({
+        filter: {
+          query: query
+        }
+      }),
+      Anime.findAll({
+        filter: {
+          query: query
+        }
+      })
+    ]).then(([mangaResponse, animeResponse]) => {
       this.mediaQuery = [].concat(mangaResponse.data).concat(animeResponse.data)
-        .filter(media => media.id !== this.manga.id && typeof media === typeof this.manga);
+        .filter(media => {
+          if (media instanceof Manga) {
+            return media.id !== this.manga.id;
+          }
+          return true;
+        });
     });
   }
 
 
   submit() {
     if (!this.manga.exists()) {
-      this.createInfo();
+      this.createInfo()
+        .then(() => this.router.navigate(['/manga', this.manga.id]))
+        .catch(err => console.error(err));
     } else {
-      this.updateInfo();
+      this.updateInfo()
+        .then(() => this.router.navigate(['/manga', this.manga.id]))
+        .catch(err => console.error(err));
     }
   }
 
-  private createInfo() {
-    forkJoin(
-      []
-        .concat(of(1))
-        .concat(this.manga.genres?.filter(genre => !genre.exists()).map(genre => genre.save().pipe(
-          map(response => {
-            console.log(response)
-            genre.id = response.data.id
-            return response
-          })
-        )))
-        .concat(this.manga.themes?.filter(theme => !theme.exists()).map(theme => theme.save().pipe(
-          map(response => {
-            theme.id = response.data.id
-            return response
-          })
-        )))
-    ).pipe(
-      switchMap(() => this.manga.save().pipe(
-        tap(response => this.manga.id = response.data.id),
-        mergeMap(() => forkJoin(
-          []
-            .concat(this.manga.volumes.map(volume => {
-              volume.manga = this.manga;
-              return volume.save();
-            }))
-            .concat(this.manga.staff.map(staff => {
-              staff.manga = this.manga;
-              if (!staff.people.exists()) {
-                return staff.people.save().pipe(
-                  mergeMap(peopleResponse => {
-                    staff.people = peopleResponse.data;
-                    return staff.save();
-                  })
-                );
-              } else {
-                return staff.save();
-              }
-            }))
-            .concat(this.manga.franchise.map(franchise => {
-              franchise.source = this.manga;
-              return franchise.save();
-            }))
-        ))
-      ))
-    ).subscribe({
-      next: value => console.log(value),
-      error: error => console.error(error),
-      complete: () => this.router.navigate(['/manga', this.manga.id])
-    });
+  private async createInfo() {
+    await Promise.all<any>([
+      ...this.manga.genres
+        .filter(genre => !genre.exists())
+        .map(genre => genre.save()
+          .then(response => genre.id = response.data.id)
+        ),
+      ...this.manga.themes
+        .filter(theme => !theme.exists())
+        .map(theme => theme.save()
+          .then(response => theme.id = response.data.id)
+        ),
+      ...this.manga.staff
+        .filter(staff => !staff.people.exists())
+        .map(staff => staff.people.save()
+          .then(response => staff.people.id = response.data.id)
+        ),
+    ]);
 
+    await this.manga.save()
+      .then(response => this.manga.id = response.data.id);
 
-    // concat(
-    //   forkJoin(
-    //     []
-    //       .concat(this.manga.genres?.filter(genre => !genre.exists()).map(genre => genre.save().pipe(
-    //         map(response => {
-    //           console.log(response)
-    //           genre.id = response.data.id
-    //           return response
-    //         })
-    //       )))
-    //       .concat(this.manga.themes?.filter(theme => !theme.exists()).map(theme => theme.save().pipe(
-    //         map(response => {
-    //           theme.id = response.data.id
-    //           return response
-    //         })
-    //       )))
-    //   ),
-    //   this.manga.save().pipe(
-    //     map(response => {
-    //       console.log(response)
-    //       this.manga.id = response.data.id;
-    //       return response;
-    //     })
-    //   ),
-    //   forkJoin(
-    //     []
-    //       .concat(this.manga.volumes.map(volume => {
-    //         console.log(this.manga)
-    //         volume.manga = this.manga;
-    //         return volume.save();
-    //       }))
-    //       .concat(
-    //         concat(
-    //           this.manga.staff.filter(staff => !staff.people.exists()).map(staff => staff.people.save().pipe(
-    //             map(response => staff.people.id = response.data.id)
-    //           )),
-    //           this.manga.staff.map(staff => {
-    //             staff.manga = this.manga;
-    //             return staff.save();
-    //           })
-    //         )
-    //       )
-    //       .concat(this.manga.franchise.map(franchise => {
-    //         franchise.source = this.manga;
-    //         return franchise.save();
-    //       }))
-    //   )
-    // ).subscribe({
-    //   next: value => console.log(value),
-    //   error: error => console.error(error),
-    //   complete: () => this.router.navigate(['/manga', this.manga.id])
-    // });
+    await Promise.all<any>([
+      ...this.manga.volumes.map(volume => {
+        volume.manga = this.manga;
+        return volume.save();
+      }),
+      ...this.manga.staff.map(staff => {
+        staff.manga = this.manga;
+        return staff.save();
+      }),
+      ...this.manga.franchise.map(franchise => {
+        franchise.source = this.manga;
+        return franchise.save();
+      }),
+    ]);
   }
 
-  private updateInfo() {
-    forkJoin(
-      []
-        .concat(of(1))
-        .concat(this.manga.genres?.filter(genre => !genre.exists()).map(genre => genre.save().pipe(
-          map(response => {
-            console.log(response)
-            genre.id = response.data.id
-            return response
-          })
-        )))
-        .concat(this.manga.themes?.filter(theme => !theme.exists()).map(theme => theme.save().pipe(
-          map(response => {
-            theme.id = response.data.id
-            return response
-          })
-        )))
-    ).pipe(
-      mergeMap(() => forkJoin(
-        []
-          .concat(this.manga.save())
-          .concat(this.manga.volumes
-            .filter(volume => !volume.exists() || volume.hasChanged())
-            .map(volume => {
-              if (!volume.exists()) {
-                volume.manga = this.manga;
-                return volume.save();
-              } else if (volume.hasChanged()) {
-                return volume.save();
-              }
-            }))
-          .concat(this.manga.staff
-            .filter(staff => !staff.people.exists() || !staff.exists() || staff.hasChanged())
-            .map(staff => {
-              if (!staff.people.exists()) {
-                return staff.people.save().pipe(
-                  mergeMap(peopleResponse => {
-                    staff.people = peopleResponse.data;
-                    if (!staff.exists()) {
-                      staff.manga = this.manga;
-                      return staff.save();
-                    } else if (staff.hasChanged()) {
-                      return staff.save();
-                    }
-                  })
-                );
-              } else if (!staff.exists()) {
-                staff.manga = this.manga;
-                return staff.save();
-              } else if (staff.hasChanged()) {
-                return staff.save();
-              }
-            }))
-          .concat(this.manga.franchise
-            .filter(franchise => !franchise.exists() || franchise.hasChanged())
-            .map(franchise => {
-              if (!franchise.exists()) {
-                franchise.source = this.manga;
-                return franchise.save();
-              } else if (franchise.hasChanged()) {
-                return franchise.save();
-              }
-            }))
-      ))
-    ).subscribe({
-      next: value => console.log(value),
-      error: error => console.error(error),
-      complete: () => this.router.navigate(['/manga', this.manga.id])
-    });
+  private async updateInfo() {
+    await Promise.all<any>([
+      ...this.manga.genres
+        .filter(genre => !genre.exists())
+        .map(genre => genre.save()
+          .then(response => genre.id = response.data.id)
+        ),
+      ...this.manga.themes
+        .filter(theme => !theme.exists())
+        .map(theme => theme.save()
+          .then(response => theme.id = response.data.id)
+        ),
+      ...this.manga.staff
+        .filter(staff => !staff.people.exists())
+        .map(staff => staff.people.save()
+          .then(response => staff.people.id = response.data.id)
+        ),
+    ]);
+
+    await Promise.all<any>([
+      this.manga.save(),
+      ...this.manga.volumes
+        .filter(volume => !volume.exists() || volume.hasChanged())
+        .map(volume => {
+          if (!volume.exists()) {
+            volume.manga = this.manga;
+          }
+          return volume;
+        })
+        .map(volume => volume.save()),
+      ...this.manga.staff
+        .filter(staff => !staff.exists() || staff.hasChanged())
+        .map(staff => {
+          if (!staff.exists()) {
+            staff.manga = this.manga;
+          }
+          return staff;
+        })
+        .map(staff => staff.save()),
+      ...this.manga.franchise
+        .filter(franchise => !franchise.exists() || franchise.hasChanged())
+        .map(franchise => {
+          if (!franchise.exists()) {
+            franchise.source = this.manga;
+          }
+          return franchise;
+        })
+        .map(franchise => franchise.save())
+    ]);
   }
 }

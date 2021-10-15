@@ -28,6 +28,6 @@ export class MangaListComponent implements OnInit {
     Manga.findAll({
       sort: '-popularity',
       filter: { query: query }
-    }).subscribe(response => this.mangas = response.data);
+    }).then(response => this.mangas = response.data);
   }
 }

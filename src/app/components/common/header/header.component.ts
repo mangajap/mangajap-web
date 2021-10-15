@@ -24,7 +24,7 @@ export class HeaderComponent implements OnInit {
           filter: {
             self: "true"
           }
-        }).subscribe(response => {
+        }).then(response => {
           if (response.data[0]) {
             this.user = response.data[0];
           } else {

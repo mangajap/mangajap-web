@@ -29,6 +29,6 @@ export class AnimeListComponent implements OnInit {
       filter: {
         query: query
       }
-    }).subscribe(response => this.animes = response.data);
+    }).then(response => this.animes = response.data);
   }
 }

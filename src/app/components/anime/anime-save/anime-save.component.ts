@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
-import { forkJoin, of } from 'rxjs';
-import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { Anime } from 'src/app/models/anime.model';
 import { Episode } from 'src/app/models/episode.model';
 import { Franchise } from 'src/app/models/franchise.model';
@@ -12,7 +10,6 @@ import { People } from 'src/app/models/people.model';
 import Season from 'src/app/models/season.model';
 import { Staff } from 'src/app/models/staff.model';
 import { Theme } from 'src/app/models/theme.model';
-import { MangajapApiService } from 'src/app/services/mangajap-api.service';
 import Base64 from 'src/app/utils/base64/base64';
 import Countries, { Country } from 'src/app/utils/countries/countries';
 
@@ -45,8 +42,7 @@ export class AnimeSaveComponent implements OnInit {
   constructor(
     private titleService: Title,
     private router: Router,
-    private route: ActivatedRoute,
-    private mangajapApiService: MangajapApiService
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
@@ -54,19 +50,19 @@ export class AnimeSaveComponent implements OnInit {
 
     Genre.findAll({
       limit: 1000,
-      sort: "title"
-    }).subscribe(response => this.genres = response.data);
+      sort: "title",
+    }).then(response => this.genres = response.data);
 
     Theme.findAll({
       limit: 1000,
-      sort: "title"
-    }).subscribe(response => this.themes = response.data);
+      sort: "title",
+    }).then(response => this.themes = response.data);
 
     const id = +this.route.snapshot.paramMap.get('id');
     if (id) {
       Anime.find(id.toString(), {
         include: ["seasons.episodes", "genres", "themes", "staff.people", "franchise.destination"],
-      }).subscribe(response => {
+      }).then(response => {
         this.anime = response.data;
         this.titleService.setTitle(`${this.anime.title} - Modification | MangaJap`);
       });
@@ -172,7 +168,7 @@ export class AnimeSaveComponent implements OnInit {
       filter: {
         query: query
       }
-    }).subscribe(response => this.peoples = response.data);
+    }).then(response => this.peoples = response.data);
   }
   addStaff() {
     const staff = new Staff();
@@ -206,20 +202,25 @@ export class AnimeSaveComponent implements OnInit {
       return;
     }
 
-    const mangas$ = Manga.findAll({
-      filter: {
-        query: query
-      }
-    });
-    const animes$ = Anime.findAll({
-      filter: {
-        query: query
-      }
-    });
-
-    forkJoin([mangas$, animes$]).subscribe(([mangaResponse, animeResponse]) => {
+    Promise.all([
+      Manga.findAll({
+        filter: {
+          query: query
+        }
+      }),
+      Anime.findAll({
+        filter: {
+          query: query
+        }
+      }),
+    ]).then(([mangaResponse, animeResponse]) => {
       this.mediaQuery = [].concat(mangaResponse.data).concat(animeResponse.data)
-        .filter(media => media.id !== this.anime.id && typeof media === typeof this.anime);
+        .filter(media => {
+          if (media instanceof Anime) {
+            return media.id !== this.anime.id;
+          }
+          return true;
+        });
     });
   }
   onFranchiseAdded(mediaIndex: string) {
@@ -250,29 +251,29 @@ export class AnimeSaveComponent implements OnInit {
     await Promise.all<any>([
       ...this.anime.genres
         .filter(genre => !genre.exists())
-        .map(genre => genre.save().toPromise()
+        .map(genre => genre.save()
           .then(response => genre.id = response.data.id)
         ),
       ...this.anime.themes
         .filter(theme => !theme.exists())
-        .map(theme => theme.save().toPromise()
+        .map(theme => theme.save()
           .then(response => theme.id = response.data.id)
         ),
       ...this.anime.staff
         .filter(staff => !staff.people.exists())
-        .map(staff => staff.people.save().toPromise()
+        .map(staff => staff.people.save()
           .then(response => staff.people.id = response.data.id)
         ),
     ]);
 
-    await this.anime.save().toPromise()
+    await this.anime.save()
       .then(response => this.anime.id = response.data.id);
 
     await Promise.all<any>([
       ...this.anime.seasons
         .map(season => {
           season.anime = this.anime;
-          return season.save().toPromise()
+          return season.save()
             .then(response => season.id = response.data.id)
             .then(async () => {
               return await Promise.all(season.episodes
@@ -281,19 +282,19 @@ export class AnimeSaveComponent implements OnInit {
                   episode.anime = this.anime;
                   return episode;
                 })
-                .map(episode => episode.save().toPromise())
+                .map(episode => episode.save())
               )
             })
         }),
       ...this.anime.staff
         .map(staff => {
           staff.anime = this.anime;
-          return staff.save().toPromise();
+          return staff.save();
         }),
       ...this.anime.franchise
         .map(franchise => {
           franchise.source = this.anime;
-          return franchise.save().toPromise();
+          return franchise.save();
         }),
     ]);
   }
@@ -302,24 +303,25 @@ export class AnimeSaveComponent implements OnInit {
     await Promise.all<any>([
       ...this.anime.genres
         ?.filter(genre => !genre.exists())
-        ?.map(genre => genre.save().toPromise()
+        ?.map(genre => genre.save()
           .then(response => genre.id = response.data.id)
         ),
       ...this.anime.themes
         ?.filter(theme => !theme.exists())
-        ?.map(theme => theme.save().toPromise()
+        ?.map(theme => theme.save()
           .then(response => theme.id = response.data.id)
         ),
       ...this.anime.staff
         ?.filter(staff => !staff.people.exists())
-        ?.map(staff => staff.people.save().toPromise()
+        ?.map(staff => staff.people.save()
           .then(response => staff.people.id = response.data.id)
         ),
     ]);
 
     await Promise.all<any>([
-      this.anime.save().toPromise(),
+      this.anime.save(),
       ...this.anime.seasons
+        // TODO: if season has changed
         .map(season => {
           if (!season.exists()) {
             season.anime = this.anime;
@@ -327,7 +329,7 @@ export class AnimeSaveComponent implements OnInit {
           return season;
         })
         .map(season => {
-          return season.save().toPromise()
+          return season.save()
             .then(response => season.id = response.data.id)
             .then(async () => {
               return await Promise.all(season.episodes
@@ -339,7 +341,7 @@ export class AnimeSaveComponent implements OnInit {
                   }
                   return episode;
                 })
-                .map(episode => episode.save().toPromise())
+                .map(episode => episode.save())
               )
             })
         }),
@@ -351,7 +353,7 @@ export class AnimeSaveComponent implements OnInit {
           }
           return staff;
         })
-        .map(staff => staff.save().toPromise()),
+        .map(staff => staff.save()),
       ...this.anime.franchise
         .filter(franchise => !franchise.exists() || franchise.hasChanged())
         .map(franchise => {
@@ -360,7 +362,7 @@ export class AnimeSaveComponent implements OnInit {
           }
           return franchise;
         })
-        .map(franchise => franchise.save().toPromise())
+        .map(franchise => franchise.save())
     ]);
   }
 }
