@@ -1,16 +1,16 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# compiled output
+# Compiled output
 /dist
 /tmp
 /out-tsc
 # Only exists if Bazel was run
 /bazel-out
 
-# dependencies
+# Dependencies
 /node_modules
 
-# profiling files
+# Profiling files
 chrome-profiler-events*.json
 speed-measure-plugin*.json
 
@@ -38,8 +38,11 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Config files
-/src/api/db.config.php
-
 # Firebase
 /.firebase
+
+# 000WebHost website files
+/src/api
+/src/images
+/src/media
+/src/.htaccess

@@ -48,11 +48,11 @@
               "src/favicon.ico",
               "src/assets",
 
+              "src/api",
               "src/images",
-              "src/.htaccess",
-              "src/app-ads.txt",
               "src/media",
-              "src/api"
+              "src/.htaccess",
+              "src/app-ads.txt"
             ],
             "styles": [
               "src/styles.css"
