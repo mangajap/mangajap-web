@@ -5,10 +5,11 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:dev": "ng build --base-href /mangajap/",
+    "build:prod": "ng build --configuration production",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "local": "ng build --base-href /mangajap/"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
