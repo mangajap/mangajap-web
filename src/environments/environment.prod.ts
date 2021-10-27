@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://mangajap.000webhostapp.com/api',
+  apiUrl: 'https://mangajap-api.herokuapp.com',
   firebase: {
     apiKey: "AIzaSyBERviz4ObXOcBPCHiY8weoU_zdA8UNcIk",
     authDomain: "mangajap.firebaseapp.com",
