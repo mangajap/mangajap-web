@@ -16,17 +16,10 @@ export class IsNotLoggedGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const isLogged = this.isLogged.canActivate(route, state);
-    if (isLogged instanceof Observable) {
-      return isLogged.pipe(
-        map((value) => {
-          return !value
-        })
-      );
-    } else {
-      return !this.isLogged.canActivate(route, state);
-    }
+  ): Promise<boolean | UrlTree> {
+    return this.isLogged.canActivate(route, state)
+      .then((isLogged) => !isLogged)
+      .catch(() => false);
   }
 
 }

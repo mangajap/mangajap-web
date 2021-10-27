@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Manga } from 'src/app/models/manga.model';
-import { MangajapApiService } from 'src/app/services/mangajap-api.service';
 
 @Component({
   selector: 'app-manga-list',
@@ -14,7 +13,6 @@ export class MangaListComponent implements OnInit {
 
   constructor(
     private titleService: Title,
-    private mangajapApiService: MangajapApiService
   ) { }
 
   ngOnInit(): void {

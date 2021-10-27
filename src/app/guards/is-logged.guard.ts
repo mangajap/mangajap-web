@@ -16,12 +16,10 @@ export class IsLoggedGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.firebaseAuth.authState.pipe(
-      map(user => {
-        return !!user;
-      })
-    );
+  ): Promise<boolean | UrlTree> {
+    return this.firebaseAuth.currentUser
+      .then((user) => !!user)
+      .catch(() => false);
   }
 
 }

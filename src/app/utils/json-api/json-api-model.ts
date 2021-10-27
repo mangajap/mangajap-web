@@ -27,7 +27,7 @@ export default abstract class JsonApiModel {
     return JSON.stringify({ ...this, initial: undefined }) !== JSON.stringify(this.initial);
   }
 
-  
+
   public static findAll<T extends JsonApiModel>(this: new () => T, params?: JsonApiParams): Promise<JsonApiResponse<T[]>> {
     const jsonApi: JsonApiConfig = this.prototype.jsonApi;
 

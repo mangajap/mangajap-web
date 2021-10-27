@@ -24,7 +24,7 @@ export interface JsonApiParams {
 })
 export default class JsonApiService {
 
-  constructor(protected http: HttpClient) {
+  constructor(private http: HttpClient) {
     for (const [type, model] of Object.entries(JsonApi.models)) {
       const jsonApi: JsonApiConfig = model.prototype.jsonApi || {};
       jsonApi.service = this;

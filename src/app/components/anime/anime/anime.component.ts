@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Anime } from 'src/app/models/anime.model';
-import { MangajapApiService } from 'src/app/services/mangajap-api.service';
 
 @Component({
   selector: 'app-anime',
@@ -15,9 +14,7 @@ export class AnimeComponent implements OnInit {
 
   constructor(
     private titleService: Title,
-    private router: Router,
     private route: ActivatedRoute,
-    private mangajapApiService: MangajapApiService
   ) { }
 
   ngOnInit(): void {

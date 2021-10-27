@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/models/user.model';
-import { MangajapApiService } from 'src/app/services/mangajap-api.service';
 
 @Component({
   selector: 'app-profile',
@@ -15,15 +14,13 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private titleService: Title,
-    private router: Router,
     private route: ActivatedRoute,
-    private mangajapApiService: MangajapApiService
   ) { }
 
   ngOnInit(): void {
     this.route.params
       .subscribe(params => {
-        
+
         const slug = params['slug'];
         if (slug) {
           User.findAll({

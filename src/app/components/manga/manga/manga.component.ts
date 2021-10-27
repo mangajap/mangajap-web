@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Manga } from 'src/app/models/manga.model';
-import { Volume } from 'src/app/models/volume.model';
-import { MangajapApiService } from 'src/app/services/mangajap-api.service';
 
 @Component({
   selector: 'app-manga',
@@ -18,7 +16,6 @@ export class MangaComponent implements OnInit {
     private titleService: Title,
     private router: Router,
     private route: ActivatedRoute,
-    private mangajapApiService: MangajapApiService
   ) { }
 
   ngOnInit(): void {

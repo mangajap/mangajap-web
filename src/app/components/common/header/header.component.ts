@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { User } from 'src/app/models/user.model';
-import { MangajapApiService } from 'src/app/services/mangajap-api.service';
 
 @Component({
   selector: 'app-header',
@@ -13,29 +12,28 @@ export class HeaderComponent implements OnInit {
   user: User = null;
 
   constructor(
-    private mangajapApiService: MangajapApiService,
     private firebaseAuth: AngularFireAuth,
   ) { }
 
   ngOnInit(): void {
-    this.firebaseAuth.authState.subscribe(firebaseUser => {
-      if (firebaseUser) {
-        User.findAll({
-          filter: {
-            self: "true"
-          }
-        }).then(response => {
-          if (response.data[0]) {
-            this.user = response.data[0];
-          } else {
-            this.user = null;
-          }
-          this.mangajapApiService.selfUser = this.user;
-        });
-      } else {
-        this.user = null;
-      }
-    });
+    this.firebaseAuth.authState
+      .subscribe(firebaseUser => {
+        if (firebaseUser) {
+          User.findAll({
+            filter: {
+              self: "true"
+            }
+          }).then(response => {
+            if (response.data[0]) {
+              this.user = response.data[0];
+            } else {
+              this.user = null;
+            }
+          });
+        } else {
+          this.user = null;
+        }
+      });
   }
 
 
@@ -51,7 +49,6 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.firebaseAuth.signOut().then(() => {
-    });
+    this.firebaseAuth.signOut().then(() => { });
   }
 }
