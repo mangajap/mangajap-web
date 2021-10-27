@@ -11,7 +11,6 @@ import { PrivacyPolicyComponent } from './components/about/privacy-policy/privac
 import { AnimeListComponent } from './components/anime/anime-list/anime-list.component';
 import { AnimeSaveComponent } from './components/anime/anime-save/anime-save.component';
 import { AnimeComponent } from './components/anime/anime/anime.component';
-import { AuthenticationComponent } from './components/authentication/authentication.component';
 import { FooterComponent } from './components/common/footer/footer.component';
 import { HeaderComponent } from './components/common/header/header.component';
 import { HomeComponent } from './components/home/home.component';
@@ -28,6 +27,8 @@ import { GroupByPipe } from './utils/pipes/group-by.pipe';
 import { InstanceOfPipe } from './utils/pipes/instance-of.pipe';
 import { RepeatPipe } from './utils/pipes/repeat.pipe';
 import { SafeUrlPipe } from './utils/pipes/safe-url.pipe';
+import { LoginComponent } from './components/authentication/login/login.component';
+import { RegisterComponent } from './components/authentication/register/register.component';
 
 
 @NgModule({
@@ -52,7 +53,8 @@ import { SafeUrlPipe } from './utils/pipes/safe-url.pipe';
     ProfileComponent,
     PrivacyPolicyComponent,
     NotFoundComponent,
-    AuthenticationComponent
+    LoginComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,

@@ -4,7 +4,8 @@ import { PrivacyPolicyComponent } from './components/about/privacy-policy/privac
 import { AnimeListComponent } from './components/anime/anime-list/anime-list.component';
 import { AnimeSaveComponent } from './components/anime/anime-save/anime-save.component';
 import { AnimeComponent } from './components/anime/anime/anime.component';
-import { AuthenticationComponent } from './components/authentication/authentication.component';
+import { LoginComponent } from './components/authentication/login/login.component';
+import { RegisterComponent } from './components/authentication/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { MangaListComponent } from './components/manga/manga-list/manga-list.component';
 import { MangaSaveComponent } from './components/manga/manga-save/manga-save.component';
@@ -17,8 +18,8 @@ import { IsNotLoggedGuard } from './guards/is-not-logged.guard';
 const routes: Routes = [
   { path: '', pathMatch: 'full', component: HomeComponent },
 
-  { path: 'login', component: AuthenticationComponent, canActivate: [IsNotLoggedGuard] },
-  { path: 'register', component: AuthenticationComponent, canActivate: [IsNotLoggedGuard] },
+  { path: 'login', component: LoginComponent, canActivate: [IsNotLoggedGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [IsNotLoggedGuard] },
 
   { path: 'about/privacy-policy', component: PrivacyPolicyComponent },
 

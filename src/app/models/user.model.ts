@@ -15,6 +15,9 @@ export class User extends JsonApiModel {
   updatedAt: string;
 
   @JsonApiAttribute()
+  uid: string;
+
+  @JsonApiAttribute()
   pseudo: string;
 
   @JsonApiAttribute()
