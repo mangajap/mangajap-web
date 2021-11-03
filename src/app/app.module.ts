@@ -24,11 +24,11 @@ import { EnumPipe } from './utils/pipes/enum.pipe';
 import { FilterNotPipe } from './utils/pipes/filter-not.pipe';
 import { FilterPipe } from './utils/pipes/filter.pipe';
 import { GroupByPipe } from './utils/pipes/group-by.pipe';
-import { InstanceOfPipe } from './utils/pipes/instance-of.pipe';
 import { RepeatPipe } from './utils/pipes/repeat.pipe';
 import { SafeUrlPipe } from './utils/pipes/safe-url.pipe';
 import { LoginComponent } from './components/authentication/login/login.component';
 import { RegisterComponent } from './components/authentication/register/register.component';
+import { JsonApiTypePipe } from './utils/json-api/json-api-pipes';
 
 
 @NgModule({
@@ -47,7 +47,7 @@ import { RegisterComponent } from './components/authentication/register/register
     FilterNotPipe,
     EnumPipe,
     SafeUrlPipe,
-    InstanceOfPipe,
+    JsonApiTypePipe,
     MangaListComponent,
     AnimeListComponent,
     ProfileComponent,
@@ -72,7 +72,7 @@ import { RegisterComponent } from './components/authentication/register/register
     FilterNotPipe,
     EnumPipe,
     SafeUrlPipe,
-    InstanceOfPipe,
+    JsonApiTypePipe,
   ],
   bootstrap: [AppComponent]
 })

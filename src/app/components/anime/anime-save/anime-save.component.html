@@ -269,7 +269,7 @@
         style="display: flex; flex-direction: column; align-items: center;">
 
         <!-- ANIME -->
-        <ng-container *ngIf="(franchise.destination | instanceof) === 'Anime'">
+        <ng-container *ngIf="(franchise.destination | jsonApiType) === 'anime'">
           <img [src]="franchise.destination.coverImage" [alt]="franchise.destination.title">
           <a href="/anime/{{ franchise.destination.id }}" target="_blank">
             {{ franchise.destination.title }}
@@ -278,7 +278,7 @@
         </ng-container>
 
         <!-- MANGA -->
-        <ng-container *ngIf="(franchise.destination | instanceof) === 'Manga'">
+        <ng-container *ngIf="(franchise.destination | jsonApiType) === 'manga'">
           <img [src]="franchise.destination.coverImage" [alt]="franchise.destination.title">
           <a href="/manga/{{ franchise.destination.id }}" target="_blank">
             {{ franchise.destination.title }}
