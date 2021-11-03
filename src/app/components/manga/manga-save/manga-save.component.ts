@@ -51,15 +51,17 @@ export class MangaSaveComponent implements OnInit {
       sort: "title",
     }).then(response => this.themes = response.data);
 
-    const id = +this.route.snapshot.paramMap.get('id');
-    if (id) {
-      Manga.find(id.toString(), {
-        include: ["volumes", "genres", "themes", "staff.people", "franchise.destination"],
-      }).then(response => {
-        this.manga = response.data;
-        this.titleService.setTitle(`${this.manga.title} - Modification | MangaJap`);
-      });
-    }
+    this.route.params.subscribe(params => {
+
+      if (params.id) {
+        Manga.find(params.id, {
+          include: ["volumes", "genres", "themes", "staff.people", "franchise.destination"],
+        }).then(response => {
+          this.manga = response.data;
+          this.titleService.setTitle(`${this.manga.title} - Modification | MangaJap`);
+        });
+      }
+    });
   }
 
 

@@ -14,23 +14,22 @@ export class MangaComponent implements OnInit {
 
   constructor(
     private titleService: Title,
-    private router: Router,
     private route: ActivatedRoute,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
-    const id = +this.route.snapshot.paramMap.get('id');
-    if (id) {
-      Manga.find(id.toString(), {
+    this.route.params.subscribe(params => {
+
+      Manga.find(params.id, {
         // include: ["volumes", "genres", "themes", "staff.people", "franchise.destination"],
-      }).then(response => {
-        this.manga = response.data;
-        this.titleService.setTitle(`${this.manga.title} | MangaJap`);
       })
+        .then(response => {
+          this.manga = response.data;
+          this.titleService.setTitle(`${this.manga.title} | MangaJap`);
+        })
         .catch(() => this.router.navigate(['**'], { skipLocationChange: true }));
-    } else {
-      this.router.navigate(['**'], { skipLocationChange: true });
-    }
+    })
   }
 
 }

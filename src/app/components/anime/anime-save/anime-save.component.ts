@@ -58,15 +58,17 @@ export class AnimeSaveComponent implements OnInit {
       sort: "title",
     }).then(response => this.themes = response.data);
 
-    const id = +this.route.snapshot.paramMap.get('id');
-    if (id) {
-      Anime.find(id.toString(), {
-        include: ["seasons.episodes", "genres", "themes", "staff.people", "franchise.destination"],
-      }).then(response => {
-        this.anime = response.data;
-        this.titleService.setTitle(`${this.anime.title} - Modification | MangaJap`);
-      });
-    }
+    this.route.params.subscribe(params => {
+
+      if (params.id) {
+        Anime.find(params.id, {
+          include: ["seasons.episodes", "genres", "themes", "staff.people", "franchise.destination"],
+        }).then(response => {
+          this.anime = response.data;
+          this.titleService.setTitle(`${this.anime.title} - Modification | MangaJap`);
+        });
+      }
+    });
   }
 
 

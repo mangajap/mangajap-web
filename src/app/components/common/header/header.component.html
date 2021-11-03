@@ -13,7 +13,7 @@
     (input)="onSearch($event.target.value)">
 
   <div *ngIf="user !== null">
-    <a routerLink="/profile/{{user.slug}}">Profil</a>
+    <a routerLink="/profile/{{user.id}}">Profil</a>
     <div>
       <span (click)="logout()">Déconnexion</span>
     </div>

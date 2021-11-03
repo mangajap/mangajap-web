@@ -15,18 +15,21 @@ export class AnimeComponent implements OnInit {
   constructor(
     private titleService: Title,
     private route: ActivatedRoute,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
-    const id = +this.route.snapshot.paramMap.get('id');
-    if (id) {
-      Anime.find(id.toString(), {
+    this.route.params.subscribe(params => {
+
+      Anime.find(params.id, {
         // include: ["episodes", "genres", "themes", "staff.people", "franchise.destination"],
-      }).then(response => {
-        this.anime = response.data;
-        this.titleService.setTitle(`${this.anime.title} | MangaJap`);
-      });
-    }
+      })
+        .then(response => {
+          this.anime = response.data;
+          this.titleService.setTitle(`${this.anime.title} | MangaJap`);
+        })
+        .catch(() => this.router.navigate(['**'], { skipLocationChange: true }));
+    });
   }
 
 }

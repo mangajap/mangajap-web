@@ -18,25 +18,13 @@ export class ProfileComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.route.params
-      .subscribe(params => {
-
-        const slug = params['slug'];
-        if (slug) {
-          User.findAll({
-            filter: {
-              slug: slug
-            }
-          }).then(response => {
-            if (response.data[0]) {
-              this.user = response.data[0];
-              this.titleService.setTitle(`${this.user.pseudo} - Profil | MangaJap`);
-            } else {
-              console.error("user introuvable");
-            }
-          });
-        }
+    this.route.params.subscribe(params => {
+      
+      User.find(params.id).then(response => {
+        this.user = response.data;
+        this.titleService.setTitle(`${this.user.pseudo} - Profil | MangaJap`);
       });
+    });
   }
 
 }

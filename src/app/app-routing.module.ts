@@ -33,7 +33,7 @@ const routes: Routes = [
   { path: 'manga/:id', component: MangaComponent },
   { path: 'manga/:id/edit', component: MangaSaveComponent, canActivate: [IsAdminGuard] },
 
-  { path: 'profile/:slug', component: ProfileComponent },
+  { path: 'profile/:id', component: ProfileComponent },
 
   { path: '**', component: NotFoundComponent },
 ];
