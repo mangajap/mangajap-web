@@ -1,8 +1,8 @@
 import { JsonApiAttribute, JsonApiRelationship, JsonApiType } from "../utils/json-api/json-api-annotations";
 import JsonApiModel from "../utils/json-api/json-api-model";
-import { Anime } from "./anime.model";
-import { Manga } from "./manga.model";
-import { People } from "./people.model";
+import Anime from "./anime.model";
+import Manga from "./manga.model";
+import People from "./people.model";
 
 enum Role {
   author = "Scénariste",
@@ -15,7 +15,7 @@ enum Role {
 }
 
 @JsonApiType("staff")
-export class Staff extends JsonApiModel {
+export default class Staff extends JsonApiModel {
 
   @JsonApiAttribute()
   createdAt: string;

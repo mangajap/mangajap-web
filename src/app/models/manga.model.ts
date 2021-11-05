@@ -1,11 +1,11 @@
 import { JsonApiAttribute, JsonApiRelationship, JsonApiType } from "../utils/json-api/json-api-annotations";
 import JsonApiModel from "../utils/json-api/json-api-model";
-import { Franchise } from "./franchise.model";
-import { Genre } from "./genre.model";
-import { Review } from "./review.model";
-import { Staff } from "./staff.model";
-import { Theme } from "./theme.model";
-import { Volume } from "./volume.model";
+import Franchise from "./franchise.model";
+import Genre from "./genre.model";
+import Review from "./review.model";
+import Staff from "./staff.model";
+import Theme from "./theme.model";
+import Volume from "./volume.model";
 
 enum Origin {
   jp = "Japon",
@@ -37,7 +37,7 @@ enum MangaType {
 }
 
 @JsonApiType("manga")
-export class Manga extends JsonApiModel {
+export default class Manga extends JsonApiModel {
 
   @JsonApiAttribute()
   createdAt?: string;

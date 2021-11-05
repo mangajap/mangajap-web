@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Anime } from 'src/app/models/anime.model';
-import { Episode } from 'src/app/models/episode.model';
-import { Franchise } from 'src/app/models/franchise.model';
-import { Genre } from 'src/app/models/genre.model';
-import { Manga } from 'src/app/models/manga.model';
-import { People } from 'src/app/models/people.model';
+import Anime from 'src/app/models/anime.model';
+import Episode from 'src/app/models/episode.model';
+import Franchise from 'src/app/models/franchise.model';
+import Genre from 'src/app/models/genre.model';
+import Manga from 'src/app/models/manga.model';
+import People from 'src/app/models/people.model';
 import Season from 'src/app/models/season.model';
-import { Staff } from 'src/app/models/staff.model';
-import { Theme } from 'src/app/models/theme.model';
+import Staff from 'src/app/models/staff.model';
+import Theme from 'src/app/models/theme.model';
 import Base64 from 'src/app/utils/base64/base64';
 import Countries, { Country } from 'src/app/utils/countries/countries';
 

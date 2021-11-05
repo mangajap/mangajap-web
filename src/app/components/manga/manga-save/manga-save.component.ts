@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Anime } from 'src/app/models/anime.model';
-import { Franchise } from 'src/app/models/franchise.model';
-import { Genre } from 'src/app/models/genre.model';
-import { Manga } from 'src/app/models/manga.model';
-import { People } from 'src/app/models/people.model';
-import { Staff } from 'src/app/models/staff.model';
-import { Theme } from 'src/app/models/theme.model';
-import { Volume } from 'src/app/models/volume.model';
+import Anime from 'src/app/models/anime.model';
+import Franchise from 'src/app/models/franchise.model';
+import Genre from 'src/app/models/genre.model';
+import Manga from 'src/app/models/manga.model';
+import People from 'src/app/models/people.model';
+import Staff from 'src/app/models/staff.model';
+import Theme from 'src/app/models/theme.model';
+import Volume from 'src/app/models/volume.model';
 import Base64 from 'src/app/utils/base64/base64';
 
 @Component({

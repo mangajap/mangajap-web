@@ -1,10 +1,10 @@
 import { JsonApiAttribute, JsonApiRelationship, JsonApiType } from "../utils/json-api/json-api-annotations";
 import JsonApiModel from "../utils/json-api/json-api-model";
-import { Anime } from "./anime.model";
-import { Manga } from "./manga.model";
+import Anime from "./anime.model";
+import Manga from "./manga.model";
 
 @JsonApiType("themes")
-export class Theme extends JsonApiModel {
+export default class Theme extends JsonApiModel {
 
   @JsonApiAttribute()
   createdAt: string;

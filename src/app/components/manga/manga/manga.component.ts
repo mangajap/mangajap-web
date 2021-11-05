@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Manga } from 'src/app/models/manga.model';
+import Manga from 'src/app/models/manga.model';
 
 @Component({
   selector: 'app-manga',

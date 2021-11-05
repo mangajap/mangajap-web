@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Anime } from 'src/app/models/anime.model';
+import Anime from 'src/app/models/anime.model';
 
 @Component({
   selector: 'app-anime-list',

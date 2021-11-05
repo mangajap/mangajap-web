@@ -1,12 +1,11 @@
 import { JsonApiAttribute, JsonApiRelationship, JsonApiType } from "../utils/json-api/json-api-annotations"
 import JsonApiModel from "../utils/json-api/json-api-model"
-import { Episode } from "./episode.model"
-import { Franchise } from "./franchise.model"
-import { Genre } from "./genre.model"
-import { Review } from "./review.model"
+import Franchise from "./franchise.model"
+import Genre from "./genre.model"
+import Review from "./review.model"
 import Season from './season.model'
-import { Staff } from "./staff.model"
-import { Theme } from "./theme.model"
+import Staff from "./staff.model"
+import Theme from "./theme.model"
 
 enum Status {
   airing = "En cours",
@@ -21,7 +20,7 @@ enum AnimeType {
 }
 
 @JsonApiType("anime")
-export class Anime extends JsonApiModel {
+export default class Anime extends JsonApiModel {
 
   @JsonApiAttribute()
   createdAt?: string;

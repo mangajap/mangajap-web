@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Manga } from 'src/app/models/manga.model';
+import Manga from 'src/app/models/manga.model';
 
 @Component({
   selector: 'app-manga-list',

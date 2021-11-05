@@ -1,7 +1,7 @@
 import { JsonApiType, JsonApiAttribute, JsonApiRelationship } from '../utils/json-api/json-api-annotations';
 import JsonApiModel from '../utils/json-api/json-api-model';
-import { Anime } from './anime.model';
-import { Episode } from './episode.model';
+import Anime from './anime.model';
+import Episode from './episode.model';
 
 @JsonApiType("seasons")
 export default class Season extends JsonApiModel {

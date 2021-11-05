@@ -1,11 +1,11 @@
 import { JsonApiAttribute, JsonApiRelationship, JsonApiType } from "../utils/json-api/json-api-annotations";
 import JsonApiModel from "../utils/json-api/json-api-model";
-import { User } from "./user.model";
+import User from "./user.model";
 
 @JsonApiType("request", {
   endpoint: 'requests'
 })
-export class Request extends JsonApiModel {
+export default class Request extends JsonApiModel {
 
   @JsonApiAttribute()
   createdAt?: string;

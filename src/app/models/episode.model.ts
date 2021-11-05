@@ -1,10 +1,10 @@
 import { JsonApiAttribute, JsonApiRelationship, JsonApiType } from "../utils/json-api/json-api-annotations";
 import JsonApiModel from "../utils/json-api/json-api-model";
-import { Anime } from "./anime.model";
+import Anime from "./anime.model";
 import Season from './season.model';
 
 @JsonApiType("episodes")
-export class Episode extends JsonApiModel {
+export default class Episode extends JsonApiModel {
   
   @JsonApiAttribute()
   createdAt: string;
