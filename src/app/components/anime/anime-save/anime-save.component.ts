@@ -10,13 +10,9 @@ import People from 'src/app/models/people.model';
 import Season from 'src/app/models/season.model';
 import Staff from 'src/app/models/staff.model';
 import Theme from 'src/app/models/theme.model';
+import { range } from 'src/app/utils/array/array';
 import Base64 from 'src/app/utils/base64/base64';
 import Countries, { Country } from 'src/app/utils/countries/countries';
-
-// TODO:
-function range(start, end) {
-  return Array(end - start + 1).fill(0).map((_, idx) => start + idx)
-}
 
 @Component({
   selector: 'app-anime-save',
