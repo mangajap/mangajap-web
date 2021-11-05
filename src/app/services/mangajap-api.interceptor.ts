@@ -23,11 +23,6 @@ export class MangaJapApiInterceptor implements HttpInterceptor {
       headers: new HttpHeaders({
         Authorization: firebaseUser ? `Bearer ${firebaseUser.uid}` : '',
       }),
-      body: {
-        data: httpRequest.body,
-        REQUEST_METHOD: httpRequest.method,
-      },
-      method: 'POST',
     });
 
     return next.handle(httpRequest).toPromise();
