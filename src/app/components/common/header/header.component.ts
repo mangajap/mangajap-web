@@ -16,24 +16,23 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.firebaseAuth.authState
-      .subscribe(firebaseUser => {
-        if (firebaseUser) {
-          User.findAll({
-            filter: {
-              self: "true"
-            }
-          }).then(response => {
-            if (response.data[0]) {
-              this.user = response.data[0];
-            } else {
-              this.user = null;
-            }
-          });
-        } else {
-          this.user = null;
-        }
-      });
+    this.firebaseAuth.authState.subscribe(firebaseUser => {
+      if (firebaseUser) {
+        User.findAll({
+          filter: {
+            self: "true"
+          }
+        }).then(response => {
+          if (response.data[0]) {
+            this.user = response.data[0];
+          } else {
+            this.user = null;
+          }
+        });
+      } else {
+        this.user = null;
+      }
+    });
   }
 
 

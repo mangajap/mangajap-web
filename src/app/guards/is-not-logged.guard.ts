@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { IsLoggedGuard } from './is-logged.guard';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -10,16 +10,22 @@ import { IsLoggedGuard } from './is-logged.guard';
 export class IsNotLoggedGuard implements CanActivate {
 
   constructor(
-    private isLogged: IsLoggedGuard
+    private router: Router,
+    private firebaseAuth: AngularFireAuth,
   ) { }
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Promise<boolean | UrlTree> {
-    return this.isLogged.canActivate(route, state)
-      .then((isLogged) => !isLogged)
-      .catch(() => false);
+  ): Observable<boolean> {
+    return this.firebaseAuth.authState.pipe(
+      map(user => !user),
+      tap(isNotLogged => {
+        if (!isNotLogged) {
+          this.router.navigate(['/'])
+        }
+      }),
+    );
   }
 
 }
