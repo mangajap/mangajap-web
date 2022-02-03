@@ -3,9 +3,7 @@ import JsonApiModel from "../utils/json-api/json-api-model";
 import Anime from "./anime.model";
 import User from "./user.model";
 
-@JsonApiType("animeEntries", {
-  endpoint: 'anime-entries'
-})
+@JsonApiType("anime-entries")
 export default class AnimeEntry extends JsonApiModel {
 
   @JsonApiAttribute()

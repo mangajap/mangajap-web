@@ -2,9 +2,7 @@ import { JsonApiAttribute, JsonApiRelationship, JsonApiType } from "../utils/jso
 import JsonApiModel from "../utils/json-api/json-api-model";
 import User from "./user.model";
 
-@JsonApiType("request", {
-  endpoint: 'requests'
-})
+@JsonApiType("requests")
 export default class Request extends JsonApiModel {
 
   @JsonApiAttribute()

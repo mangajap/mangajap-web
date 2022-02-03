@@ -2,7 +2,7 @@ import { JsonApiAttribute, JsonApiRelationship, JsonApiType } from "../utils/jso
 import JsonApiModel from "../utils/json-api/json-api-model";
 import Staff from "./staff.model";
 
-@JsonApiType("people")
+@JsonApiType("peoples")
 export default class People extends JsonApiModel {
 
   @JsonApiAttribute()

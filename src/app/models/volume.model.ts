@@ -2,9 +2,7 @@ import { JsonApiAttribute, JsonApiRelationship, JsonApiType } from "../utils/jso
 import JsonApiModel from "../utils/json-api/json-api-model";
 import Manga from "./manga.model";
 
-@JsonApiType("volumes", {
-  endpoint: 'volumes'
-})
+@JsonApiType("volumes")
 export default class Volume extends JsonApiModel {
 
   @JsonApiAttribute()

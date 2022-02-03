@@ -58,7 +58,7 @@ export class AnimeSaveComponent implements OnInit {
 
       if (params.id) {
         Anime.find(params.id, {
-          include: ["seasons.episodes", "genres", "themes", "staff.people", "franchise.destination"],
+          include: ["seasons.episodes", "genres", "themes", "staff.people", "franchises.destination"],
         }).then(response => {
           this.anime = response.data;
           this.titleService.setTitle(`${this.anime.title} - Modification | MangaJap`);
