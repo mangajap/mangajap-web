@@ -25,7 +25,7 @@ export class RegisterComponent implements OnInit {
   onRegister() {
     this.firebaseAuth.createUserWithEmailAndPassword(this.email, this.password)
       .then((result) => {
-        this.user.uid = result.user.uid;
+        this.user.id = result.user.uid;
         return this.user.save();
       })
       .then(() => this.router.navigate(['/']))
