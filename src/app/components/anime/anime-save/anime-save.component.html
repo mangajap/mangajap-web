@@ -2,101 +2,106 @@
   <input type="text" [(ngModel)]="anime.title">
 </h1>
 
-<div style="display: grid; grid-template: auto auto / auto 1fr auto; column-gap: 20px;">
+<div>
+  <h3>Titres alternatifs</h3>
   <div>
     <div>
-      <img [src]="anime.coverImage" [alt]="anime.title">
-      <div>
-        <input type="file" accept="image/*" (change)="onCoverImageChange($event.target.files[0])">
-        <a href="javascript: void(0)" (click)="onCoverImageChange(null)">X</a>
-      </div>
+      <strong>Titre français : </strong>
+      <input type="text" [(ngModel)]="anime.titles.fr">
     </div>
 
     <div>
-      <h3>Titres alternatifs</h3>
-      <div>
-        <div>
-          <strong>Titre français : </strong>
-          <input type="text" [(ngModel)]="anime.titles.fr">
-        </div>
+      <strong>Titre anglais : </strong>
+      <input type="text" [(ngModel)]="anime.titles.en">
+    </div>
 
-        <div>
-          <strong>Titre anglais : </strong>
-          <input type="text" [(ngModel)]="anime.titles.en">
-        </div>
+    <div>
+      <strong>Titre romanisé : </strong>
+      <input type="text" [(ngModel)]="anime.titles.en_jp">
+    </div>
 
-        <div>
-          <strong>Titre romanisé : </strong>
-          <input type="text" [(ngModel)]="anime.titles.en_jp">
-        </div>
+    <div>
+      <strong>Titre japonais : </strong>
+      <input type="text" [(ngModel)]="anime.titles.ja_jp">
+    </div>
+  </div>
+</div>
 
-        <div>
-          <strong>Titre japonais : </strong>
-          <input type="text" [(ngModel)]="anime.titles.ja_jp">
-        </div>
-      </div>
+
+<div>
+  <h2>Informations</h2>
+  <div>
+    <div>
+      <strong>Diffusion : </strong>
+      <span>du </span>
+      <input type="date" [(ngModel)]="anime.startDate">
+      <span> au </span>
+      <input type="date" [(ngModel)]="anime.endDate">
+    </div>
+
+    <div>
+      <strong>Pays : </strong>
+      <select [(ngModel)]="anime.origin">
+        <option disabled selected value>------</option>
+        <option *ngFor="let country of countries" [value]="country.code">{{ country.name }}</option>
+      </select>
+    </div>
+
+    <div>
+      <strong>Status de publication : </strong>
+      <select [(ngModel)]="anime.status">
+        <option disabled selected value>------</option>
+        <option *ngFor="let status of animeStatus | enum" [value]="status.key">{{status.value}}</option>
+      </select>
+    </div>
+
+    <div>
+      <strong>Type : </strong>
+      <select [(ngModel)]="anime.animeType">
+        <option disabled selected value>------</option>
+        <option *ngFor="let type of animeType | enum" [value]="type.key">{{type.value}}</option>
+      </select>
+    </div>
+
+    <div>
+      <strong>Durée par épisode : </strong>
+      <input type="number" [(ngModel)]="anime.episodeLength">
+    </div>
+  </div>
+</div>
+
+<div>
+  <div>
+    <img [src]="anime.coverImage" [alt]="anime.title">
+    <div>
+      <input type="file" accept="image/*" (change)="onCoverImageChange($event.target.files[0])">
+      <a href="javascript: void(0)" (click)="onCoverImageChange(null)">X</a>
     </div>
   </div>
 
   <div>
+    <img [src]="anime.bannerImage" [alt]="anime.title">
     <div>
-      <h2>Informations</h2>
-      <div>
-        <div>
-          <strong>Diffusion : </strong>
-          <span>du </span>
-          <input type="date" [(ngModel)]="anime.startDate">
-          <span> au </span>
-          <input type="date" [(ngModel)]="anime.endDate">
-        </div>
-
-        <div>
-          <strong>Pays : </strong>
-          <select [(ngModel)]="anime.origin">
-            <option disabled selected value>------</option>
-            <option *ngFor="let country of countries" [value]="country.code">{{ country.name }}</option>
-          </select>
-        </div>
-
-        <div>
-          <strong>Status de publication : </strong>
-          <select [(ngModel)]="anime.status">
-            <option disabled selected value>------</option>
-            <option *ngFor="let status of animeStatus | enum" [value]="status.key">{{status.value}}</option>
-          </select>
-        </div>
-
-        <div>
-          <strong>Type : </strong>
-          <select [(ngModel)]="anime.animeType">
-            <option disabled selected value>------</option>
-            <option *ngFor="let type of animeType | enum" [value]="type.key">{{type.value}}</option>
-          </select>
-        </div>
-
-        <div>
-          <strong>Durée par épisode : </strong>
-          <input type="number" [(ngModel)]="anime.episodeLength">
-        </div>
-      </div>
+      <input type="file" accept="image/*" (change)="onBannerImageChange($event.target.files[0])">
+      <a href="javascript: void(0)" (click)="onBannerImageChange(null)">X</a>
     </div>
   </div>
+</div>
 
 
+<div>
+  <h2>Bande-annonce</h2>
+  <iframe [src]="'https://www.youtube.com/embed/' + anime.youtubeVideoId | safeUrl" allowfullscreen=""></iframe>
   <div>
-    <h2>Bande-annonce</h2>
-    <iframe [src]="'https://www.youtube.com/embed/' + anime.youtubeVideoId | safeUrl" allowfullscreen=""></iframe>
-    <div>
-      <input type="text" placeholder="https://www.youtube.com/watch?v=...." [(ngModel)]="anime.youtubeVideoId"
-        (ngModelChange)="onYoutubeVideoIdChange()">
-    </div>
+    <input type="text" placeholder="https://www.youtube.com/watch?v=...." [(ngModel)]="anime.youtubeVideoId"
+      (ngModelChange)="onYoutubeVideoIdChange()">
   </div>
+</div>
 
-  <div style="grid-area: 2 / 1 / 3 / 4;">
-    <h2>Synopsis</h2>
-    <div>
-      <textarea style="width: 100%;" rows="8" [(ngModel)]="anime.synopsis"></textarea>
-    </div>
+<div>
+  <h2>Synopsis</h2>
+  <div>
+    <textarea style="width: 100%;" rows="8" [(ngModel)]="anime.synopsis"></textarea>
   </div>
 </div>
 

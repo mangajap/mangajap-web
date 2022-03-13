@@ -19,6 +19,8 @@ enum Origin {
 enum Status {
   publishing = "En cours",
   finished = "Terminé",
+  unreleased = "À sortir",
+  upcoming = "À venir",
 }
 
 enum MangaType {

@@ -10,7 +10,8 @@ import Theme from "./theme.model"
 enum Status {
   airing = "En cours",
   finished = "Terminé",
-  planning = "Pas encore commencé",
+  unreleased = "À sortir",
+  upcoming = "À venir",
 }
 
 enum AnimeType {
@@ -103,6 +104,9 @@ export default class Anime extends JsonApiModel {
 
   @JsonApiAttribute()
   coverImage: string;
+
+  @JsonApiAttribute()
+  bannerImage: string;
 
   @JsonApiAttribute()
   youtubeVideoId: string

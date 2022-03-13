@@ -76,6 +76,14 @@ export class AnimeSaveComponent implements OnInit {
     }
   }
 
+  onBannerImageChange(file: File | null) {
+    if (file) {
+      Base64.encode(file, (base64) => this.anime.bannerImage = base64);
+    } else {
+      this.anime.bannerImage = null;
+    }
+  }
+
   onYoutubeVideoIdChange() {
     if (this.anime.youtubeVideoId.startsWith("http://") || this.anime.youtubeVideoId.startsWith("https://")) {
       const videoYoutubeId = new URL(this.anime.youtubeVideoId).searchParams.get("v");
