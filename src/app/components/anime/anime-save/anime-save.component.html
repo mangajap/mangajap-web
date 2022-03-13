@@ -78,63 +78,6 @@
           <strong>Durée par épisode : </strong>
           <input type="number" [(ngModel)]="anime.episodeLength">
         </div>
-
-        <div>
-          <strong>Genres : </strong>
-          <div>
-            <div *ngFor="let genre of anime.genres">
-
-              <ng-container *ngIf="genre.id != undefined">
-                <select [(ngModel)]="genre.id">
-                  <option disabled selected value>------</option>
-                  <option *ngFor="let g of genres" [value]="g.id">{{ g.title }}</option>
-                </select>
-                <a href="javascript: void(0)" (click)="removeGenre(genre)">X</a>
-              </ng-container>
-
-              <ng-container *ngIf="genre.id == undefined">
-                <input type="text" [(ngModel)]="genre.title" placeholder="Nom">
-                <input type="text" [(ngModel)]="genre.description" placeholder="Description">
-                <a href="javascript: void(0)" (click)="removeGenre(genre)">X</a>
-              </ng-container>
-
-            </div>
-          </div>
-          <div>
-            <a href="javascript: void(0)" (click)="addGenre()">Ajouter</a>
-            <span> / </span>
-            <a href="javascript: void(0)" (click)="createGenre()">Créer</a>
-          </div>
-        </div>
-
-        <div>
-          <strong>Thèmes : </strong>
-          <div>
-            <div *ngFor="let theme of anime.themes">
-
-              <div *ngIf="theme.id != undefined">
-                <select [(ngModel)]="theme.id">
-                  <option disabled selected value>------</option>
-                  <option *ngFor="let t of themes" [value]="t.id">{{ t.title }}</option>
-                </select>
-                <a href="javascript: void(0)" (click)="removeTheme(theme)">X</a>
-              </div>
-
-              <div *ngIf="theme.id == undefined">
-                <input type="text" [(ngModel)]="theme.title" placeholder="Nom">
-                <input type="text" [(ngModel)]="theme.description" placeholder="Description">
-                <a href="javascript: void(0)" (click)="removeTheme(theme)">X</a>
-              </div>
-
-            </div>
-          </div>
-          <div>
-            <a href="javascript: void(0)" (click)="addTheme()">Ajouter</a>
-            <span> / </span>
-            <a href="javascript: void(0)" (click)="createTheme()">Créer</a>
-          </div>
-        </div>
-
       </div>
     </div>
   </div>
@@ -199,6 +142,54 @@
     </div>
   </div>
 </div>
+
+
+<div>
+  <h2>Genres</h2>
+  <fieldset>
+
+    <div style="display: grid; grid-template: auto / auto auto auto auto;">
+      <div *ngFor="let genre of genres">
+        <input type="checkbox" (change)="onGenreChecked(genre, $event.target.checked)"
+          [checked]="genreIsAdded(genre)" />
+        <span>{{ genre.title }}</span>
+      </div>
+    </div>
+
+    <div>
+      <div *ngFor="let genre of anime.genres | filter:'id':undefined">
+        <input type="text" [(ngModel)]="genre.title" placeholder="Nom">
+        <input type="text" [(ngModel)]="genre.description" placeholder="Description">
+        <a href="javascript: void(0)" (click)="removeGenre(genre)">X</a>
+      </div>
+      <a href="javascript: void(0)" (click)="createGenre()">Créer</a>
+    </div>
+  </fieldset>
+</div>
+
+<div>
+  <h2>Thèmes</h2>
+  <fieldset>
+    <div style="display: grid; grid-template: auto / auto auto auto auto;">
+      <div *ngFor="let theme of themes">
+        <input type="checkbox" (change)="onThemeChecked(theme, $event.target.checked)"
+          [checked]="themeIsAdded(theme)" />
+        <span>{{ theme.title }}</span>
+      </div>
+    </div>
+
+    <div>
+      <div *ngFor="let theme of anime.themes | filter:'id':undefined">
+        <input type="text" [(ngModel)]="theme.title" placeholder="Nom">
+        <input type="text" [(ngModel)]="theme.description" placeholder="Description">
+        <a href="javascript: void(0)" (click)="removeTheme(theme)">X</a>
+      </div>
+      <a href="javascript: void(0)" (click)="createTheme()">Créer</a>
+    </div>
+
+  </fieldset>
+</div>
+
 
 <div>
   <h2>Staff</h2>

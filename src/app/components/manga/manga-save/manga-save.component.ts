@@ -91,35 +91,43 @@ export class MangaSaveComponent implements OnInit {
     }
   }
 
-  addGenre() {
-    const genre = new Genre();
-    genre.id = '';
 
-    this.manga.genres.push(genre);
+  genreIsAdded(genre: Genre): boolean {
+    return !!this.manga.genres.find(g => g.id === genre.id)
+  }
+  onGenreChecked(genre: Genre, checked: boolean) {
+    if (checked) {
+      this.manga.genres.push(genre);
+    } else {
+      this.manga.genres.splice(this.manga.genres.findIndex(g => g.id === genre.id), 1);
+    }
   }
   createGenre() {
     const genre = new Genre();
-
     this.manga.genres.push(genre);
   }
   removeGenre(genre: Genre) {
     this.manga.genres.splice(this.manga.genres.indexOf(genre), 1);
   }
 
-  addTheme() {
-    const theme = new Theme();
-    theme.id = '';
-
-    this.manga.themes.push(theme);
+  themeIsAdded(theme: Theme): boolean {
+    return !!this.manga.themes.find(t => t.id === theme.id)
+  }
+  onThemeChecked(theme: Theme, checked: boolean) {
+    if (checked) {
+      this.manga.themes.push(theme);
+    } else {
+      this.manga.themes.splice(this.manga.themes.findIndex(t => t.id === theme.id), 1);
+    }
   }
   createTheme() {
     const theme = new Theme();
-
     this.manga.themes.push(theme);
   }
   removeTheme(theme: Theme) {
     this.manga.themes.splice(this.manga.themes.indexOf(theme), 1);
   }
+
 
   onSearchPeople(query: string) {
     if (query === '') {

@@ -126,30 +126,36 @@ export class AnimeSaveComponent implements OnInit {
       .length;
   }
 
-  addGenre() {
-    const genre = new Genre();
-    genre.id = '';
-
-    this.anime.genres.push(genre);
+  genreIsAdded(genre: Genre): boolean {
+    return !!this.anime.genres.find(g => g.id === genre.id)
+  }
+  onGenreChecked(genre: Genre, checked: boolean) {
+    if (checked) {
+      this.anime.genres.push(genre);
+    } else {
+      this.anime.genres.splice(this.anime.genres.findIndex(g => g.id === genre.id), 1);
+    }
   }
   createGenre() {
     const genre = new Genre();
-
     this.anime.genres.push(genre);
   }
   removeGenre(genre: Genre) {
     this.anime.genres.splice(this.anime.genres.indexOf(genre), 1);
   }
 
-  addTheme() {
-    const theme = new Theme();
-    theme.id = '';
-
-    this.anime.themes.push(theme);
+  themeIsAdded(theme: Theme): boolean {
+    return !!this.anime.themes.find(t => t.id === theme.id)
+  }
+  onThemeChecked(theme: Theme, checked: boolean) {
+    if (checked) {
+      this.anime.themes.push(theme);
+    } else {
+      this.anime.themes.splice(this.anime.themes.findIndex(t => t.id === theme.id), 1);
+    }
   }
   createTheme() {
     const theme = new Theme();
-
     this.anime.themes.push(theme);
   }
   removeTheme(theme: Theme) {
