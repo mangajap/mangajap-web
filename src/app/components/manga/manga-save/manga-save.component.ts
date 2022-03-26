@@ -159,10 +159,10 @@ export class MangaSaveComponent implements OnInit {
   }
 
   addFranchise() {
-    this.manga.franchise.push(new Franchise());
+    this.manga.franchises.push(new Franchise());
   }
   removeFranchise(franchise: Franchise) {
-    this.manga.franchise.splice(this.manga.franchise.indexOf(franchise), 1);
+    this.manga.franchises.splice(this.manga.franchises.indexOf(franchise), 1);
   }
   onSearchFranchise(query: string) {
     if (query === '') {
@@ -236,7 +236,7 @@ export class MangaSaveComponent implements OnInit {
         staff.manga = this.manga;
         return staff.save();
       }),
-      ...this.manga.franchise.map(franchise => {
+      ...this.manga.franchises.map(franchise => {
         franchise.source = this.manga;
         return franchise.save();
       }),
@@ -282,7 +282,7 @@ export class MangaSaveComponent implements OnInit {
           return staff;
         })
         .map(staff => staff.save()),
-      ...this.manga.franchise
+      ...this.manga.franchises
         .filter(franchise => !franchise.exists() || franchise.hasChanged())
         .map(franchise => {
           if (!franchise.exists()) {

@@ -131,7 +131,7 @@ export default class Manga extends JsonApiModel {
   reviews?: Review[] = [];
 
   @JsonApiRelationship()
-  franchise?: Franchise[] = [];
+  franchises?: Franchise[] = [];
 
 
 

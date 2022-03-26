@@ -128,7 +128,7 @@ export default class Anime extends JsonApiModel {
   reviews: Review[] = [];
 
   @JsonApiRelationship()
-  franchise: Franchise[] = [];
+  franchises: Franchise[] = [];
 
 
   static readonly Status = Status;

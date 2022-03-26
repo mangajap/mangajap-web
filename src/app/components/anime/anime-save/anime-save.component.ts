@@ -239,10 +239,10 @@ export class AnimeSaveComponent implements OnInit {
     const franchise = new Franchise();
     franchise.destination = this.mediaQuery[mediaIndex];
 
-    this.anime.franchise.push(franchise);
+    this.anime.franchises.push(franchise);
   }
   removeFranchise(franchise: Franchise) {
-    this.anime.franchise.splice(this.anime.franchise.indexOf(franchise), 1);
+    this.anime.franchises.splice(this.anime.franchises.indexOf(franchise), 1);
   }
 
 
@@ -303,7 +303,7 @@ export class AnimeSaveComponent implements OnInit {
           staff.anime = this.anime;
           return staff.save();
         }),
-      ...this.anime.franchise
+      ...this.anime.franchises
         .map(franchise => {
           franchise.source = this.anime;
           return franchise.save();
@@ -366,7 +366,7 @@ export class AnimeSaveComponent implements OnInit {
           return staff;
         })
         .map(staff => staff.save()),
-      ...this.anime.franchise
+      ...this.anime.franchises
         .filter(franchise => !franchise.exists() || franchise.hasChanged())
         .map(franchise => {
           if (!franchise.exists()) {

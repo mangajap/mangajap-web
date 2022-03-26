@@ -218,7 +218,7 @@
       <th>Franchise</th>
       <td>
         <div id="franchise-container">
-          <div *ngFor="let franchise of manga.franchise">
+          <div *ngFor="let franchise of manga.franchises">
             <input type="text" placeholder="Rechercher" (input)="onSearchFranchise($event.target.value)">
             <select [(ngModel)]="franchise.destination">
               <option *ngIf="franchise.destination && !mediaQuery.includes(franchise.destination)"
