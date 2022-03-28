@@ -25,7 +25,7 @@ speed-measure-plugin*.json
 *.sublime-workspace
 
 # misc
-/.angular/cache
+/.angular
 /.sass-cache
 /connect.lock
 /coverage
