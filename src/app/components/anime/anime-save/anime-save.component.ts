@@ -204,7 +204,6 @@ export class AnimeSaveComponent implements OnInit {
     staff.people = this.peoples[peopleIndex];
 
     this.anime.staff.push(staff);
-    console.log(this.anime.staff)
   }
 
 
@@ -227,12 +226,10 @@ export class AnimeSaveComponent implements OnInit {
       }),
     ]).then(([mangaResponse, animeResponse]) => {
       this.mediaQuery = [].concat(mangaResponse.data).concat(animeResponse.data)
-        .filter(media => {
-          if (media instanceof Anime) {
-            return media.id !== this.anime.id;
-          }
-          return true;
-        });
+      .filter(media => !(media instanceof Anime && media.id === this.anime.id))
+      .filter(media => this.anime.franchises.findIndex(franchise => {
+        return franchise.destination.type === media.type && franchise.destination.id === media.id
+      }) === -1);
     });
   }
   onFranchiseAdded(mediaIndex: string) {
