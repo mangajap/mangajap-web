@@ -29,6 +29,7 @@ import { SafeUrlPipe } from './utils/pipes/safe-url.pipe';
 import { LoginComponent } from './components/authentication/login/login.component';
 import { RegisterComponent } from './components/authentication/register/register.component';
 import { JsonApiTypePipe } from './utils/json-api/json-api-pipes';
+import { PeopleComponent } from './components/people/people/people.component';
 
 
 @NgModule({
@@ -55,6 +56,7 @@ import { JsonApiTypePipe } from './utils/json-api/json-api-pipes';
     NotFoundComponent,
     LoginComponent,
     RegisterComponent,
+    PeopleComponent,
   ],
   imports: [
     BrowserModule,
