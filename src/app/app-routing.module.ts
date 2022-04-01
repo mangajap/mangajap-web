@@ -11,6 +11,8 @@ import { MangaListComponent } from './components/manga/manga-list/manga-list.com
 import { MangaSaveComponent } from './components/manga/manga-save/manga-save.component';
 import { MangaComponent } from './components/manga/manga/manga.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { PeopleSaveComponent } from './components/people/people-save/people-save.component';
+import { PeopleComponent } from './components/people/people/people.component';
 import { ProfileComponent } from './components/profile/profile/profile.component';
 import { IsAdminGuard } from './guards/is-admin.guard';
 import { IsNotLoggedGuard } from './guards/is-not-logged.guard';
@@ -32,6 +34,10 @@ const routes: Routes = [
   { path: 'manga/add', component: MangaSaveComponent, canActivate: [IsAdminGuard] },
   { path: 'manga/:id', component: MangaComponent },
   { path: 'manga/:id/edit', component: MangaSaveComponent, canActivate: [IsAdminGuard] },
+
+  { path: 'people/add', component: PeopleSaveComponent, canActivate: [IsAdminGuard] },
+  { path: 'people/:id', component: PeopleComponent },
+  { path: 'people/:id/edit', component: PeopleSaveComponent, canActivate: [IsAdminGuard] },
 
   { path: 'profile/:id', component: ProfileComponent },
 
