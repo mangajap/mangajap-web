@@ -157,14 +157,15 @@ export class MangaSaveComponent implements OnInit {
   removeStaff(staff: Staff) {
     this.manga.staff.splice(this.manga.staff.indexOf(staff), 1);
   }
+  onStaffAdded(peopleIndex: string) {
+    const staff = new Staff();
+    staff.id = '';
+    staff.people = this.peoples[peopleIndex];
 
-  addFranchise() {
-    this.manga.franchises.push(new Franchise());
+    this.manga.staff.push(staff);
   }
-  removeFranchise(franchise: Franchise) {
-    this.manga.franchises.splice(this.manga.franchises.indexOf(franchise), 1);
-  }
-  onSearchFranchise(query: string) {
+
+  onFranchiseSearch(query: string) {
     if (query === '') {
       this.mediaQuery = [];
       return;
@@ -183,13 +184,20 @@ export class MangaSaveComponent implements OnInit {
       })
     ]).then(([mangaResponse, animeResponse]) => {
       this.mediaQuery = [].concat(mangaResponse.data).concat(animeResponse.data)
-        .filter(media => {
-          if (media instanceof Manga) {
-            return media.id !== this.manga.id;
-          }
-          return true;
-        });
+        .filter(media => !(media instanceof Manga && media.id === this.manga.id))
+        .filter(media => this.manga.franchises.findIndex(franchise => {
+          return franchise.destination.type === media.type && franchise.destination.id === media.id
+        }) === -1);
     });
+  }
+  onFranchiseAdded(mediaIndex: string) {
+    const franchise = new Franchise();
+    franchise.destination = this.mediaQuery[mediaIndex];
+
+    this.manga.franchises.push(franchise);
+  }
+  removeFranchise(franchise: Franchise) {
+    this.manga.franchises.splice(this.manga.franchises.indexOf(franchise), 1);
   }
 
 

@@ -177,23 +177,34 @@
     <tr>
       <th>Staff</th>
       <td>
-        <div id="staff-container">
-          <div *ngFor="let staff of manga.staff">
-            <div *ngIf="staff.id != undefined">
-              <input type="text" placeholder="Rechercher" (input)="onSearchPeople($event.target.value)">
-              <select [(ngModel)]="staff.people">
-                <option *ngIf="staff.people.id && !peoples.includes(staff.people)" [ngValue]="staff.people">
-                  {{ staff.people.firstName }} {{ staff.people.lastName }} / {{ staff.people.pseudo }}
-                </option>
-                <option *ngFor="let p of peoples" [ngValue]="p">
-                  {{ p.firstName }} {{ p.lastName }} / {{ p.pseudo }}
-                </option>
-              </select>
+        <div>
+          <div>
+            <input type="text" placeholder="Rechercher" (input)="onSearchPeople($event.target.value)">
+            <select (change)="onStaffAdded($event.target.value)">
+              <option disabled selected value>------</option>
+              <option *ngFor="let people of peoples; let i = index" [value]="i">
+                {{ people.firstName }} {{ people.lastName }} / {{ people.pseudo }}
+              </option>
+            </select>
+          </div>
+      
+          <div style="display: flex; column-gap: 10px;">
+            <div *ngFor="let staff of manga.staff" style="display: flex; flex-direction: column; align-items: center;">
+              <img [src]="staff.people.image" [alt]="staff.people.firstName + ' ' + staff.people.lastName">
+              <a href="/people/{{ staff.people.id }}">
+                {{ staff.people.firstName }} {{ staff.people.lastName }}
+              </a>
+              <small>{{ staff.people.pseudo }}</small>
               <select [(ngModel)]="staff.role">
+                <option disabled selected value>------</option>
                 <option *ngFor="let role of staffRole | enum" [value]="role.key">{{ role.value }}</option>
               </select>
               <a href="javascript: void(0)" (click)="removeStaff(staff)">X</a>
             </div>
+          </div>
+      
+          <div *ngFor="let staff of manga.staff">
+      
             <div *ngIf="staff.id == undefined">
               <input type="text" [(ngModel)]="staff.people.firstName" placeholder="Prénom">
               <input type="text" [(ngModel)]="staff.people.lastName" placeholder="Nom">
@@ -203,42 +214,62 @@
               </select>
               <a href="javascript: void(0)" (click)="removeStaff(staff)">X</a>
             </div>
+      
           </div>
+      
+          <p>
+            Si la personne n'est pas sur le site, <a href="javascript: void(0)" (click)="createStaff()">merci de le
+              créer</a>.
+          </p>
         </div>
-        <p>
-          <a href="javascript: void(0)" (click)="addStaff()">+ Ajouter un staff</a>
-          <br />
-          Si la personne n'est pas sur le site, <a href="javascript: void(0)" (click)="createStaff()">merci de le
-            créer</a>.
-        </p>
       </td>
     </tr>
 
     <tr>
       <th>Franchise</th>
       <td>
-        <div id="franchise-container">
-          <div *ngFor="let franchise of manga.franchises">
-            <input type="text" placeholder="Rechercher" (input)="onSearchFranchise($event.target.value)">
-            <select [(ngModel)]="franchise.destination">
-              <option *ngIf="franchise.destination && !mediaQuery.includes(franchise.destination)"
-                [ngValue]="franchise.destination">
-                {{ franchise.destination.title }} ({{ franchise.destination.jsonApi.schema.type }})
-              </option>
-              <option *ngFor="let media of mediaQuery" [ngValue]="media">
+        <div>
+          <div>
+            <input type="text" placeholder="Rechercher" (input)="onFranchiseSearch($event.target.value)">
+            <select (change)="onFranchiseAdded($event.target.value)">
+              <option disabled selected value>------</option>
+              <option *ngFor="let media of mediaQuery; let i = index" [value]="i">
                 {{ media.title }} ({{ media.jsonApi.schema.type }})
               </option>
             </select>
-            <span> is a </span>
-            <select [(ngModel)]="franchise.role">
-              <option *ngFor="let role of franchiseRole | enum" [value]="role.key">{{ role.value }}</option>
-            </select>
-            <a href="javascript: void(0)" (click)="removeFranchise(franchise)">X</a>
+          </div>
+      
+          <div style="display: flex; column-gap: 10px;">
+            <div *ngFor="let franchise of manga.franchises"
+              style="display: flex; flex-direction: column; align-items: center;">
+      
+              <!-- ANIME -->
+              <ng-container *ngIf="(franchise.destination | jsonApiType) === 'anime'">
+                <img [src]="franchise.destination.coverImage" [alt]="franchise.destination.title">
+                <a href="/anime/{{ franchise.destination.id }}" target="_blank">
+                  {{ franchise.destination.title }}
+                </a>
+                <small>Anime</small>
+              </ng-container>
+      
+              <!-- MANGA -->
+              <ng-container *ngIf="(franchise.destination | jsonApiType) === 'manga'">
+                <img [src]="franchise.destination.coverImage" [alt]="franchise.destination.title">
+                <a href="/manga/{{ franchise.destination.id }}" target="_blank">
+                  {{ franchise.destination.title }}
+                </a>
+                <small>Manga</small>
+              </ng-container>
+      
+              <select [(ngModel)]="franchise.role">
+                <option disabled selected value>------</option>
+                <option *ngFor="let role of franchiseRole | enum" [value]="role.key">{{ role.value }}</option>
+              </select>
+              <a href="javascript: void(0)" (click)="removeFranchise(franchise)">X</a>
+      
+            </div>
           </div>
         </div>
-        <p>
-          <a href="javascript: void(0)" (click)="addFranchise()">+ Ajouter une franchise</a>
-        </p>
       </td>
     </tr>
 
