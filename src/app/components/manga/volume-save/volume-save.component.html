@@ -1,1 +1,78 @@
-<p>volume-save works!</p>
+<h2>{{ volume.manga.title }}</h2>
+
+<table>
+  <tbody>
+
+    <tr>
+      <th>Numéro du tome</th>
+      <td>
+        <input type="number" [(ngModel)]="volume.number">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Couverture</th>
+      <td>
+        <img [src]="volume.coverImage" alt="Image">
+        <input type="file" accept="image/*" (change)="onImageChanged($event.target.files[0])">
+        <a href="javascript: void(0)" (click)="onImageChanged(null)">X</a>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Titre français</th>
+      <td>
+        <input type="text" [(ngModel)]="volume.titles.fr">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Titre anglais</th>
+      <td>
+        <input type="text" [(ngModel)]="volume.titles.en">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Titre romanisé</th>
+      <td>
+        <input type="text" [(ngModel)]="volume.titles.en_jp">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Titre japonais</th>
+      <td>
+        <input type="text" [(ngModel)]="volume.titles.ja_jp">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Start chapter</th>
+      <td>
+        <input type="number" [(ngModel)]="volume.startChapter">
+      </td>
+    </tr>
+
+    <tr>
+      <th>End chapter</th>
+      <td>
+        <input type="number" [(ngModel)]="volume.endChapter">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Date de parution</th>
+      <td>
+        <input type="date" [(ngModel)]="volume.published">
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2">
+        <input type="submit" (click)="submit()" value="Envoyer">
+      </td>
+    </tr>
+
+  </tbody>
+</table>
