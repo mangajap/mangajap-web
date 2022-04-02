@@ -32,6 +32,7 @@ import { JsonApiTypePipe } from './utils/json-api/json-api-pipes';
 import { PeopleComponent } from './components/people/people/people.component';
 import { PeopleSaveComponent } from './components/people/people-save/people-save.component';
 import { VolumeComponent } from './components/manga/volume/volume.component';
+import { VolumeSaveComponent } from './components/manga/volume-save/volume-save.component';
 
 
 @NgModule({
@@ -61,6 +62,7 @@ import { VolumeComponent } from './components/manga/volume/volume.component';
     PeopleComponent,
     PeopleSaveComponent,
     VolumeComponent,
+    VolumeSaveComponent,
   ],
   imports: [
     BrowserModule,
