@@ -31,6 +31,7 @@ import { RegisterComponent } from './components/authentication/register/register
 import { JsonApiTypePipe } from './utils/json-api/json-api-pipes';
 import { PeopleComponent } from './components/people/people/people.component';
 import { PeopleSaveComponent } from './components/people/people-save/people-save.component';
+import { VolumeComponent } from './components/manga/volume/volume.component';
 
 
 @NgModule({
@@ -59,6 +60,7 @@ import { PeopleSaveComponent } from './components/people/people-save/people-save
     RegisterComponent,
     PeopleComponent,
     PeopleSaveComponent,
+    VolumeComponent,
   ],
   imports: [
     BrowserModule,
