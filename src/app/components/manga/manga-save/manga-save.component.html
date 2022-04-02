@@ -78,32 +78,6 @@
     </tr>
 
     <tr>
-      <th>Nombre de volumes</th>
-      <td>
-        <input type="number" [(ngModel)]="manga.volumeCount" (ngModelChange)="updateVolumes()">
-        <div id="volume-container" style="max-height: 600px; overflow-y: auto">
-          <div *ngFor="let volume of manga.volumes">
-            <span>{{ volume.number }}</span>
-            <input type="text" [(ngModel)]="volume.titles.fr" placeholder="Titre fr">
-            <input type="text" [(ngModel)]="volume.titles.en" placeholder="Titre en">
-            <input type="text" [(ngModel)]="volume.titles.en_jp" placeholder="Titre en_jp">
-            <input type="text" [(ngModel)]="volume.titles.ja_jp" placeholder="Titre ja_jp">
-            <input type="number" [(ngModel)]="volume.startChapter" placeholder="Start chapter">
-            <input type="number" [(ngModel)]="volume.endChapter" placeholder="End chapter">
-            <input type="date" [(ngModel)]="volume.published" placeholder="Date de publication">
-          </div>
-        </div>
-      </td>
-    </tr>
-
-    <tr>
-      <th>Nombre de chapitres</th>
-      <td>
-        <input type="number" [(ngModel)]="manga.chapterCount">
-      </td>
-    </tr>
-
-    <tr>
       <th>Synopsis</th>
       <td>
         <textarea rows="8" cols="33" [(ngModel)]="manga.synopsis"></textarea>
@@ -171,6 +145,32 @@
             <a href="javascript: void(0)" (click)="createTheme()">Créer</a>
           </div>
         </fieldset>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Nombre de volumes</th>
+      <td>
+        <input type="number" [(ngModel)]="manga.volumeCount" (ngModelChange)="updateVolumes()">
+        <div id="volume-container" style="max-height: 600px; overflow-y: auto">
+          <div *ngFor="let volume of manga.volumes">
+            <span>{{ volume.number }}</span>
+            <input type="text" [(ngModel)]="volume.titles.fr" placeholder="Titre fr">
+            <input type="text" [(ngModel)]="volume.titles.en" placeholder="Titre en">
+            <input type="text" [(ngModel)]="volume.titles.en_jp" placeholder="Titre en_jp">
+            <input type="text" [(ngModel)]="volume.titles.ja_jp" placeholder="Titre ja_jp">
+            <input type="number" [(ngModel)]="volume.startChapter" placeholder="Start chapter">
+            <input type="number" [(ngModel)]="volume.endChapter" placeholder="End chapter">
+            <input type="date" [(ngModel)]="volume.published" placeholder="Date de publication">
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Nombre de chapitres</th>
+      <td>
+        <input type="number" [(ngModel)]="manga.chapterCount">
       </td>
     </tr>
 
