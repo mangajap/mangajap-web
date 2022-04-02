@@ -53,5 +53,4 @@ export class PeopleSaveComponent implements OnInit {
         .catch(err => console.error(err))
     }
   }
-
 }
