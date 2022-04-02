@@ -33,6 +33,7 @@ import { PeopleComponent } from './components/people/people/people.component';
 import { PeopleSaveComponent } from './components/people/people-save/people-save.component';
 import { VolumeComponent } from './components/manga/volume/volume.component';
 import { VolumeSaveComponent } from './components/manga/volume-save/volume-save.component';
+import { SeasonComponent } from './components/anime/season/season.component';
 
 
 @NgModule({
@@ -63,6 +64,7 @@ import { VolumeSaveComponent } from './components/manga/volume-save/volume-save.
     PeopleSaveComponent,
     VolumeComponent,
     VolumeSaveComponent,
+    SeasonComponent,
   ],
   imports: [
     BrowserModule,
