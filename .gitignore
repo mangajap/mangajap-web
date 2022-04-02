@@ -41,9 +41,3 @@ Thumbs.db
 
 # Firebase
 /.firebase
-
-# 000WebHost website files
-/src/api
-/src/images
-/src/media
-/src/.htaccess
