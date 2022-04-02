@@ -36,6 +36,7 @@ import { VolumeSaveComponent } from './components/manga/volume-save/volume-save.
 import { SeasonComponent } from './components/anime/season/season.component';
 import { SeasonSaveComponent } from './components/anime/season-save/season-save.component';
 import { EpisodeComponent } from './components/anime/episode/episode.component';
+import { EpisodeSaveComponent } from './components/anime/episode-save/episode-save.component';
 
 
 @NgModule({
@@ -69,6 +70,7 @@ import { EpisodeComponent } from './components/anime/episode/episode.component';
     SeasonComponent,
     SeasonSaveComponent,
     EpisodeComponent,
+    EpisodeSaveComponent,
   ],
   imports: [
     BrowserModule,
