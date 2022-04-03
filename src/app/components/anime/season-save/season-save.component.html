@@ -1,1 +1,48 @@
-<p>season-save works!</p>
+<h2>{{ season.anime.title }}</h2>
+
+<table>
+  <tbody>
+
+    <tr>
+      <th>Numéro de la saison</th>
+      <td>
+        <input type="number" [(ngModel)]="season.number">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Titre français</th>
+      <td>
+        <input type="text" [(ngModel)]="season.titles.fr">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Titre anglais</th>
+      <td>
+        <input type="text" [(ngModel)]="season.titles.en">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Titre romanisé</th>
+      <td>
+        <input type="text" [(ngModel)]="season.titles.en_jp">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Titre japonais</th>
+      <td>
+        <input type="text" [(ngModel)]="season.titles.ja_jp">
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2">
+        <input type="submit" (click)="submit()" value="Envoyer">
+      </td>
+    </tr>
+
+  </tbody>
+</table>
