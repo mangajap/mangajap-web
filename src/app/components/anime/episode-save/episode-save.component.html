@@ -1,1 +1,72 @@
-<p>episode-save works!</p>
+<h2>{{ episode.anime.title }} - Saison {{ episode.season.number }}</h2>
+
+<table>
+  <tbody>
+
+    <tr>
+      <th>Numéro de l'épisode dans la saison</th>
+      <td>
+        <input type="number" [(ngModel)]="episode.relativeNumber">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Numéro de l'épisode</th>
+      <td>
+        <input type="number" [(ngModel)]="episode.number">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Titre français</th>
+      <td>
+        <input type="text" [(ngModel)]="episode.titles.fr">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Titre anglais</th>
+      <td>
+        <input type="text" [(ngModel)]="episode.titles.en">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Titre romanisé</th>
+      <td>
+        <input type="text" [(ngModel)]="episode.titles.en_jp">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Titre japonais</th>
+      <td>
+        <input type="text" [(ngModel)]="episode.titles.ja_jp">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Date de sortie</th>
+      <td>
+        <input type="date" [(ngModel)]="episode.airDate">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Type d'épisode</th>
+      <td>
+        <select [(ngModel)]="episode.episodeType">
+          <option selected value=""></option>
+          <option *ngFor="let type of episodeType | enum" [value]="type.key">{{type.value}}</option>
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2">
+        <input type="submit" (click)="submit()" value="Envoyer">
+      </td>
+    </tr>
+
+  </tbody>
+</table>

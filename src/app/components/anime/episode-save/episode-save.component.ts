@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import Anime from 'src/app/models/anime.model';
+import Episode from 'src/app/models/episode.model';
+import Season from 'src/app/models/season.model';
 
 @Component({
   selector: 'app-episode-save',
@@ -7,9 +12,56 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EpisodeSaveComponent implements OnInit {
 
-  constructor() { }
+  episode = new Episode();
+
+  episodeType = Episode.EpisodeType;
+
+  constructor(
+    private titleService: Title,
+    private router: Router,
+    private route: ActivatedRoute,
+  ) { }
 
   ngOnInit(): void {
+    this.route.params.subscribe((params) => {
+      if (params.id) {
+        Episode.find(params.id, { include: ["season", "anime"] })
+          .then((response) => this.episode = response.data)
+          .then(() => {
+            this.titleService.setTitle(`${this.episode.anime.title} - S${this.episode.season.number}E${this.episode.number} - Modification | MangaJap`)
+          })
+          .catch(() => this.router.navigate(['**'], { skipLocationChange: true }));
+      } else {
+        Promise.all([
+          Anime.find(params.animeId),
+          Season.find(params.seasonId),
+        ])
+          .then(([animeResponse, seasonResponse]) => {
+            this.episode.anime = animeResponse.data;
+            this.episode.season = seasonResponse.data;
+            console.log(this.episode.season)
+          })
+          .then(() => {
+            this.titleService.setTitle(`${this.episode.anime.title} - S${this.episode.season.number} - Ajouter un épisode | MangaJap`)
+            this.episode.relativeNumber = this.episode.season.episodeCount + 1;
+            this.episode.number = this.episode.anime.episodeCount + 1;
+          })
+          .catch(() => this.router.navigate(['**'], { skipLocationChange: true }));
+      }
+    });
   }
 
+
+  submit() {
+    if (!this.episode.exists()) {
+      this.episode.create()
+        .then(response => this.episode.id = response.data.id)
+        .then(() => this.router.navigate(['/anime', this.episode.anime.id, 'season', this.episode.season.id, 'episode', this.episode.id]))
+        .catch(err => console.error(err))
+    } else {
+      this.episode.update()
+        .then(() => this.router.navigate(['/anime', this.episode.anime.id, 'season', this.episode.season.id, 'episode', this.episode.id]))
+        .catch(err => console.error(err))
+    }
+  }
 }
