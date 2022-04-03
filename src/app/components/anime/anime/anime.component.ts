@@ -22,7 +22,7 @@ export class AnimeComponent implements OnInit {
     this.route.params.subscribe(params => {
 
       Anime.find(params.id, {
-        // include: ["episodes", "genres", "themes", "staff.people", "franchise.destination"],
+        include: ["seasons.episodes", "genres", "themes", "staff.people", "franchises.destination"],
       })
         .then(response => {
           this.anime = response.data;
