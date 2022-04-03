@@ -4,6 +4,10 @@ import { PrivacyPolicyComponent } from './components/about/privacy-policy/privac
 import { AnimeListComponent } from './components/anime/anime-list/anime-list.component';
 import { AnimeSaveComponent } from './components/anime/anime-save/anime-save.component';
 import { AnimeComponent } from './components/anime/anime/anime.component';
+import { EpisodeSaveComponent } from './components/anime/episode-save/episode-save.component';
+import { EpisodeComponent } from './components/anime/episode/episode.component';
+import { SeasonSaveComponent } from './components/anime/season-save/season-save.component';
+import { SeasonComponent } from './components/anime/season/season.component';
 import { LoginComponent } from './components/authentication/login/login.component';
 import { RegisterComponent } from './components/authentication/register/register.component';
 import { HomeComponent } from './components/home/home.component';
@@ -31,6 +35,12 @@ const routes: Routes = [
   { path: 'anime/add', component: AnimeSaveComponent, canActivate: [IsAdminGuard] },
   { path: 'anime/:id', component: AnimeComponent },
   { path: 'anime/:id/edit', component: AnimeSaveComponent, canActivate: [IsAdminGuard] },
+  { path: 'anime/:animeId/season/add', component: SeasonSaveComponent, canActivate: [IsAdminGuard] },
+  { path: 'anime/:animeId/season/:id', component: SeasonComponent },
+  { path: 'anime/:animeId/season/:id/edit', component: SeasonSaveComponent, canActivate: [IsAdminGuard] },
+  { path: 'anime/:animeId/season/:seasonId/episode/add', component: EpisodeSaveComponent, canActivate: [IsAdminGuard] },
+  { path: 'anime/:animeId/season/:seasonId/episode/:id', component: EpisodeComponent },
+  { path: 'anime/:animeId/season/:seasonId/episode/:id/edit', component: EpisodeSaveComponent, canActivate: [IsAdminGuard] },
 
   { path: 'manga', component: MangaListComponent },
   { path: 'manga/add', component: MangaSaveComponent, canActivate: [IsAdminGuard] },
