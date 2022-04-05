@@ -27,7 +27,8 @@ export class VolumeSaveComponent implements OnInit {
           .then((response) => this.volume = response.data)
           .then(() => {
             this.titleService.setTitle(`${this.volume.manga.title} - Tome ${this.volume.number} - Modification | MangaJap`)
-          });
+          })
+          .catch(() => this.router.navigate(['**'], { skipLocationChange: true }));
       } else {
         Manga.find(params.mangaId)
           .then((response) => this.volume.manga = response.data)
@@ -35,7 +36,7 @@ export class VolumeSaveComponent implements OnInit {
             this.titleService.setTitle(`${this.volume.manga.title} - Ajouter un tome | MangaJap`)
             this.volume.number = this.volume.manga.volumeCount + 1;
           })
-          .catch((err) => console.error(err));
+          .catch(() => this.router.navigate(['**'], { skipLocationChange: true }));
       }
     });
   }

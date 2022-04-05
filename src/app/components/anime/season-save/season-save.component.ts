@@ -26,7 +26,8 @@ export class SeasonSaveComponent implements OnInit {
           .then((response) => this.season = response.data)
           .then(() => {
             this.titleService.setTitle(`${this.season.anime.title} - Saison ${this.season.number} - Modification | MangaJap`)
-          });
+          })
+          .catch(() => this.router.navigate(['**'], { skipLocationChange: true }));
       } else {
         Anime.find(params.animeId)
           .then((response) => this.season.anime = response.data)
@@ -34,7 +35,7 @@ export class SeasonSaveComponent implements OnInit {
             this.titleService.setTitle(`${this.season.anime.title} - Ajouter une saison | MangaJap`)
             this.season.number = this.season.anime.seasonCount + 1;
           })
-          .catch((err) => console.error(err));
+          .catch(() => this.router.navigate(['**'], { skipLocationChange: true }));
       }
     });
   }

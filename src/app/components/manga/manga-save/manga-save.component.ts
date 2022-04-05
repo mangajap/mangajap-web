@@ -56,10 +56,12 @@ export class MangaSaveComponent implements OnInit {
       if (params.id) {
         Manga.find(params.id, {
           include: ["volumes", "genres", "themes", "staff.people", "franchises.destination"],
-        }).then(response => {
-          this.manga = response.data;
-          this.titleService.setTitle(`${this.manga.title} - Modification | MangaJap`);
-        });
+        })
+          .then(response => this.manga = response.data)
+          .then(() => {
+            this.titleService.setTitle(`${this.manga.title} - Modification | MangaJap`);
+          })
+          .catch(() => this.router.navigate(['**'], { skipLocationChange: true }));
       }
     });
   }
