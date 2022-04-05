@@ -32,7 +32,7 @@
     <tr>
       <th>Titre japonais</th>
       <td>
-        <input type="text" [(ngModel)]="manga.titles.ja_jp">
+        <input type="text" [(ngModel)]="manga.titles.ja">
       </td>
     </tr>
 
@@ -111,7 +111,7 @@
               <span>{{ genre.title }}</span>
             </div>
           </div>
-      
+
           <div>
             <div *ngFor="let genre of manga.genres | filter:'id':undefined">
               <input type="text" [(ngModel)]="genre.title" placeholder="Nom">
@@ -135,7 +135,7 @@
               <span>{{ theme.title }}</span>
             </div>
           </div>
-      
+
           <div>
             <div *ngFor="let theme of manga.themes | filter:'id':undefined">
               <input type="text" [(ngModel)]="theme.title" placeholder="Nom">
@@ -187,7 +187,7 @@
               </option>
             </select>
           </div>
-      
+
           <div style="display: flex; column-gap: 10px;">
             <div *ngFor="let staff of manga.staff" style="display: flex; flex-direction: column; align-items: center;">
               <img [src]="staff.people.image" [alt]="staff.people.firstName + ' ' + staff.people.lastName">
@@ -202,9 +202,9 @@
               <a href="javascript: void(0)" (click)="removeStaff(staff)">X</a>
             </div>
           </div>
-      
+
           <div *ngFor="let staff of manga.staff">
-      
+
             <div *ngIf="staff.id == undefined">
               <input type="text" [(ngModel)]="staff.people.firstName" placeholder="Prénom">
               <input type="text" [(ngModel)]="staff.people.lastName" placeholder="Nom">
@@ -214,9 +214,9 @@
               </select>
               <a href="javascript: void(0)" (click)="removeStaff(staff)">X</a>
             </div>
-      
+
           </div>
-      
+
           <p>
             Si la personne n'est pas sur le site, <a routerLink="/people/add" target="_blank">merci de le créer</a>.
           </p>
@@ -237,11 +237,11 @@
               </option>
             </select>
           </div>
-      
+
           <div style="display: flex; column-gap: 10px;">
             <div *ngFor="let franchise of manga.franchises"
               style="display: flex; flex-direction: column; align-items: center;">
-      
+
               <!-- ANIME -->
               <ng-container *ngIf="(franchise.destination | jsonApiType) === 'anime'">
                 <img [src]="franchise.destination.coverImage" [alt]="franchise.destination.title">
@@ -250,7 +250,7 @@
                 </a>
                 <small>Anime</small>
               </ng-container>
-      
+
               <!-- MANGA -->
               <ng-container *ngIf="(franchise.destination | jsonApiType) === 'manga'">
                 <img [src]="franchise.destination.coverImage" [alt]="franchise.destination.title">
@@ -259,13 +259,13 @@
                 </a>
                 <small>Manga</small>
               </ng-container>
-      
+
               <select [(ngModel)]="franchise.role">
                 <option disabled selected value>------</option>
                 <option *ngFor="let role of franchiseRole | enum" [value]="role.key">{{ role.value }}</option>
               </select>
               <a href="javascript: void(0)" (click)="removeFranchise(franchise)">X</a>
-      
+
             </div>
           </div>
         </div>
