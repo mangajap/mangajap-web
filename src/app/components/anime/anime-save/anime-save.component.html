@@ -1,296 +1,314 @@
-<h1>
-  <input type="text" [(ngModel)]="anime.title">
-</h1>
+<table>
+  <tbody>
 
-<div>
-  <h3>Titres alternatifs</h3>
-  <div>
-    <div>
-      <strong>Titre français : </strong>
-      <input type="text" [(ngModel)]="anime.titles.fr">
-    </div>
+    <tr>
+      <th>Titre</th>
+      <td>
+        <input type="text" [(ngModel)]="anime.title">
+      </td>
+    </tr>
 
-    <div>
-      <strong>Titre anglais : </strong>
-      <input type="text" [(ngModel)]="anime.titles.en">
-    </div>
+    <tr>
+      <th>Titre français</th>
+      <td>
+        <input type="text" [(ngModel)]="anime.titles.fr">
+      </td>
+    </tr>
 
-    <div>
-      <strong>Titre romanisé : </strong>
-      <input type="text" [(ngModel)]="anime.titles.en_jp">
-    </div>
+    <tr>
+      <th>Titre anglais</th>
+      <td>
+        <input type="text" [(ngModel)]="anime.titles.en">
+      </td>
+    </tr>
 
-    <div>
-      <strong>Titre japonais : </strong>
-      <input type="text" [(ngModel)]="anime.titles.ja_jp">
-    </div>
-  </div>
-</div>
+    <tr>
+      <th>Titre romanisé</th>
+      <td>
+        <input type="text" [(ngModel)]="anime.titles.en_jp">
+      </td>
+    </tr>
 
+    <tr>
+      <th>Titre japonais</th>
+      <td>
+        <input type="text" [(ngModel)]="anime.titles.ja_jp">
+      </td>
+    </tr>
 
-<div>
-  <h2>Informations</h2>
-  <div>
-    <div>
-      <strong>Diffusion : </strong>
-      <span>du </span>
-      <input type="date" [(ngModel)]="anime.startDate">
-      <span> au </span>
-      <input type="date" [(ngModel)]="anime.endDate">
-    </div>
+    <tr>
+      <th>Date de sortie</th>
+      <td>
+        <input type="date" [(ngModel)]="anime.startDate">
+      </td>
+    </tr>
 
-    <div>
-      <strong>Pays : </strong>
-      <select [(ngModel)]="anime.origin">
-        <option disabled selected value>------</option>
-        <option *ngFor="let country of countries" [value]="country.code">{{ country.name }}</option>
-      </select>
-    </div>
+    <tr>
+      <th>Date de fin</th>
+      <td>
+        <input type="date" [(ngModel)]="anime.endDate">
+      </td>
+    </tr>
 
-    <div>
-      <strong>Status de publication : </strong>
-      <select [(ngModel)]="anime.status">
-        <option disabled selected value>------</option>
-        <option *ngFor="let status of animeStatus | enum" [value]="status.key">{{status.value}}</option>
-      </select>
-    </div>
+    <tr>
+      <th>Pays</th>
+      <td>
+        <select [(ngModel)]="anime.origin">
+          <option disabled selected value>------</option>
+          <option *ngFor="let country of countries" [value]="country.code">{{ country.name }}</option>
+        </select>
+      </td>
+    </tr>
 
-    <div>
-      <strong>Type : </strong>
-      <select [(ngModel)]="anime.animeType">
-        <option disabled selected value>------</option>
-        <option *ngFor="let type of animeType | enum" [value]="type.key">{{type.value}}</option>
-      </select>
-    </div>
+    <tr>
+      <th>Status de publication</th>
+      <td>
+        <select [(ngModel)]="anime.status">
+          <option *ngFor="let status of animeStatus | enum" [value]="status.key">{{status.value}}</option>
+        </select>
+      </td>
+    </tr>
 
-    <div>
-      <strong>Durée par épisode : </strong>
-      <input type="number" [(ngModel)]="anime.episodeLength">
-    </div>
-  </div>
-</div>
+    <tr>
+      <th>Type</th>
+      <td>
+        <select [(ngModel)]="anime.animeType">
+          <option *ngFor="let type of animeType | enum" [value]="type.key">{{type.value}}</option>
+        </select>
+      </td>
+    </tr>
 
-<div>
-  <div>
-    <img [src]="anime.coverImage" [alt]="anime.title">
-    <div>
-      <input type="file" accept="image/*" (change)="onCoverImageChange($event.target.files[0])">
-      <a href="javascript: void(0)" (click)="onCoverImageChange(null)">X</a>
-    </div>
-  </div>
+    <tr>
+      <th>Durée par épisode</th>
+      <td>
+        <input type="number" [(ngModel)]="anime.episodeLength">
+      </td>
+    </tr>
 
-  <div>
-    <img [src]="anime.bannerImage" [alt]="anime.title">
-    <div>
-      <input type="file" accept="image/*" (change)="onBannerImageChange($event.target.files[0])">
-      <a href="javascript: void(0)" (click)="onBannerImageChange(null)">X</a>
-    </div>
-  </div>
-</div>
+    <tr>
+      <th>Synopsis</th>
+      <td>
+        <textarea rows="8" cols="33" [(ngModel)]="anime.synopsis"></textarea>
+      </td>
+    </tr>
 
+    <tr>
+      <th>Image</th>
+      <td>
+        <img [src]="anime.coverImage" alt="coverImage">
+        <input type="file" accept="image/*" (change)="onCoverImageChanged($event.target.files[0])">
+      </td>
+    </tr>
 
-<div>
-  <h2>Bande-annonce</h2>
-  <iframe [src]="'https://www.youtube.com/embed/' + anime.youtubeVideoId | safeUrl" allowfullscreen=""></iframe>
-  <div>
-    <input type="text" placeholder="https://www.youtube.com/watch?v=...." [(ngModel)]="anime.youtubeVideoId"
-      (ngModelChange)="onYoutubeVideoIdChange()">
-  </div>
-</div>
+    <tr>
+      <th>Bannière</th>
+      <td>
+        <img [src]="anime.bannerImage" alt="bannerImage">
+        <input type="file" accept="image/*" (change)="onBannerImageChanged($event.target.files[0])">
+      </td>
+    </tr>
 
-<div>
-  <h2>Synopsis</h2>
-  <div>
-    <textarea style="width: 100%;" rows="8" [(ngModel)]="anime.synopsis"></textarea>
-  </div>
-</div>
+    <tr>
+      <th>Vidéo youtube</th>
+      <td>
+        <input type="text" [(ngModel)]="anime.youtubeVideoId" (ngModelChange)="onYoutubeVideoIdChanged()">
+      </td>
+    </tr>
 
-<div>
-  <h2>Episodes</h2>
-  <div>
-    <input type="number" placeholder="Nombre de saisons" [(ngModel)]="anime.seasonCount"
-      (ngModelChange)="onSeasonCountChange()">
-    <div style="max-height: 600px; overflow-y: auto">
-      <div *ngFor="let season of anime.seasons">
-        <div>
-          <span>Saison {{ season.number }}</span>
-          <input type="number" placeholder="Nombres d'épisodes" [(ngModel)]="season.episodeCount"
-            (ngModelChange)="onSeasonEpisodeCountChange(season)">
-          <input type="text" [(ngModel)]="season.titles.fr">
-          <input type="text" [(ngModel)]="season.titles.en">
-          <input type="text" [(ngModel)]="season.titles.en_jp">
-          <input type="text" [(ngModel)]="season.titles.ja_jp">
+    <tr>
+      <th>Genres</th>
+      <td>
+        <fieldset>
+          <div style="display: grid; grid-template: auto / auto auto auto auto;">
+            <div *ngFor="let genre of genres">
+              <input type="checkbox" (change)="onGenreChecked(genre, $event.target.checked)"
+                [checked]="genreIsAdded(genre)" />
+              <span>{{ genre.title }}</span>
+            </div>
+          </div>
+
+          <div>
+            <div *ngFor="let genre of anime.genres | filter:'id':undefined">
+              <input type="text" [(ngModel)]="genre.title" placeholder="Nom">
+              <input type="text" [(ngModel)]="genre.description" placeholder="Description">
+              <a href="javascript: void(0)" (click)="removeGenre(genre)">X</a>
+            </div>
+            <a href="javascript: void(0)" (click)="createGenre()">Créer</a>
+          </div>
+        </fieldset>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Thèmes</th>
+      <td>
+        <fieldset>
+          <div style="display: grid; grid-template: auto / auto auto auto auto;">
+            <div *ngFor="let theme of themes">
+              <input type="checkbox" (change)="onThemeChecked(theme, $event.target.checked)"
+                [checked]="themeIsAdded(theme)" />
+              <span>{{ theme.title }}</span>
+            </div>
+          </div>
+
+          <div>
+            <div *ngFor="let theme of anime.themes | filter:'id':undefined">
+              <input type="text" [(ngModel)]="theme.title" placeholder="Nom">
+              <input type="text" [(ngModel)]="theme.description" placeholder="Description">
+              <a href="javascript: void(0)" (click)="removeTheme(theme)">X</a>
+            </div>
+            <a href="javascript: void(0)" (click)="createTheme()">Créer</a>
+          </div>
+        </fieldset>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Episodes</th>
+      <td>
+        <input type="number" placeholder="Nombre de saisons" [(ngModel)]="anime.seasonCount"
+          (ngModelChange)="onSeasonCountChange()">
+        <div style="max-height: 600px; overflow-y: auto">
+          <div *ngFor="let season of anime.seasons">
+            <div>
+              <span>Saison {{ season.number }}</span>
+              <input type="number" placeholder="Nombres d'épisodes" [(ngModel)]="season.episodeCount"
+                (ngModelChange)="onSeasonEpisodeCountChange(season)">
+              <input type="text" [(ngModel)]="season.titles.fr">
+              <input type="text" [(ngModel)]="season.titles.en">
+              <input type="text" [(ngModel)]="season.titles.en_jp">
+              <input type="text" [(ngModel)]="season.titles.ja_jp">
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>N°</th>
+                  <th>Titre français</th>
+                  <th>Titre anglais</th>
+                  <th>Titre romanisé</th>
+                  <th>Titre japonais</th>
+                  <th>Date de diffusion</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let episode of season.episodes">
+                  <td><span>S{{ season.number }} | E{{ episode.relativeNumber }} (E{{ episode.number }})</span></td>
+                  <td><input type="text" [(ngModel)]="episode.titles.fr"></td>
+                  <td><input type="text" [(ngModel)]="episode.titles.en"></td>
+                  <td><input type="text" [(ngModel)]="episode.titles.en_jp"></td>
+                  <td><input type="text" [(ngModel)]="episode.titles.ja_jp"></td>
+                  <td><input type="date" [(ngModel)]="episode.airDate"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>N°</th>
-              <th>Titre français</th>
-              <th>Titre anglais</th>
-              <th>Titre romanisé</th>
-              <th>Titre japonais</th>
-              <th>Date de diffusion</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let episode of season.episodes">
-              <td><span>S{{ season.number }} | E{{ episode.relativeNumber }} (E{{ episode.number }})</span></td>
-              <td><input type="text" [(ngModel)]="episode.titles.fr"></td>
-              <td><input type="text" [(ngModel)]="episode.titles.en"></td>
-              <td><input type="text" [(ngModel)]="episode.titles.en_jp"></td>
-              <td><input type="text" [(ngModel)]="episode.titles.ja_jp"></td>
-              <td><input type="date" [(ngModel)]="episode.airDate"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
+      </td>
+    </tr>
 
+    <tr>
+      <th>Staff</th>
+      <td>
+        <div>
+          <div>
+            <input type="text" placeholder="Rechercher" (input)="onSearchPeople($event.target.value)">
+            <select (change)="onStaffAdded($event.target.value)">
+              <option disabled selected value>------</option>
+              <option *ngFor="let people of peoples; let i = index" [value]="i">
+                {{ people.firstName }} {{ people.lastName }} / {{ people.pseudo }}
+              </option>
+            </select>
+          </div>
 
-<div>
-  <h2>Genres</h2>
-  <fieldset>
+          <div style="display: flex; column-gap: 10px;">
+            <div *ngFor="let staff of anime.staff" style="display: flex; flex-direction: column; align-items: center;">
+              <img [src]="staff.people.image" [alt]="staff.people.firstName + ' ' + staff.people.lastName">
+              <a href="/people/{{ staff.people.id }}">
+                {{ staff.people.firstName }} {{ staff.people.lastName }}
+              </a>
+              <small>{{ staff.people.pseudo }}</small>
+              <select [(ngModel)]="staff.role">
+                <option disabled selected value>------</option>
+                <option *ngFor="let role of staffRole | enum" [value]="role.key">{{ role.value }}</option>
+              </select>
+              <a href="javascript: void(0)" (click)="removeStaff(staff)">X</a>
+            </div>
+          </div>
 
-    <div style="display: grid; grid-template: auto / auto auto auto auto;">
-      <div *ngFor="let genre of genres">
-        <input type="checkbox" (change)="onGenreChecked(genre, $event.target.checked)"
-          [checked]="genreIsAdded(genre)" />
-        <span>{{ genre.title }}</span>
-      </div>
-    </div>
+          <div *ngFor="let staff of anime.staff">
 
-    <div>
-      <div *ngFor="let genre of anime.genres | filter:'id':undefined">
-        <input type="text" [(ngModel)]="genre.title" placeholder="Nom">
-        <input type="text" [(ngModel)]="genre.description" placeholder="Description">
-        <a href="javascript: void(0)" (click)="removeGenre(genre)">X</a>
-      </div>
-      <a href="javascript: void(0)" (click)="createGenre()">Créer</a>
-    </div>
-  </fieldset>
-</div>
+            <div *ngIf="staff.id == undefined">
+              <input type="text" [(ngModel)]="staff.people.firstName" placeholder="Prénom">
+              <input type="text" [(ngModel)]="staff.people.lastName" placeholder="Nom">
+              <input type="text" [(ngModel)]="staff.people.pseudo" placeholder="Pseudo">
+              <select [(ngModel)]="staff.role">
+                <option *ngFor="let role of staffRole | enum" [value]="role.key">{{ role.value }}</option>
+              </select>
+              <a href="javascript: void(0)" (click)="removeStaff(staff)">X</a>
+            </div>
 
-<div>
-  <h2>Thèmes</h2>
-  <fieldset>
-    <div style="display: grid; grid-template: auto / auto auto auto auto;">
-      <div *ngFor="let theme of themes">
-        <input type="checkbox" (change)="onThemeChecked(theme, $event.target.checked)"
-          [checked]="themeIsAdded(theme)" />
-        <span>{{ theme.title }}</span>
-      </div>
-    </div>
+          </div>
 
-    <div>
-      <div *ngFor="let theme of anime.themes | filter:'id':undefined">
-        <input type="text" [(ngModel)]="theme.title" placeholder="Nom">
-        <input type="text" [(ngModel)]="theme.description" placeholder="Description">
-        <a href="javascript: void(0)" (click)="removeTheme(theme)">X</a>
-      </div>
-      <a href="javascript: void(0)" (click)="createTheme()">Créer</a>
-    </div>
+          <p>
+            Si la personne n'est pas sur le site, <a routerLink="/people/add" target="_blank">merci de le créer</a>.
+          </p>
+        </div>
+      </td>
+    </tr>
 
-  </fieldset>
-</div>
+    <tr>
+      <th>Franchise</th>
+      <td>
+        <div>
+          <div>
+            <input type="text" placeholder="Rechercher" (input)="onFranchiseSearch($event.target.value)">
+            <select (change)="onFranchiseAdded($event.target.value)">
+              <option disabled selected value>------</option>
+              <option *ngFor="let media of mediaQuery; let i = index" [value]="i">
+                {{ media.title }} ({{ media.jsonApi.schema.type }})
+              </option>
+            </select>
+          </div>
 
+          <div style="display: flex; column-gap: 10px;">
+            <div *ngFor="let franchise of anime.franchises"
+              style="display: flex; flex-direction: column; align-items: center;">
 
-<div>
-  <h2>Staff</h2>
-  <div>
-    <div>
-      <input type="text" placeholder="Rechercher" (input)="onSearchPeople($event.target.value)">
-      <select (change)="onStaffAdded($event.target.value)">
-        <option disabled selected value>------</option>
-        <option *ngFor="let people of peoples; let i = index" [value]="i">
-          {{ people.firstName }} {{ people.lastName }} / {{ people.pseudo }}
-        </option>
-      </select>
-    </div>
+              <!-- ANIME -->
+              <ng-container *ngIf="(franchise.destination | jsonApiType) === 'anime'">
+                <img [src]="franchise.destination.coverImage" [alt]="franchise.destination.title">
+                <a href="/anime/{{ franchise.destination.id }}" target="_blank">
+                  {{ franchise.destination.title }}
+                </a>
+                <small>Anime</small>
+              </ng-container>
 
-    <div style="display: flex; column-gap: 10px;">
-      <div *ngFor="let staff of anime.staff" style="display: flex; flex-direction: column; align-items: center;">
-        <img [src]="staff.people.image" [alt]="staff.people.firstName + ' ' + staff.people.lastName">
-        <a href="/poeple/{{ staff.people.id }}">
-          {{ staff.people.firstName }} {{ staff.people.lastName }}
-        </a>
-        <small>{{ staff.people.pseudo }}</small>
-        <select [(ngModel)]="staff.role">
-          <option disabled selected value>------</option>
-          <option *ngFor="let role of staffRole | enum" [value]="role.key">{{ role.value }}</option>
-        </select>
-        <a href="javascript: void(0)" (click)="removeStaff(staff)">X</a>
-      </div>
-    </div>
+              <!-- MANGA -->
+              <ng-container *ngIf="(franchise.destination | jsonApiType) === 'manga'">
+                <img [src]="franchise.destination.coverImage" [alt]="franchise.destination.title">
+                <a href="/manga/{{ franchise.destination.id }}" target="_blank">
+                  {{ franchise.destination.title }}
+                </a>
+                <small>Manga</small>
+              </ng-container>
 
-    <div *ngFor="let staff of anime.staff">
+              <select [(ngModel)]="franchise.role">
+                <option disabled selected value>------</option>
+                <option *ngFor="let role of franchiseRole | enum" [value]="role.key">{{ role.value }}</option>
+              </select>
+              <a href="javascript: void(0)" (click)="removeFranchise(franchise)">X</a>
 
-      <div *ngIf="staff.id == undefined">
-        <input type="text" [(ngModel)]="staff.people.firstName" placeholder="Prénom">
-        <input type="text" [(ngModel)]="staff.people.lastName" placeholder="Nom">
-        <input type="text" [(ngModel)]="staff.people.pseudo" placeholder="Pseudo">
-        <select [(ngModel)]="staff.role">
-          <option *ngFor="let role of staffRole | enum" [value]="role.key">{{ role.value }}</option>
-        </select>
-        <a href="javascript: void(0)" (click)="removeStaff(staff)">X</a>
-      </div>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
 
-    </div>
+    <tr>
+      <td colspan="2">
+        <input type="submit" (click)="submit()" value="Envoyer">
+      </td>
+    </tr>
 
-    <p>
-      Si la personne n'est pas sur le site, <a routerLink="/people/add" target="_blank">merci de le créer</a>.
-    </p>
-  </div>
-</div>
-
-
-<!-- FRANCHISES -->
-<div>
-  <h2>Franchises</h2>
-  <div>
-    <div>
-      <input type="text" placeholder="Rechercher" (input)="onFranchiseSearch($event.target.value)">
-      <select (change)="onFranchiseAdded($event.target.value)">
-        <option disabled selected value>------</option>
-        <option *ngFor="let media of mediaQuery; let i = index" [value]="i">
-          {{ media.title }} ({{ media.jsonApi.schema.type }})
-        </option>
-      </select>
-    </div>
-
-    <div style="display: flex; column-gap: 10px;">
-      <div *ngFor="let franchise of anime.franchises"
-        style="display: flex; flex-direction: column; align-items: center;">
-
-        <!-- ANIME -->
-        <ng-container *ngIf="(franchise.destination | jsonApiType) === 'anime'">
-          <img [src]="franchise.destination.coverImage" [alt]="franchise.destination.title">
-          <a href="/anime/{{ franchise.destination.id }}" target="_blank">
-            {{ franchise.destination.title }}
-          </a>
-          <small>Anime</small>
-        </ng-container>
-
-        <!-- MANGA -->
-        <ng-container *ngIf="(franchise.destination | jsonApiType) === 'manga'">
-          <img [src]="franchise.destination.coverImage" [alt]="franchise.destination.title">
-          <a href="/manga/{{ franchise.destination.id }}" target="_blank">
-            {{ franchise.destination.title }}
-          </a>
-          <small>Manga</small>
-        </ng-container>
-
-        <select [(ngModel)]="franchise.role">
-          <option disabled selected value>------</option>
-          <option *ngFor="let role of franchiseRole | enum" [value]="role.key">{{ role.value }}</option>
-        </select>
-        <a href="javascript: void(0)" (click)="removeFranchise(franchise)">X</a>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<input type="submit" (click)="submit()" value="Envoyer">
+  </tbody>
+</table>
