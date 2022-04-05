@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import Anime from 'src/app/models/anime.model';
 import Season from 'src/app/models/season.model';
+import Languages from 'src/app/utils/languages/languages';
 
 @Component({
   selector: 'app-season-save',
@@ -12,6 +13,8 @@ import Season from 'src/app/models/season.model';
 export class SeasonSaveComponent implements OnInit {
 
   season = new Season();
+
+  languages = Languages.getLanguages();
 
   constructor(
     private titleService: Title,
@@ -39,6 +42,25 @@ export class SeasonSaveComponent implements OnInit {
       }
     });
   }
+
+
+  onTitleLanguageAdded() {
+    this.season.titles[''] = '';
+  }
+  onTitleLanguageChanged(index: number, language: string) {
+    if (this.season.titles[language]) {
+      delete this.season.titles[Object.keys(this.season.titles)[index]];
+    } else {
+      this.season.titles = Object.keys(this.season.titles).reduce((acc, key, i) => {
+        acc[i === index ? language : key] = this.season.titles[key];
+        return acc;
+      }, {});
+    }
+  }
+  onTitleLanguageRemoved(index: number) {
+    delete this.season.titles[Object.keys(this.season.titles)[index]];
+  }
+  unsorted() { }
 
 
   submit() {

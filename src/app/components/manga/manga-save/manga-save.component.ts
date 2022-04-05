@@ -11,6 +11,7 @@ import Theme from 'src/app/models/theme.model';
 import Volume from 'src/app/models/volume.model';
 import Base64 from 'src/app/utils/base64/base64';
 import Countries from 'src/app/utils/countries/countries';
+import Languages from 'src/app/utils/languages/languages';
 
 @Component({
   selector: 'app-manga-save',
@@ -28,6 +29,7 @@ export class MangaSaveComponent implements OnInit {
   mediaQuery: any[] = [];
 
   countries = Countries.getCountries();
+  languages = Languages.getLanguages();
   mangaOrigin = Manga.Origin;
   mangaStatus = Manga.Status;
   mangaType = Manga.MangaType;
@@ -67,6 +69,25 @@ export class MangaSaveComponent implements OnInit {
       }
     });
   }
+
+
+  onTitleLanguageAdded() {
+    this.manga.titles[''] = '';
+  }
+  onTitleLanguageChanged(index: number, language: string) {
+    if (this.manga.titles[language]) {
+      delete this.manga.titles[Object.keys(this.manga.titles)[index]];
+    } else {
+      this.manga.titles = Object.keys(this.manga.titles).reduce((acc, key, i) => {
+        acc[i === index ? language : key] = this.manga.titles[key];
+        return acc;
+      }, {});
+    }
+  }
+  onTitleLanguageRemoved(index: number) {
+    delete this.manga.titles[Object.keys(this.manga.titles)[index]];
+  }
+  unsorted() { }
 
 
   updateCover(file: File) {

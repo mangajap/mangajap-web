@@ -9,30 +9,18 @@
     </tr>
 
     <tr>
-      <th>Titre français</th>
+      <th>Titre alternatifs</th>
       <td>
-        <input type="text" [(ngModel)]="manga.titles.fr">
-      </td>
-    </tr>
-
-    <tr>
-      <th>Titre anglais</th>
-      <td>
-        <input type="text" [(ngModel)]="manga.titles.en">
-      </td>
-    </tr>
-
-    <tr>
-      <th>Titre romanisé</th>
-      <td>
-        <input type="text" [(ngModel)]="manga.titles.en_jp">
-      </td>
-    </tr>
-
-    <tr>
-      <th>Titre japonais</th>
-      <td>
-        <input type="text" [(ngModel)]="manga.titles.ja">
+        <div *ngFor="let title of manga.titles | keyvalue:unsorted; let index = index">
+          <select [ngModel]="title.key | lowercase" (change)="onTitleLanguageChanged(index, $event.target.value)">
+            <option disabled selected value>------</option>
+            <option *ngFor="let language of languages" [value]="language.code | lowercase">{{ language.name }}</option>
+          </select>
+          <input type="text" [ngModel]="manga.titles[title.key]"
+            (change)="manga.titles[title.key] = $event.target.value">
+          <a href="javascript: void(0)" (click)="onTitleLanguageRemoved(index)">X</a>
+        </div>
+        <a href="javascript: void(0)" (click)="onTitleLanguageAdded()">Ajouter un titre</a>
       </td>
     </tr>
 

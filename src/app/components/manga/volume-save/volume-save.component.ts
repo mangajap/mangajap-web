@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Manga from 'src/app/models/manga.model';
 import Volume from 'src/app/models/volume.model';
 import Base64 from 'src/app/utils/base64/base64';
+import Languages from 'src/app/utils/languages/languages';
 
 @Component({
   selector: 'app-volume-save',
@@ -13,6 +14,8 @@ import Base64 from 'src/app/utils/base64/base64';
 export class VolumeSaveComponent implements OnInit {
 
   volume = new Volume();
+
+  languages = Languages.getLanguages();
 
   constructor(
     private titleService: Title,
@@ -49,6 +52,25 @@ export class VolumeSaveComponent implements OnInit {
       this.volume.coverImage = null;
     }
   }
+
+
+  onTitleLanguageAdded() {
+    this.volume.titles[''] = '';
+  }
+  onTitleLanguageChanged(index: number, language: string) {
+    if (this.volume.titles[language]) {
+      delete this.volume.titles[Object.keys(this.volume.titles)[index]];
+    } else {
+      this.volume.titles = Object.keys(this.volume.titles).reduce((acc, key, i) => {
+        acc[i === index ? language : key] = this.volume.titles[key];
+        return acc;
+      }, {});
+    }
+  }
+  onTitleLanguageRemoved(index: number) {
+    delete this.volume.titles[Object.keys(this.volume.titles)[index]];
+  }
+  unsorted() { }
 
 
   submit() {

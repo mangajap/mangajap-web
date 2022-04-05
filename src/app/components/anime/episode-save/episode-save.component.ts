@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Anime from 'src/app/models/anime.model';
 import Episode from 'src/app/models/episode.model';
 import Season from 'src/app/models/season.model';
+import Languages from 'src/app/utils/languages/languages';
 
 @Component({
   selector: 'app-episode-save',
@@ -14,6 +15,7 @@ export class EpisodeSaveComponent implements OnInit {
 
   episode = new Episode();
 
+  languages = Languages.getLanguages();
   episodeType = Episode.EpisodeType;
 
   constructor(
@@ -50,6 +52,25 @@ export class EpisodeSaveComponent implements OnInit {
       }
     });
   }
+
+
+  onTitleLanguageAdded() {
+    this.episode.titles[''] = '';
+  }
+  onTitleLanguageChanged(index: number, language: string) {
+    if (this.episode.titles[language]) {
+      delete this.episode.titles[Object.keys(this.episode.titles)[index]];
+    } else {
+      this.episode.titles = Object.keys(this.episode.titles).reduce((acc, key, i) => {
+        acc[i === index ? language : key] = this.episode.titles[key];
+        return acc;
+      }, {});
+    }
+  }
+  onTitleLanguageRemoved(index: number) {
+    delete this.episode.titles[Object.keys(this.episode.titles)[index]];
+  }
+  unsorted() { }
 
 
   submit() {

@@ -13,6 +13,7 @@ import Theme from 'src/app/models/theme.model';
 import { range } from 'src/app/utils/array/array';
 import Base64 from 'src/app/utils/base64/base64';
 import Countries from 'src/app/utils/countries/countries';
+import Languages from 'src/app/utils/languages/languages';
 
 @Component({
   selector: 'app-anime-save',
@@ -30,6 +31,7 @@ export class AnimeSaveComponent implements OnInit {
   mediaQuery: any[] = [];
 
   countries = Countries.getCountries();
+  languages = Languages.getLanguages();
   animeStatus = Anime.Status;
   animeType = Anime.AnimeType;
   staffRole = Staff.Role;
@@ -68,6 +70,25 @@ export class AnimeSaveComponent implements OnInit {
       }
     });
   }
+
+
+  onTitleLanguageAdded() {
+    this.anime.titles[''] = '';
+  }
+  onTitleLanguageChanged(index: number, language: string) {
+    if (this.anime.titles[language]) {
+      delete this.anime.titles[Object.keys(this.anime.titles)[index]];
+    } else {
+      this.anime.titles = Object.keys(this.anime.titles).reduce((acc, key, i) => {
+        acc[i === index ? language : key] = this.anime.titles[key];
+        return acc;
+      }, {});
+    }
+  }
+  onTitleLanguageRemoved(index: number) {
+    delete this.anime.titles[Object.keys(this.anime.titles)[index]];
+  }
+  unsorted() { }
 
 
   onCoverImageChanged(file: File | null) {
