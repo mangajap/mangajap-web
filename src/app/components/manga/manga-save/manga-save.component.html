@@ -53,8 +53,9 @@
     <tr>
       <th>Pays</th>
       <td>
-        <select [(ngModel)]="manga.origin">
-          <option *ngFor="let origin of mangaOrigin | enum" [value]="origin.key">{{ origin.value }}</option>
+        <select [ngModel]="manga.origin | uppercase" (change)="manga.origin = $event">
+          <option disabled selected value>------</option>
+          <option *ngFor="let country of countries" [value]="country.code | uppercase">{{ country.name }}</option>
         </select>
       </td>
     </tr>

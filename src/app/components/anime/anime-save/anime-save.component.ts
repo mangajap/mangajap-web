@@ -12,7 +12,7 @@ import Staff from 'src/app/models/staff.model';
 import Theme from 'src/app/models/theme.model';
 import { range } from 'src/app/utils/array/array';
 import Base64 from 'src/app/utils/base64/base64';
-import Countries, { Country } from 'src/app/utils/countries/countries';
+import Countries from 'src/app/utils/countries/countries';
 
 @Component({
   selector: 'app-anime-save',
@@ -29,7 +29,7 @@ export class AnimeSaveComponent implements OnInit {
 
   mediaQuery: any[] = [];
 
-  countries: Country[] = Countries.getCountries();
+  countries = Countries.getCountries();
   animeStatus = Anime.Status;
   animeType = Anime.AnimeType;
   staffRole = Staff.Role;

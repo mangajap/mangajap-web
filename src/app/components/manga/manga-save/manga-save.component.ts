@@ -10,6 +10,7 @@ import Staff from 'src/app/models/staff.model';
 import Theme from 'src/app/models/theme.model';
 import Volume from 'src/app/models/volume.model';
 import Base64 from 'src/app/utils/base64/base64';
+import Countries from 'src/app/utils/countries/countries';
 
 @Component({
   selector: 'app-manga-save',
@@ -26,6 +27,7 @@ export class MangaSaveComponent implements OnInit {
 
   mediaQuery: any[] = [];
 
+  countries = Countries.getCountries();
   mangaOrigin = Manga.Origin;
   mangaStatus = Manga.Status;
   mangaType = Manga.MangaType;
