@@ -34,16 +34,8 @@ export default class Anime extends JsonApiModel {
 
   @JsonApiAttribute()
   titles?: {
-    fr: string;
-    en: string;
-    en_jp: string;
-    ja_jp: string;
-  } = {
-      fr: undefined,
-      en: undefined,
-      en_jp: undefined,
-      ja_jp: undefined
-    };
+    [language: string]: string;
+  } = {};
 
   @JsonApiAttribute()
   slug?: string;
@@ -58,13 +50,7 @@ export default class Anime extends JsonApiModel {
   endDate?: string | null;
 
   @JsonApiAttribute()
-  get origin(): string | undefined {
-    return this._origin?.toUpperCase();
-  }
-  set origin(value: string | undefined) {
-    this._origin = value?.toUpperCase();
-  }
-  _origin?: string;
+  origin?: string;
 
   @JsonApiAttribute()
   status: string;
