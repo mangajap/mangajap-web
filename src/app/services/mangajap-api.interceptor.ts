@@ -17,11 +17,12 @@ export class MangaJapApiInterceptor implements HttpInterceptor {
 
   private async handle(httpRequest: HttpRequest<any>, next: HttpHandler) {
     const firebaseUser = await this.firebaseAuth.currentUser;
+    const idToken = await firebaseUser.getIdToken()
 
     httpRequest = httpRequest.clone({
       url: httpRequest.url.startsWith(environment.apiUrl) ? httpRequest.url : `${environment.apiUrl}/${httpRequest.url}`,
       headers: new HttpHeaders({
-        Authorization: firebaseUser ? `Bearer ${firebaseUser.uid}` : '',
+        Authorization: firebaseUser ? `Bearer ${idToken}` : '',
       }),
     });
 
