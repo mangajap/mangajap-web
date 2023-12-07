@@ -5,7 +5,7 @@ export interface Country {
 
 export default class Countries {
 
-  static getCountries() {
+  static getCountries(): Country[] {
     return [
       { name: "Albania", code: "AL" },
       { name: "Åland Islands", code: "AX" },

@@ -22,7 +22,7 @@ export class MangaComponent implements OnInit {
     this.route.params.subscribe(params => {
 
       Manga.find(params.id, {
-        // include: ["volumes", "genres", "themes", "staff.people", "franchise.destination"],
+        include: ["volumes", "genres", "themes", "staff.people", "franchises.destination"],
       })
         .then(response => {
           this.manga = response.data;

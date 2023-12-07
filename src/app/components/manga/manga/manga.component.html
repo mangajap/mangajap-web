@@ -7,24 +7,36 @@
     <img [src]="manga.bannerImage" />
 </nav>
 
-<section>
+<article>
+    <h2>Synopsis</h2>
 
-    <article>
-        <h2>Statistiques</h2>
+    <p>{{ manga.synopsis }}</p>
+</article>
 
-        <p>{{ manga.averageRating }}</p>
-        <p>{{ manga.ratingRank }}</p>
-        <p>{{ manga.popularity }}</p>
-        <p>{{ manga.userCount }}</p>
-        <p>{{ manga.favoritesCount }}</p>
+<article>
+    <h2>Tomes</h2>
 
-    </article>
+    <div style="display: flex; column-gap: 10px; flex-wrap: wrap;">
+        <div *ngFor="let volume of manga.volumes"
+          style="display: flex; flex-direction: column; align-items: center;">
+          
+          <img [src]="volume.coverImage" [alt]="volume.number">
+          <a routerLink="/manga/{{ manga.id }}/volume/{{ volume.id }}">
+            Tome {{ volume.number }}
+          </a>
+        </div>
+      </div>
 
-    <article>
-        <h2>Synopsis</h2>
+      <a routerLink="/manga/{{manga.id}}/volume/add">Ajouter un tome</a>
+</article>
 
-        <p>{{ manga.synopsis }}</p>
+<article>
+    <h2>Statistiques</h2>
 
-    </article>
+    <p>{{ manga.averageRating }}</p>
+    <p>{{ manga.ratingRank }}</p>
+    <p>{{ manga.popularity }}</p>
+    <p>{{ manga.userCount }}</p>
+    <p>{{ manga.favoritesCount }}</p>
 
-</section>
+</article>

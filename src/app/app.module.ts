@@ -29,6 +29,14 @@ import { SafeUrlPipe } from './utils/pipes/safe-url.pipe';
 import { LoginComponent } from './components/authentication/login/login.component';
 import { RegisterComponent } from './components/authentication/register/register.component';
 import { JsonApiTypePipe } from './utils/json-api/json-api-pipes';
+import { PeopleComponent } from './components/people/people/people.component';
+import { PeopleSaveComponent } from './components/people/people-save/people-save.component';
+import { VolumeComponent } from './components/manga/volume/volume.component';
+import { VolumeSaveComponent } from './components/manga/volume-save/volume-save.component';
+import { SeasonComponent } from './components/anime/season/season.component';
+import { SeasonSaveComponent } from './components/anime/season-save/season-save.component';
+import { EpisodeComponent } from './components/anime/episode/episode.component';
+import { EpisodeSaveComponent } from './components/anime/episode-save/episode-save.component';
 
 
 @NgModule({
@@ -55,6 +63,14 @@ import { JsonApiTypePipe } from './utils/json-api/json-api-pipes';
     NotFoundComponent,
     LoginComponent,
     RegisterComponent,
+    PeopleComponent,
+    PeopleSaveComponent,
+    VolumeComponent,
+    VolumeSaveComponent,
+    SeasonComponent,
+    SeasonSaveComponent,
+    EpisodeComponent,
+    EpisodeSaveComponent,
   ],
   imports: [
     BrowserModule,

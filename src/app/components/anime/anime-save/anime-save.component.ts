@@ -12,7 +12,8 @@ import Staff from 'src/app/models/staff.model';
 import Theme from 'src/app/models/theme.model';
 import { range } from 'src/app/utils/array/array';
 import Base64 from 'src/app/utils/base64/base64';
-import Countries, { Country } from 'src/app/utils/countries/countries';
+import Countries from 'src/app/utils/countries/countries';
+import Languages from 'src/app/utils/languages/languages';
 
 @Component({
   selector: 'app-anime-save',
@@ -29,7 +30,8 @@ export class AnimeSaveComponent implements OnInit {
 
   mediaQuery: any[] = [];
 
-  countries: Country[] = Countries.getCountries();
+  countries = Countries.getCountries();
+  languages = Languages.getLanguages();
   animeStatus = Anime.Status;
   animeType = Anime.AnimeType;
   staffRole = Staff.Role;
@@ -59,16 +61,37 @@ export class AnimeSaveComponent implements OnInit {
       if (params.id) {
         Anime.find(params.id, {
           include: ["seasons.episodes", "genres", "themes", "staff.people", "franchises.destination"],
-        }).then(response => {
-          this.anime = response.data;
-          this.titleService.setTitle(`${this.anime.title} - Modification | MangaJap`);
-        });
+        })
+          .then((response) => this.anime = response.data)
+          .then(() => {
+            this.titleService.setTitle(`${this.anime.title} - Modification | MangaJap`);
+          })
+          .catch(() => this.router.navigate(['**'], { skipLocationChange: true }));
       }
     });
   }
 
 
-  onCoverImageChange(file: File | null) {
+  onTitleLanguageAdded() {
+    this.anime.titles[''] = '';
+  }
+  onTitleLanguageChanged(index: number, language: string) {
+    if (this.anime.titles[language]) {
+      delete this.anime.titles[Object.keys(this.anime.titles)[index]];
+    } else {
+      this.anime.titles = Object.keys(this.anime.titles).reduce((acc, key, i) => {
+        acc[i === index ? language : key] = this.anime.titles[key];
+        return acc;
+      }, {});
+    }
+  }
+  onTitleLanguageRemoved(index: number) {
+    delete this.anime.titles[Object.keys(this.anime.titles)[index]];
+  }
+  unsorted() { }
+
+
+  onCoverImageChanged(file: File | null) {
     if (file) {
       Base64.encode(file, (base64) => this.anime.coverImage = base64);
     } else {
@@ -76,7 +99,7 @@ export class AnimeSaveComponent implements OnInit {
     }
   }
 
-  onBannerImageChange(file: File | null) {
+  onBannerImageChanged(file: File | null) {
     if (file) {
       Base64.encode(file, (base64) => this.anime.bannerImage = base64);
     } else {
@@ -84,7 +107,7 @@ export class AnimeSaveComponent implements OnInit {
     }
   }
 
-  onYoutubeVideoIdChange() {
+  onYoutubeVideoIdChanged() {
     if (this.anime.youtubeVideoId.startsWith("http://") || this.anime.youtubeVideoId.startsWith("https://")) {
       const videoYoutubeId = new URL(this.anime.youtubeVideoId).searchParams.get("v");
       this.anime.youtubeVideoId = videoYoutubeId;
@@ -204,7 +227,6 @@ export class AnimeSaveComponent implements OnInit {
     staff.people = this.peoples[peopleIndex];
 
     this.anime.staff.push(staff);
-    console.log(this.anime.staff)
   }
 
 
@@ -227,12 +249,10 @@ export class AnimeSaveComponent implements OnInit {
       }),
     ]).then(([mangaResponse, animeResponse]) => {
       this.mediaQuery = [].concat(mangaResponse.data).concat(animeResponse.data)
-        .filter(media => {
-          if (media instanceof Anime) {
-            return media.id !== this.anime.id;
-          }
-          return true;
-        });
+        .filter(media => !(media instanceof Anime && media.id === this.anime.id))
+        .filter(media => this.anime.franchises.findIndex(franchise => {
+          return franchise.destination.type === media.type && franchise.destination.id === media.id
+        }) === -1);
     });
   }
   onFranchiseAdded(mediaIndex: string) {

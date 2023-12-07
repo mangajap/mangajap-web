@@ -56,6 +56,10 @@ export default class JsonApi {
 
     const model: any = new modelType();
     model.initial = new modelType();
+    
+    // Type
+    model.type = data.type;
+    model.initial.type = data.type;
 
     // Id
     model[model.jsonApi?.mapping?.id || 'id'] = data.id;

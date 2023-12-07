@@ -6,6 +6,7 @@ import { JsonApiParams } from "./json-api.service";
 
 export default abstract class JsonApiModel {
 
+  type?: string;
   id?: string;
 
   initial: any;

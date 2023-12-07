@@ -10,6 +10,8 @@ import Staff from 'src/app/models/staff.model';
 import Theme from 'src/app/models/theme.model';
 import Volume from 'src/app/models/volume.model';
 import Base64 from 'src/app/utils/base64/base64';
+import Countries from 'src/app/utils/countries/countries';
+import Languages from 'src/app/utils/languages/languages';
 
 @Component({
   selector: 'app-manga-save',
@@ -26,6 +28,8 @@ export class MangaSaveComponent implements OnInit {
 
   mediaQuery: any[] = [];
 
+  countries = Countries.getCountries();
+  languages = Languages.getLanguages();
   mangaOrigin = Manga.Origin;
   mangaStatus = Manga.Status;
   mangaType = Manga.MangaType;
@@ -56,13 +60,34 @@ export class MangaSaveComponent implements OnInit {
       if (params.id) {
         Manga.find(params.id, {
           include: ["volumes", "genres", "themes", "staff.people", "franchises.destination"],
-        }).then(response => {
-          this.manga = response.data;
-          this.titleService.setTitle(`${this.manga.title} - Modification | MangaJap`);
-        });
+        })
+          .then(response => this.manga = response.data)
+          .then(() => {
+            this.titleService.setTitle(`${this.manga.title} - Modification | MangaJap`);
+          })
+          .catch(() => this.router.navigate(['**'], { skipLocationChange: true }));
       }
     });
   }
+
+
+  onTitleLanguageAdded() {
+    this.manga.titles[''] = '';
+  }
+  onTitleLanguageChanged(index: number, language: string) {
+    if (this.manga.titles[language]) {
+      delete this.manga.titles[Object.keys(this.manga.titles)[index]];
+    } else {
+      this.manga.titles = Object.keys(this.manga.titles).reduce((acc, key, i) => {
+        acc[i === index ? language : key] = this.manga.titles[key];
+        return acc;
+      }, {});
+    }
+  }
+  onTitleLanguageRemoved(index: number) {
+    delete this.manga.titles[Object.keys(this.manga.titles)[index]];
+  }
+  unsorted() { }
 
 
   updateCover(file: File) {
@@ -157,14 +182,15 @@ export class MangaSaveComponent implements OnInit {
   removeStaff(staff: Staff) {
     this.manga.staff.splice(this.manga.staff.indexOf(staff), 1);
   }
+  onStaffAdded(peopleIndex: string) {
+    const staff = new Staff();
+    staff.id = '';
+    staff.people = this.peoples[peopleIndex];
 
-  addFranchise() {
-    this.manga.franchises.push(new Franchise());
+    this.manga.staff.push(staff);
   }
-  removeFranchise(franchise: Franchise) {
-    this.manga.franchises.splice(this.manga.franchises.indexOf(franchise), 1);
-  }
-  onSearchFranchise(query: string) {
+
+  onFranchiseSearch(query: string) {
     if (query === '') {
       this.mediaQuery = [];
       return;
@@ -183,13 +209,20 @@ export class MangaSaveComponent implements OnInit {
       })
     ]).then(([mangaResponse, animeResponse]) => {
       this.mediaQuery = [].concat(mangaResponse.data).concat(animeResponse.data)
-        .filter(media => {
-          if (media instanceof Manga) {
-            return media.id !== this.manga.id;
-          }
-          return true;
-        });
+        .filter(media => !(media instanceof Manga && media.id === this.manga.id))
+        .filter(media => this.manga.franchises.findIndex(franchise => {
+          return franchise.destination.type === media.type && franchise.destination.id === media.id
+        }) === -1);
     });
+  }
+  onFranchiseAdded(mediaIndex: string) {
+    const franchise = new Franchise();
+    franchise.destination = this.mediaQuery[mediaIndex];
+
+    this.manga.franchises.push(franchise);
+  }
+  removeFranchise(franchise: Franchise) {
+    this.manga.franchises.splice(this.manga.franchises.indexOf(franchise), 1);
   }
 
 

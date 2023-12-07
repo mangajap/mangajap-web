@@ -3,27 +3,43 @@
 <h1>{{ anime.title }}</h1>
 
 <nav>
-    <img [src]="anime.coverImage" />
+  <img [src]="anime.coverImage" />
 </nav>
 
-<section>
+<article>
+  <h2>Synopsis</h2>
 
-    <article>
-        <h2>Statistiques</h2>
+  <p>{{ anime.synopsis }}</p>
+</article>
 
-        <p>{{ anime.averageRating }}</p>
-        <p>{{ anime.ratingRank }}</p>
-        <p>{{ anime.popularity }}</p>
-        <p>{{ anime.userCount }}</p>
-        <p>{{ anime.favoritesCount }}</p>
+<article>
+  <h2>Saisons</h2>
 
-    </article>
+  <div style="display: flex; flex-direction: column; gap: 20px">
+    <div *ngFor="let season of anime.seasons" style="display: flex; flex-direction: column; align-items: center;">
+      <a routerLink="/anime/{{ anime.id }}/season/{{ season.id }}">
+        Saison {{ season.number }}
+      </a>
 
-    <article>
-        <h2>Synopsis</h2>
+      <div *ngFor="let episode of season.episodes">
+        <a routerLink="/anime/{{ anime.id }}/season/{{ season.id }}/episode/{{ episode.id }}">
+          Episode {{ episode.number }}
+        </a>
+      </div>
 
-        <p>{{ anime.synopsis }}</p>
+      <a routerLink="/anime/{{anime.id}}/season/{{ season.id }}/episode/add">Ajouter un episode</a>
+    </div>
+  </div>
 
-    </article>
+  <a routerLink="/anime/{{anime.id}}/season/add">Ajouter une saison</a>
+</article>
 
-</section>
+<article>
+  <h2>Statistiques</h2>
+
+  <p>{{ anime.averageRating }}</p>
+  <p>{{ anime.ratingRank }}</p>
+  <p>{{ anime.popularity }}</p>
+  <p>{{ anime.userCount }}</p>
+  <p>{{ anime.favoritesCount }}</p>
+</article>

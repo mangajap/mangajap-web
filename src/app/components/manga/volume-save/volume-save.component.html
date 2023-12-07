@@ -1,0 +1,66 @@
+<h2>{{ volume.manga.title }}</h2>
+
+<table>
+  <tbody>
+
+    <tr>
+      <th>Numéro du tome</th>
+      <td>
+        <input type="number" [(ngModel)]="volume.number">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Couverture</th>
+      <td>
+        <img [src]="volume.coverImage" alt="Image">
+        <input type="file" accept="image/*" (change)="onImageChanged($event.target.files[0])">
+        <a href="javascript: void(0)" (click)="onImageChanged(null)">X</a>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Titre alternatifs</th>
+      <td>
+        <div *ngFor="let title of volume.titles | keyvalue:unsorted; let index = index">
+          <select [ngModel]="title.key | lowercase" (change)="onTitleLanguageChanged(index, $event.target.value)">
+            <option disabled selected value>------</option>
+            <option *ngFor="let language of languages" [value]="language.code | lowercase">{{ language.name }}</option>
+          </select>
+          <input type="text" [ngModel]="volume.titles[title.key]"
+            (change)="volume.titles[title.key] = $event.target.value">
+          <a href="javascript: void(0)" (click)="onTitleLanguageRemoved(index)">X</a>
+        </div>
+        <a href="javascript: void(0)" (click)="onTitleLanguageAdded()">Ajouter un titre</a>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Start chapter</th>
+      <td>
+        <input type="number" [(ngModel)]="volume.startChapter">
+      </td>
+    </tr>
+
+    <tr>
+      <th>End chapter</th>
+      <td>
+        <input type="number" [(ngModel)]="volume.endChapter">
+      </td>
+    </tr>
+
+    <tr>
+      <th>Date de parution</th>
+      <td>
+        <input type="date" [(ngModel)]="volume.published">
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2">
+        <input type="submit" (click)="submit()" value="Envoyer">
+      </td>
+    </tr>
+
+  </tbody>
+</table>
