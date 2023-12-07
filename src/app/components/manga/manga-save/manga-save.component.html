@@ -41,7 +41,7 @@
     <tr>
       <th>Pays</th>
       <td>
-        <select [ngModel]="manga.origin | uppercase" (change)="manga.origin = $event">
+        <select [ngModel]="manga.origin | uppercase" (change)="manga.origin = $event.target.value">
           <option disabled selected value>------</option>
           <option *ngFor="let country of countries" [value]="country.code | uppercase">{{ country.name }}</option>
         </select>
