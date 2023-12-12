@@ -1,5 +1,21 @@
 import JsonApiBody, { JsonApiIdentifier, JsonApiResource } from "./json-api-body";
 import JsonApiModel from "./json-api-model";
+import Anime from "src/app/models/anime";
+import AnimeEntry from "src/app/models/anime-entry";
+import Episode from "src/app/models/episode";
+import Follow from "src/app/models/follow";
+import Franchise from "src/app/models/franchise";
+import Genre from "src/app/models/genre";
+import Manga from "src/app/models/manga";
+import MangaEntry from "src/app/models/manga-entry";
+import People from "src/app/models/people";
+import Request from "src/app/models/request";
+import Review from "src/app/models/review";
+import Season from "src/app/models/season";
+import Staff from "src/app/models/staff";
+import Theme from "src/app/models/theme";
+import User from "src/app/models/user";
+import Volume from "src/app/models/volume";
 
 export interface ModelType<T extends JsonApiModel> {
   new(): T;
@@ -26,7 +42,24 @@ export default class JsonApi {
 
   public static models: {
     [type: string]: ModelType<any>
-  } = {};
+  } = {
+    "anime": Anime,
+    "anime-entries": AnimeEntry,
+    "episodes": Episode,
+    "follows": Follow,
+    "franchises": Franchise,
+    "genres": Genre,
+    "manga": Manga,
+    "manga-entries": MangaEntry,
+    "peoples": People,
+    "requests": Request,
+    "reviews": Review,
+    "seasons": Season,
+    "staff": Staff,
+    "themes": Theme,
+    "users": User,
+    "volumes": Volume,
+  };
 
 
   public static decode<T extends JsonApiModel>(modelType: ModelType<T>, body: JsonApiBody): JsonApiResponse<T> {
