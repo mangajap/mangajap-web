@@ -1,0 +1,17 @@
+<div>
+  <input type="text" placeholder="Rechercher un manga" (input)="onSearch($event)">
+</div>
+
+<div class="manga-grid">
+  <div *ngFor="let manga of list" class="manga-item">
+
+    <a class="manga-link" routerLink="/manga/{{manga.id}}"></a>
+
+    <img class="manga-cover" [src]="manga.coverImage" />
+
+    <div class="manga-title">
+      <span>{{ manga.title }}</span>
+    </div>
+
+  </div>
+</div>
