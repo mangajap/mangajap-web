@@ -1,4 +1,6 @@
 export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:5000',
   firebase: {
     projectId: 'mangajap',
     appId: '1:765459541968:web:fd5acd1ab2ba4d4c1193d5',
