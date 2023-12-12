@@ -1,31 +1,36 @@
-import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { from, Observable } from 'rxjs';
+import {
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpInterceptor,
+  HttpHeaders
+} from '@angular/common/http';
+import { Auth } from '@angular/fire/auth';
+import { Observable, from, lastValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable()
-export class MangaJapApiInterceptor implements HttpInterceptor {
+export class MangajapApiInterceptor implements HttpInterceptor {
 
   constructor(
-    private firebaseAuth: AngularFireAuth,
+    private firebaseAuth: Auth,
   ) { }
 
-  intercept(httpRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return from(this.handle(httpRequest, next));
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    return from(this.handle(request, next))
   }
 
-  private async handle(httpRequest: HttpRequest<any>, next: HttpHandler) {
-    const firebaseUser = await this.firebaseAuth.currentUser;
-    const idToken = await firebaseUser.getIdToken()
+  async handle(request: HttpRequest<any>, next: HttpHandler) {
+    const firebaseUser = this.firebaseAuth.currentUser;
 
-    httpRequest = httpRequest.clone({
-      url: httpRequest.url.startsWith(environment.apiUrl) ? httpRequest.url : `${environment.apiUrl}/${httpRequest.url}`,
+    request = request.clone({
+      url: request.url.startsWith(environment.apiUrl) ? request.url : `${environment.apiUrl}/${request.url}`,
       headers: new HttpHeaders({
-        Authorization: firebaseUser ? `Bearer ${idToken}` : '',
+        Authorization: firebaseUser ? `Bearer ${await firebaseUser?.getIdToken()}` : '',
       }),
     });
 
-    return next.handle(httpRequest).toPromise();
+    return await lastValueFrom(next.handle(request));
   }
 }

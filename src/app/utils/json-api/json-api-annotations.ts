@@ -3,7 +3,7 @@ import JsonApiConfig from "./json-api-config";
 
 export function JsonApiType(name: string, config?: JsonApiConfig['config']): any {
   return (constructor: Function): any => {
-    JsonApi.models[name] = constructor as any;
+    // JsonApi.models[name] = constructor as any;
     constructor.prototype.jsonApi = constructor.prototype.jsonApi || {};
     const jsonApi: JsonApiConfig = constructor.prototype.jsonApi || {};
 

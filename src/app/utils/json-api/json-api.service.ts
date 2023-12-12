@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { Observable, throwError } from "rxjs";
 import { map, catchError } from "rxjs/operators";
 import JsonApi, { JsonApiResponse, ModelType } from "./json-api";
@@ -41,8 +41,8 @@ export default class JsonApiService {
     const options = this.buildOptions(headers, params);
 
     return this.http.get(url, options).pipe(
-      map((res: HttpResponse<object>) => this.handleResponse(res, modelType)),
-      catchError((err: any) => this.handleErrorResponse(err))
+      map((res) => this.handleResponse(res, modelType)),
+      catchError((err) => this.handleErrorResponse(err))
     );
   }
 
@@ -56,8 +56,8 @@ export default class JsonApiService {
     const options = this.buildOptions(headers, params);
 
     return this.http.get(url, options).pipe(
-      map((res: HttpResponse<any>) => this.handleResponse(res, modelType)),
-      catchError((err: any) => this.handleErrorResponse(err))
+      map((res) => this.handleResponse(res, modelType)),
+      catchError((err) => this.handleErrorResponse(err))
     );
   }
 
@@ -71,8 +71,8 @@ export default class JsonApiService {
     const options = this.buildOptions(headers);
 
     return this.http.post(url, body, options).pipe(
-      map((res: HttpResponse<any>) => this.handleResponse(res, modelType)),
-      catchError((err: any) => this.handleErrorResponse(err))
+      map((res) => this.handleResponse(res, modelType)),
+      catchError((err) => this.handleErrorResponse(err))
     );
   }
 
@@ -86,8 +86,8 @@ export default class JsonApiService {
     const options = this.buildOptions(headers);
 
     return this.http.patch(url, body, options).pipe(
-      map((res: HttpResponse<any>) => this.handleResponse(res, modelType)),
-      catchError((err: any) => this.handleErrorResponse(err))
+      map((res) => this.handleResponse(res, modelType)),
+      catchError((err) => this.handleErrorResponse(err))
     );
   }
 
@@ -95,7 +95,7 @@ export default class JsonApiService {
     modelType: ModelType<T>,
     id: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
-  ): Observable<Response> {
+  ): Observable<any> {
     const url = JsonApiService.buildUrl(modelType, id);
     const options = this.buildOptions(headers);
 
@@ -138,7 +138,7 @@ export default class JsonApiService {
     }
   }
 
-  private buildParams(params: JsonApiParams): HttpParams {
+  private buildParams(params?: JsonApiParams): HttpParams {
     let httpParams = new HttpParams();
     if (!params) return httpParams;
 

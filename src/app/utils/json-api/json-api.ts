@@ -1,5 +1,21 @@
 import JsonApiBody, { JsonApiIdentifier, JsonApiResource } from "./json-api-body";
 import JsonApiModel from "./json-api-model";
+import Anime from "src/app/models/anime";
+import AnimeEntry from "src/app/models/anime-entry";
+import Episode from "src/app/models/episode";
+import Follow from "src/app/models/follow";
+import Franchise from "src/app/models/franchise";
+import Genre from "src/app/models/genre";
+import Manga from "src/app/models/manga";
+import MangaEntry from "src/app/models/manga-entry";
+import People from "src/app/models/people";
+import Request from "src/app/models/request";
+import Review from "src/app/models/review";
+import Season from "src/app/models/season";
+import Staff from "src/app/models/staff";
+import Theme from "src/app/models/theme";
+import User from "src/app/models/user";
+import Volume from "src/app/models/volume";
 
 export interface ModelType<T extends JsonApiModel> {
   new(): T;
@@ -26,23 +42,40 @@ export default class JsonApi {
 
   public static models: {
     [type: string]: ModelType<any>
-  } = {};
+  } = {
+    "anime": Anime,
+    "anime-entries": AnimeEntry,
+    "episodes": Episode,
+    "follows": Follow,
+    "franchises": Franchise,
+    "genres": Genre,
+    "manga": Manga,
+    "manga-entries": MangaEntry,
+    "peoples": People,
+    "requests": Request,
+    "reviews": Review,
+    "seasons": Season,
+    "staff": Staff,
+    "themes": Theme,
+    "users": User,
+    "volumes": Volume,
+  };
 
 
   public static decode<T extends JsonApiModel>(modelType: ModelType<T>, body: JsonApiBody): JsonApiResponse<T> {
     let data = null;
 
     if (Array.isArray(body.data)) {
-      data = body.data.map(data => this.decodeModel(data, body.included, modelType));
+      data = body.data.map(data => this.decodeModel(data, body.included ?? [], modelType));
     } else if (body.data) {
-      data = this.decodeModel(body.data, body.included, modelType);
+      data = this.decodeModel(body.data, body.included ?? [], modelType);
     }
 
     return {
       raw: JSON.stringify(body),
 
       jsonapi: body.jsonapi,
-      data: data,
+      data: data as any,
       included: body.included,
       links: body.links,
       meta: body.meta,
@@ -51,7 +84,7 @@ export default class JsonApi {
 
   private static decodeModel<T extends JsonApiModel>(data: JsonApiResource, included: JsonApiResource[], modelType: ModelType<T>): T {
     const getRelation = (identifier: JsonApiIdentifier, included: JsonApiResource[]): JsonApiResource => {
-      return included.find(resource => resource.type == identifier.type && resource.id == identifier.id)
+      return included.find(resource => resource.type == identifier.type && resource.id == identifier.id)!
     }
 
     const model: any = new modelType();
@@ -66,7 +99,7 @@ export default class JsonApi {
     model.initial[model.jsonApi?.mapping?.id || 'id'] = data.id;
 
     // Attributes
-    for (const [attribute, value] of Object.entries<any>(data.attributes)) {
+    for (const [attribute, value] of Object.entries(data.attributes)) {
       const property = model.jsonApi?.mapping?.attributes?.[attribute] || attribute;
 
       model[property] = value;
@@ -79,7 +112,7 @@ export default class JsonApi {
     }
 
     // Relationships
-    for (const [relationship, value] of Object.entries<any>(data.relationships)) {
+    for (const [relationship, value] of Object.entries(data.relationships ?? {})) {
       const property = model.jsonApi?.mapping?.relationships?.[relationship] || relationship;
 
       if (!value.data) {
@@ -107,7 +140,7 @@ export default class JsonApi {
   public static encode(model: JsonApiModel): JsonApiBody {
     if (!model) throw new Error("model is invalid");
 
-    const jsonApiSchema = model['jsonApi']?.schema;
+    const jsonApiSchema = (model as any).jsonApi.schema;
 
     const data: JsonApiResource = {
       type: jsonApiSchema.type,
@@ -118,7 +151,7 @@ export default class JsonApi {
 
     // Attributes
     for (const [attribute, property] of Object.entries<any>(jsonApiSchema.attributes)) {
-      const value = model[property];
+      const value = (model as any)[property];
       const initValue = model.initial?.[property];
 
       if (JSON.stringify(value) !== JSON.stringify(initValue)) {
@@ -128,7 +161,7 @@ export default class JsonApi {
 
     // Relationships
     for (const [relationship, property] of Object.entries<any>(jsonApiSchema.relationships)) {
-      const value = model[property];
+      const value = (model as any)[property];
       const initValue = model.initial?.[property];
 
       if (Array.isArray(value)) {
@@ -136,13 +169,13 @@ export default class JsonApi {
           .map(model => model.identifier())
           .filter(identifier => identifier.id)
           .filter(identifier => !initValue
-            ?.map(initModel => initModel.identifier())
-            ?.some(initIdentifier => (
+            ?.map((initModel: any) => initModel.identifier())
+            ?.some((initIdentifier: any) => (
               identifier.type === initIdentifier.type && identifier.id === initIdentifier.id
             )));
 
         if (relationshipData.length != 0) {
-          data.relationships[relationship] = {
+          data.relationships![relationship] = {
             data: relationshipData
           };
         }
@@ -152,7 +185,7 @@ export default class JsonApi {
 
         if (relationshipIdentifier.id) {
           if (JSON.stringify(relationshipIdentifier) !== JSON.stringify(relationshipInitIdentifier)) {
-            data.relationships[relationship] = {
+            data.relationships![relationship] = {
               data: relationshipIdentifier
             };
           }

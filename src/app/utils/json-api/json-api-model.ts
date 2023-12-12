@@ -1,4 +1,4 @@
-import { Observable } from "rxjs";
+import { firstValueFrom } from "rxjs";
 import { JsonApiResponse } from "./json-api";
 import { JsonApiIdentifier } from "./json-api-body";
 import JsonApiConfig from "./json-api-config";
@@ -17,7 +17,7 @@ export default abstract class JsonApiModel {
 
     return {
       type: jsonApi.schema.type,
-      id: this.id
+      id: this.id!,
     }
   }
 
@@ -33,13 +33,13 @@ export default abstract class JsonApiModel {
   public static findAll<T extends JsonApiModel>(this: new () => T, params?: JsonApiParams): Promise<JsonApiResponse<T[]>> {
     const jsonApi: JsonApiConfig = this.prototype.jsonApi;
 
-    return jsonApi.service.findAll(this, params).toPromise();
+    return firstValueFrom(jsonApi.service.findAll(this, params));
   }
 
   public static find<T extends JsonApiModel>(this: new () => T, id: string, params?: JsonApiParams): Promise<JsonApiResponse<T>> {
     const jsonApi: JsonApiConfig = this.prototype.jsonApi;
 
-    return jsonApi.service.find(this, id, params).toPromise();
+    return firstValueFrom(jsonApi.service.find(this, id, params));
   }
 
   
@@ -54,13 +54,13 @@ export default abstract class JsonApiModel {
   public create(): Promise<JsonApiResponse<this>> {
     const jsonApi: JsonApiConfig = this.constructor.prototype.jsonApi;
 
-    return jsonApi.service.create(this).toPromise();
+    return firstValueFrom(jsonApi.service.create(this));
   }
 
 
   public update(): Promise<JsonApiResponse<this>> {
     const jsonApi: JsonApiConfig = this.constructor.prototype.jsonApi;
 
-    return jsonApi.service.update(this).toPromise();
+    return firstValueFrom(jsonApi.service.update(this));
   }
 }
