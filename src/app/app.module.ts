@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { FooterComponent } from './components/shared/footer/footer.component';
 import { HeaderComponent } from './components/shared/header/header.component';
 import { LoginComponent } from './pages/authentication/login/login.component';
+import { RegisterComponent } from './pages/authentication/register/register.component';
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { MangajapApiInterceptor } from './services/mangajap-api.interceptor';
@@ -25,6 +26,7 @@ import { environment } from '../environments/environment';
     JsonApiTypePipe,
     LoginComponent,
     NotFoundComponent,
+    RegisterComponent,
   ],
   imports: [
     AppRoutingModule,
