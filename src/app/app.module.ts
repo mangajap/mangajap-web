@@ -15,6 +15,7 @@ import { LoginComponent } from './pages/authentication/login/login.component';
 import { RegisterComponent } from './pages/authentication/register/register.component';
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { ProfileComponent } from './pages/profile/profile/profile.component';
 import { MangajapApiInterceptor } from './services/mangajap-api.interceptor';
 import { JsonApiTypePipe } from './utils/json-api/json-api-type.pipe';
 import { environment } from '../environments/environment';
@@ -29,6 +30,7 @@ import { environment } from '../environments/environment';
     PrivacyPolicyComponent,
     LoginComponent,
     NotFoundComponent,
+    ProfileComponent,
     RegisterComponent,
   ],
   imports: [

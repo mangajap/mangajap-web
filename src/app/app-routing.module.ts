@@ -7,6 +7,7 @@ import { LoginComponent } from './pages/authentication/login/login.component';
 import { RegisterComponent } from './pages/authentication/register/register.component';
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { ProfileComponent } from './pages/profile/profile/profile.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', component: HomeComponent },
@@ -25,6 +26,8 @@ const routes: Routes = [
   },
 
   { path: 'about/privacy-policy', component: PrivacyPolicyComponent },
+
+  { path: 'profile/:id', component: ProfileComponent },
 
   { path: '**', component: NotFoundComponent },
 ];
