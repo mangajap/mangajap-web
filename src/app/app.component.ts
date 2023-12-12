@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import JsonApiService from './utils/json-api/json-api.service';
 
 @Component({
   selector: 'app-root',
@@ -7,8 +6,5 @@ import JsonApiService from './utils/json-api/json-api.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-
-  constructor(
-    private jsonApiService: JsonApiService,
-  ) { }
+  title = 'mangajap';
 }
