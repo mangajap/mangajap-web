@@ -1,0 +1,43 @@
+<h1>{{ anime.title }}</h1>
+
+<nav>
+  <img [src]="anime.coverImage" />
+</nav>
+
+<article>
+  <h2>Synopsis</h2>
+
+  <p>{{ anime.synopsis }}</p>
+</article>
+
+<article>
+  <h2>Saisons</h2>
+
+  <div style="display: flex; flex-direction: column; gap: 20px">
+    <div *ngFor="let season of anime.seasons" style="display: flex; flex-direction: column; align-items: center;">
+      <a routerLink="/anime/{{ anime.id }}/season/{{ season.id }}">
+        Saison {{ season.number }}
+      </a>
+
+      <div *ngFor="let episode of season.episodes">
+        <a routerLink="/anime/{{ anime.id }}/season/{{ season.id }}/episode/{{ episode.id }}">
+          Episode {{ episode.number }}
+        </a>
+      </div>
+
+      <a routerLink="/anime/{{anime.id}}/season/{{ season.id }}/episode/add">Ajouter un episode</a>
+    </div>
+  </div>
+
+  <a routerLink="/anime/{{anime.id}}/season/add">Ajouter une saison</a>
+</article>
+
+<article>
+  <h2>Statistiques</h2>
+
+  <p>{{ anime.averageRating }}</p>
+  <p>{{ anime.ratingRank }}</p>
+  <p>{{ anime.popularity }}</p>
+  <p>{{ anime.userCount }}</p>
+  <p>{{ anime.favoritesCount }}</p>
+</article>

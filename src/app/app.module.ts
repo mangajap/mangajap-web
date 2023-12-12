@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { FooterComponent } from './components/shared/footer/footer.component';
 import { HeaderComponent } from './components/shared/header/header.component';
 import { PrivacyPolicyComponent } from './pages/about/privacy-policy/privacy-policy.component';
+import { AnimeComponent } from './pages/anime/anime/anime.component';
 import { AnimeListComponent } from './pages/anime/anime-list/anime-list.component';
 import { LoginComponent } from './pages/authentication/login/login.component';
 import { RegisterComponent } from './pages/authentication/register/register.component';
@@ -24,6 +25,7 @@ import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
+    AnimeComponent,
     AnimeListComponent,
     AppComponent,
     FooterComponent,
