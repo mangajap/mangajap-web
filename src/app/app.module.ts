@@ -16,6 +16,7 @@ import { AnimeListComponent } from './pages/anime/anime-list/anime-list.componen
 import { LoginComponent } from './pages/authentication/login/login.component';
 import { RegisterComponent } from './pages/authentication/register/register.component';
 import { HomeComponent } from './pages/home/home.component';
+import { MangaComponent } from './pages/manga/manga/manga.component';
 import { MangaListComponent } from './pages/manga/manga-list/manga-list.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { ProfileComponent } from './pages/profile/profile/profile.component';
@@ -34,6 +35,7 @@ import { environment } from '../environments/environment';
     JsonApiTypePipe,
     PrivacyPolicyComponent,
     LoginComponent,
+    MangaComponent,
     MangaListComponent,
     NotFoundComponent,
     ProfileComponent,
