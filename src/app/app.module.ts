@@ -2,6 +2,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
+import { AuthGuardModule } from '@angular/fire/auth-guard'; 
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -29,6 +30,7 @@ import { environment } from '../environments/environment';
     RegisterComponent,
   ],
   imports: [
+    AuthGuardModule,
     AppRoutingModule,
     BrowserModule,
     FormsModule,
