@@ -3,6 +3,7 @@ import { AuthGuard, redirectLoggedInTo } from '@angular/fire/auth-guard';
 import { RouterModule, Routes } from '@angular/router';
 
 import { PrivacyPolicyComponent } from './pages/about/privacy-policy/privacy-policy.component';
+import { AnimeListComponent } from './pages/anime/anime-list/anime-list.component';
 import { LoginComponent } from './pages/authentication/login/login.component';
 import { RegisterComponent } from './pages/authentication/register/register.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -26,6 +27,8 @@ const routes: Routes = [
   },
 
   { path: 'about/privacy-policy', component: PrivacyPolicyComponent },
+
+  { path: 'anime', component: AnimeListComponent },
 
   { path: 'profile/:id', component: ProfileComponent },
 

@@ -1,0 +1,17 @@
+<div>
+  <input type="text" placeholder="Rechercher un anime" (input)="onSearch($event)">
+</div>
+
+<div class="anime-grid">
+  <div *ngFor="let anime of list" class="anime-item">
+
+    <a class="anime-link" routerLink="/anime/{{anime.id}}"></a>
+
+    <img class="anime-cover" [src]="anime.coverImage" />
+
+    <div class="anime-title">
+      <span>{{ anime.title }}</span>
+    </div>
+
+  </div>
+</div>
