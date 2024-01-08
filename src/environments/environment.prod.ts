@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://mangajap-api.herokuapp.com',
+  apiUrl: 'https://mangajap-api.onrender.com',
   firebase: {
     projectId: 'mangajap',
     appId: '1:765459541968:web:fd5acd1ab2ba4d4c1193d5',
